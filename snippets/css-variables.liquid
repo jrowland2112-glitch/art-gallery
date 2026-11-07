@@ -1,0 +1,25 @@
+{% style %}
+  {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-heading: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    --font-heading-weight: {{ settings.type_heading_font.weight }};
+    --font-heading-style: {{ settings.type_heading_font.style }};
+    --font-body: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --font-body-weight: {{ settings.type_body_font.weight }};
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+    --page-width: {{ settings.max_page_width }};
+    --page-margin: {{ settings.min_page_margin }}px;
+    --color-background: {{ settings.background_color }};
+    --color-foreground: {{ settings.foreground_color }};
+    --color-muted: {{ settings.muted_color }};
+    --color-accent: {{ settings.accent_color }};
+    --color-accent-text: {{ settings.accent_text_color }};
+    --color-border: {{ settings.border_color }};
+    --color-surface: {{ settings.surface_color }};
+    --radius: {{ settings.corner_radius }}px;
+  }
+{% endstyle %}

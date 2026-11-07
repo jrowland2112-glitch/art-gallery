@@ -1,0 +1,53 @@
+<section class="section{% if section.settings.surface %} section--surface{% endif %}">
+  <div class="page-width page-width--narrow text-{{ section.settings.alignment }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'eyebrow' -%}
+          <span class="eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+        {%- when 'heading' -%}
+          <h2 {{ block.shopify_attributes }}>{{ block.settings.heading }}</h2>
+        {%- when 'text' -%}
+          <div class="rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- when 'button' -%}
+          <p style="margin-top: 1.75rem" {{ block.shopify_attributes }}>
+            <a class="button{% if block.settings.style == 'secondary' %} button--secondary{% endif %}" href="{{ block.settings.link | default: '#' }}">{{ block.settings.label }}</a>
+          </p>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    {
+      "type": "select", "id": "alignment", "label": "Alignment", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ]
+    },
+    { "type": "checkbox", "id": "surface", "label": "Use alternate background", "default": false }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Small text", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Small text" } ] },
+    { "type": "heading", "name": "Heading", "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Heading" } ] },
+    { "type": "text", "name": "Paragraph", "settings": [ { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Add a paragraph of text.</p>" } ] },
+    {
+      "type": "button", "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Learn more" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "style", "label": "Style", "default": "primary", "options": [ { "value": "primary", "label": "Solid" }, { "value": "secondary", "label": "Outline" } ] }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text",
+      "blocks": [
+        { "type": "heading", "settings": { "heading": "Every print is made to order" } },
+        { "type": "text", "settings": { "text": "<p>Printed on archival, museum-grade paper with pigment inks rated to last generations. Choose your size, frame, and mat, and your print ships ready to hang.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

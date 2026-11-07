@@ -23,8 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Site has a homepage
-        run: test -f site/index.html
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Shopify theme check
+        run: npx -y -p @shopify/cli@5.0.1 shopify theme check --fail-level error
       - name: Block secret-looking files
         run: |
           if git ls-files | grep -E '(^|/)\.env' ; then

@@ -1,0 +1,67 @@
+<section class="section">
+  <div class="page-width">
+    <h1>Your cart</h1>
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <table class="cart-table">
+          <thead>
+            <tr><th>Print</th><th>Quantity</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr>
+                <td>
+                  <div class="cart-item">
+                    <a href="{{ item.url }}">
+                      {%- if item.image -%}
+                        {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: item.product.title }}
+                      {%- endif -%}
+                    </a>
+                    <div>
+                      <a href="{{ item.url }}" style="text-decoration: none"><strong>{{ item.product.title }}</strong></a>
+                      {%- unless item.product.has_only_default_variant -%}
+                        <div class="muted">{{ item.variant.title }}</div>
+                      {%- endunless -%}
+                      <div class="muted">{{ item.final_price | money }}</div>
+                      <a class="cart-item__remove" href="{{ item.url_to_remove }}">Remove</a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <label class="visually-hidden" for="qty-{{ item.key }}">Quantity</label>
+                  <input class="cart-qty" id="qty-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                </td>
+                <td>{{ item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div class="cart-footer">
+          <div style="font-size: 1.15rem">Subtotal: {{ cart.total_price | money }}</div>
+          <div class="muted" style="font-size: .88rem">Shipping and taxes calculated at checkout.</div>
+          {%- if section.settings.show_note -%}
+            <div class="field" style="width: min(100%, 26rem); text-align: left">
+              <label for="cart-note">Order note (gift message, framing questions…)</label>
+              <textarea id="cart-note" name="note" style="min-height: 5rem">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+          <button class="button button--secondary" type="submit" name="update">Update cart</button>
+          <button class="button" type="submit" name="checkout">Checkout</button>
+        </div>
+      </form>
+    {%- else -%}
+      <p class="muted">Your cart is empty.</p>
+      <p><a class="button" href="{{ routes.all_products_collection_url }}">Browse prints</a></p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    { "type": "checkbox", "id": "show_note", "label": "Let customers add an order note", "default": true }
+  ]
+}
+{% endschema %}

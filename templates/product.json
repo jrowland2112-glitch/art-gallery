@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "blocks": {
+        "details": { "type": "collapsible", "settings": { "heading": "Print details", "text": "<p>Archival pigment print on museum-grade fine art paper. Signed certificate of authenticity included.</p>" } },
+        "shipping": { "type": "collapsible", "settings": { "heading": "Shipping & returns", "text": "<p>Each print is made to order and typically ships within 3–5 business days. Damaged in transit? We'll replace it free.</p>" } }
+      },
+      "block_order": ["details", "shipping"],
+      "settings": {}
+    },
+    "related": { "type": "featured-collection", "settings": { "heading": "You may also like", "eyebrow": "", "limit": 3 } }
+  },
+  "order": ["main", "related"]
+}

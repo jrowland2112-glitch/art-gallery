@@ -1,17 +1,18 @@
-# Art Gallery
+# Gallery — Shopify theme
 
-The website for <OWNER NAME>'s original artwork, where visitors can browse pieces and buy prints.
+A custom Shopify theme for selling fine art and photography prints, with a blog, an About page, and a contact page. Everything visitors see can be edited in the Shopify theme editor, with no code needed.
 
-- **Site files:** `site/` (plain HTML, CSS and JavaScript, hosted on Cloudflare)
-- **Shop:** Shopify Buy Button embeds; Printful prints and ships orders
-- **Rules for Claude:** [`CLAUDE.md`](CLAUDE.md), which you must read first. It includes the first-time setup steps
-- **Accounts and setup:** [`docs/ACCOUNTS_AND_SETUP.md`](docs/ACCOUNTS_AND_SETUP.md)
+- **Rules for AI assistants:** [`CLAUDE.md`](CLAUDE.md) (Codex reads [`AGENTS.md`](AGENTS.md), which points to it)
+- **Accounts, costs, and setup:** [`docs/ACCOUNTS_AND_SETUP.md`](docs/ACCOUNTS_AND_SETUP.md)
+- **Editing the site without code:** [`docs/EDITING_GUIDE.md`](docs/EDITING_GUIDE.md)
 
 ## Developer quick start
 
-1. Create your own copy: `gh repo create <REPO NAME> --public --template tjrowland3/art-gallery --clone`
-2. Open the folder in VS Code and start Claude Code. It reads `CLAUDE.md` automatically.
-3. Create a branch: `git checkout -b <change-name>`
-4. To preview locally, open `site/index.html` in a browser, or run `npx wrangler dev`.
-5. Push your branch and open a pull request. Cloudflare adds a preview link.
-6. The owner reviews the preview and merges. Claude never pushes to `main`.
+1. Install [Shopify CLI](https://shopify.dev/docs/api/shopify-cli): `npm install -g @shopify/cli`
+2. Clone this repo and open it in VS Code.
+3. Live local preview: `shopify theme dev --store <store>.myshopify.com`
+4. Check for errors: `shopify theme check`
+5. Share a preview: `shopify theme push --unpublished --theme "Preview: <change>"`
+6. Open a pull request. Only the owner merges and publishes.
+
+Built on Shopify's [Skeleton theme](https://github.com/Shopify/skeleton-theme). See `LICENSE-SHOPIFY-SKELETON.md`.

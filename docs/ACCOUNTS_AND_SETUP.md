@@ -1,45 +1,28 @@
-# Art Gallery Website — Accounts and Setup
+# Accounts, costs, and setup
 
-**Rule of thumb:** you (the owner) create and own every account. Your AI assistant can guide you through each one, but you sign up and enter payment details yourself. Never share these passwords with the AI or anyone else.
-
-**Tip:** create one dedicated email for the business first (for example `<yourname>art@gmail.com`) and use it for every account below. That keeps the business separate from your personal email.
+**Rule of thumb:** the owner owns every account. AI assistants can guide you, but you sign up and enter payment details yourself. Never share passwords with an AI or anyone else.
 
 ## Accounts
 
-| # | Account | Cost (check current pricing) | What it's for |
-|---|---|---|---|
-| 1 | **Business email** (Gmail) | Free | Sign-ups and customer emails |
-| 2 | **GitHub** | Free (keep the repo public, or get GitHub Pro for a private repo with branch protection) | Stores the website code |
-| 3 | **Claude Pro** (Claude Code) or **ChatGPT Plus** (Codex) | About $20/month | The AI that builds the site |
-| 4 | **Cloudflare** | Free hosting; domain about $10–20/year at cost | Hosts the website and registers the domain |
-| 5 | **Shopify** | Starter about $5/month (confirm the Buy Button is included), plus fees per sale | Cart, checkout, payments, orders |
-| 6 | **Printful**, connected to Shopify | Free; you pay per order | Prints and ships the art |
+| Account | Cost (check current pricing) | What it's for |
+|---|---|---|
+| **Business email** (Gmail) | Free | Sign-ups and customer emails |
+| **Shopify** (Basic plan) | About $29–39/month, plus card fees per sale | The website, shop, checkout, blog, editor, and analytics |
+| **Print vendor:** Prodigi or Lumaprints (order samples from both first) | Free account; you pay the print cost per order | Prints, frames, and ships orders automatically |
+| **Domain** (buy in Shopify, or at Cloudflare or Namecheap) | About $10–20/year | Your web address |
+| **GitHub** | Free | Stores the theme code |
+| **Claude Pro** or **ChatGPT Plus** (optional) | About $20/month | Only needed for design or code changes |
 
-## Setup order
+## Handoff steps
 
-1. **Business email.**
-2. **GitHub account,** then ask your AI to run the first-time setup in `CLAUDE.md`.
-3. **Cloudflare account:** sign up at cloudflare.com (free).
-4. **Connect the site:** Cloudflare dashboard → **Workers & Pages** → **Create** → **Import a repository** (Connect to Git) → authorize GitHub → pick your repo.
-   - Production branch: `main`
-   - Build command: leave empty
-   - Deploy command (if asked): `npx wrangler deploy`
-   - The repo's `wrangler.jsonc` already tells Cloudflare to publish the `site/` folder.
-   - Turn on preview deployments for non-production branches, so each pull request gets a preview link.
-   - Cloudflare's menus change sometimes. If anything looks different, ask your AI to check Cloudflare's current docs.
-5. **Domain:** Cloudflare dashboard → **Domain Registration** → **Register Domains** → buy your domain. Then open your site in Workers & Pages → **Settings** → **Domains & Routes** → **Add custom domain**. HTTPS is automatic.
-6. **Shopify store:**
-   - Add the **Buy Button** sales channel
-   - Install **Printful** from the Shopify App Store
-   - In Printful, upload your art, pick paper, frame, and size options, and sync them to Shopify
-   - Set up payments, shipping, taxes, and your return policy
-7. **Buy Button code:** in Shopify → Buy Button channel, create a button for each product and give the generated code to your AI.
-8. **Content:** give your AI your artwork image files, titles, descriptions, and About-page text.
+1. **Tristan** builds the theme in a Shopify Partner "client transfer" store.
+2. **Tristan** transfers the store: Partner dashboard → Stores → the store → **Transfer ownership**, entering the owner's email.
+3. **Owner** accepts, picks a plan, and sets up payments (Shopify Payments), payouts, shipping, taxes, and policies.
+4. **Owner** installs the print vendor app (Apps → Shopify App Store → Prodigi or Lumaprints), creates products with **Size**, **Frame**, and **Mat** options, and syncs them.
+5. **Owner** connects the domain: Settings → Domains.
+6. **Tristan** transfers the GitHub repo (repo → Settings → Transfer ownership), or the owner keeps it under Tristan's account and is added as a collaborator.
+7. **Owner** removes the store password (Online Store → Preferences) to launch.
 
-## How approving changes works
+## Analytics
 
-1. Your AI opens a pull request on GitHub and tells you it's ready.
-2. Open the **preview link** Cloudflare posts on the pull request, and click around on your phone and computer.
-3. Read the report in the pull request description.
-4. If it's good, click **Merge pull request**. The live site updates in about a minute.
-5. If something breaks, open the merged pull request and click **Revert**, then merge the undo.
+Shopify admin → **Analytics** shows visitors, sessions, top pages, traffic sources, top products, add-to-cart and conversion rates, and sales. For click-by-click detail, install the free **Google & YouTube** app and connect Google Analytics 4.

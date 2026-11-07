@@ -4,84 +4,75 @@ These rules apply to every AI session (Claude Code, Codex, or any other assistan
 
 ## Project identity
 
-- **Owner and approver:** <OWNER NAME> (GitHub: `<OWNER GITHUB USERNAME>`). The owner owns the artwork, the business, every account, and the code, and is the only person who approves changes.
-- **Helper:** Tristan Rowland (GitHub: `tjrowland3`) set up this starter project and may help if the owner asks. He has no approval authority.
-- **Repository:** `<OWNER GITHUB USERNAME>/<REPO NAME>`.
-- **Live site:** `https://<CUSTOM DOMAIN>` (hosted on Cloudflare).
-- **Purpose:** a gallery of the owner's original artwork where visitors can browse pieces and buy prints.
+- **Owner and approver:** <OWNER NAME> (GitHub: `<OWNER GITHUB USERNAME>`). The owner owns the artwork, the business, the Shopify store, every account, and the code, and is the only person who approves changes.
+- **Helper:** Tristan Rowland (GitHub: `tjrowland3`) built the first version and may help if the owner asks. He has no approval authority after the handoff.
+- **Shopify store:** `<STORE>.myshopify.com` (live site: `https://<CUSTOM DOMAIN>`).
+- **Purpose:** a gallery of the owner's original photography and art where visitors browse pieces, read the blog, and buy prints.
 
-## First-time setup (do this once, then delete this section)
-
-If any `<PLACEHOLDER>` values above are still unfilled, the project hasn't been set up yet. With the owner:
-
-1. Ask for the owner's name, GitHub username, the repo name they want, and the domain (or "not yet").
-2. Fill in the placeholders in this file, `README.md`, and `.github/CODEOWNERS`.
-3. Protect the `main` branch on GitHub (with the owner's permission, via `gh api`):
-   - Require a pull request before merging (0 required approvals, since the owner merges their own pull requests)
-   - Require status checks `secret-scan` and `site-check` to pass
-   - Block force pushes and branch deletion
-4. Turn on secret scanning and push protection in the repo settings.
-5. Commit these setup changes on a branch, open a pull request, and have the owner merge it.
+Until the store is transferred, Tristan is the acting owner and the placeholders above stay unfilled.
 
 ## How the site works
 
-- **Frontend:** a static website (HTML, CSS, JavaScript) in `site/`, deployed by Cloudflare (Workers & Pages) from the `main` branch. `wrangler.jsonc` tells Cloudflare to publish the `site/` folder; there is no build step.
-- **Shop:** Shopify **Buy Button** embeds. Shopify handles the cart, checkout, payment, tax, and order emails.
-- **Printing and shipping:** Printful (or a similar print-on-demand service) is connected to Shopify and fulfills orders automatically.
-- **There is no custom backend, database, payment code, or customer login.** Don't add one without the owner's explicit approval.
-- Products, prices, and sizes are managed by the owner in the Shopify admin, never in this code.
+- **This repository is a Shopify theme** (Liquid, CSS, JavaScript) named "Gallery", built on Shopify's open-source Skeleton theme.
+- **Everyday editing happens in Shopify, not in code.** In the Shopify admin, the owner uploads photos, adds, removes, and reorders sections (Online Store → Themes → Customize), edits the About page, writes blog posts, and manages products, prices, menus, and analytics.
+- **Code changes are only for new kinds of sections or design changes** the theme editor can't already do.
+- **Products and print options** (size, frame, mat, paper) come from the print vendor app (for example Prodigi or Lumaprints) as Shopify product options. The product page builds its option buttons and frame/mat preview from those options automatically. Never hard-code products or prices.
+- **There is no custom backend, database, payment code, or customer login.** Shopify provides checkout, accounts, and analytics. Don't add a backend without the owner's explicit approval.
+
+### Theme structure
+
+| Folder | Contents |
+|---|---|
+| `layout/` | `theme.liquid`, the page shell |
+| `sections/` | Editable sections: hero, featured prints, collections, photo gallery, image with text, text, blog posts, contact form, plus the page sections (product, collection, cart, …) |
+| `snippets/` | Reusable pieces (`product-card`, `css-variables`, `meta-tags`) |
+| `templates/` | Which sections each page type starts with (`index.json` = homepage, `page.about.json`, `page.contact.json`, …) |
+| `assets/` | `base.css` (all styling), `theme.js` (option picker, frame preview, quantity) |
+| `config/` | Global theme settings (fonts, colors, logo, social links) |
+
+Every new section must have a `{% schema %}` with plain-English labels, sensible defaults, and a `presets` entry so the owner can add it from the theme editor.
 
 ## Hard rules
 
-1. **Never push directly to `main` and never merge pull requests.** Every change goes through a pull request, and the owner reviews and merges it.
-2. **Never sign up for accounts, enter payment details, or buy anything** for the owner. Explain what's needed and guide the owner through doing it.
-3. **Never ask for, store, or commit passwords, secret API keys, admin tokens, `.env` files, or login cookies.**
-   - Allowed in code: the Shopify **Storefront access token** and store domain used by the Buy Button. They're designed to be public.
-   - Never allowed: Shopify Admin API tokens, Printful API keys, Cloudflare API tokens, or any key labeled "secret", "admin", or "private".
-4. **Don't change settings in Shopify, Printful, or Cloudflare** unless the owner explicitly asks for that exact change.
-5. **Never write custom payment, checkout, or card-handling code.** All purchasing goes through Shopify.
-6. **Never delete or rewrite git history** (no force-push, no rebasing shared branches).
-7. **Only use artwork images the owner has provided.** Don't add stock or AI-generated art presented as the owner's work.
+1. **Never publish a theme and never touch the live theme.** Preview with `shopify theme dev` or `shopify theme push --unpublished`. The owner publishes.
+2. **Never push directly to `main` and never merge pull requests.** Every change goes through a pull request, and the owner merges it.
+3. **Never sign up for accounts, enter payment details, or buy anything** for the owner. Explain what's needed and guide the owner through it.
+4. **Never ask for, store, or commit passwords, API keys, admin tokens, `.env` files, or login cookies.**
+5. **Don't change store settings, products, payments, shipping, taxes, or apps** in the Shopify admin unless the owner explicitly asks for that exact change.
+6. **Never write custom payment, checkout, or card-handling code.**
+7. **Never delete or rewrite git history** (no force-push, no rebasing shared branches).
+8. **Only use artwork the owner has provided.** Don't add stock or AI-generated art presented as the owner's work.
+9. **Don't overwrite the owner's theme-editor changes.** The editor saves to `templates/*.json`, `sections/*-group.json`, and `config/settings_data.json`. Run `shopify theme pull` before editing those files, and never push old copies over newer ones.
 
 ## Workflow for every change
 
 1. Start from the latest `main`: `git checkout main` then `git pull --ff-only origin main`.
-2. Create a branch named for the change, for example `artwork-page-layout`.
+2. Create a branch named for the change, for example `add-testimonials-section`.
 3. Keep **one logical change per branch**.
-4. Commit with clear messages, then push the branch: `git push -u origin <branch>`.
-5. Open a **pull request into `main`** with the report below in the description.
-6. Cloudflare posts a **preview link** on the pull request. Check the change there.
-7. **Stop.** Tell the owner it's ready and share the preview link. The owner merges when happy.
+4. Run `shopify theme check`. It must report no errors.
+5. Preview: `shopify theme push --unpublished --theme "Preview: <branch>"`, then share the preview link.
+6. Commit, push the branch, and open a **pull request into `main`** with the report below.
+7. **Stop.** Tell the owner it's ready. The owner reviews the preview, merges, and publishes.
 
 ## Testing before opening a pull request
 
-- Check every affected page at **desktop width** and **phone width (about 390px)**.
-- Click through navigation: Home → Gallery → Artwork page → Shop.
-- Confirm Shopify Buy Buttons load, open the cart, and reach the Shopify checkout page. **Don't complete a real purchase.**
-- Confirm images load and aren't huge (compress them; aim for under about 500 KB each).
+- Check affected pages at **desktop width** and **phone width (about 390px)**.
+- Click through: Home → Collection → Product → choose options → Add to cart → Cart → Checkout page. **Don't complete a real purchase.**
+- On a product with Frame and Mat options, confirm the price, the preview, and Add to cart update for each choice.
+- Open the theme editor (Customize) and confirm new or changed sections can be added, edited, and removed.
 - Confirm there are no errors in the browser console.
-- Confirm no secrets are in the diff.
 
 ## Pull request report (required)
-
-Every pull request description must include:
 
 1. **Change:** short name and branch.
 2. **Purpose:** what this does and why.
 3. **Files changed:** list.
 4. **Testing:** what was checked, at which screen sizes, and the results.
-5. **Shop impact:** does this touch the Shopify buttons or checkout flow? (yes/no, with details)
-6. **Account or settings changes the owner needs to make:** none, or a list with exact steps.
-7. **Rollback:** how to undo it (usually "revert this pull request").
-8. **Deploy Preview link.**
+5. **Shop impact:** does this touch the product page, cart, or checkout flow?
+6. **Store changes the owner needs to make:** none, or exact steps.
+7. **Rollback:** usually "revert this pull request and re-publish the previous theme".
+8. **Preview link.**
 
 End the description with exactly:
 
 `STATUS: WAITING FOR OWNER APPROVAL — NOT MERGED`
-
-## Site content guidelines
-
-- The artwork is the focus. Use a clean, minimal design that doesn't compete with the art.
-- Every artwork image needs descriptive `alt` text.
-- Pages: Home, Gallery, individual Artwork pages (with a "Buy Print" button), Shop, About, Contact.
-- Use the owner's own wording for visitor-facing text. Mark any placeholder text clearly as `TODO`.

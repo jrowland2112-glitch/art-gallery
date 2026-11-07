@@ -23,6 +23,6 @@
 Revert this pull request.
 
 ## Preview link
-<!-- Cloudflare preview link -->
+<!-- Shopify theme preview link -->
 
 STATUS: WAITING FOR OWNER APPROVAL — NOT MERGED

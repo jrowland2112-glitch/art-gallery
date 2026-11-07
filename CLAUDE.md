@@ -1,6 +1,6 @@
-# Art Gallery Website — Rules for Claude
+# Art Gallery Website — Rules for AI Assistants (Claude, Codex, and others)
 
-These rules apply to every Claude session working in this repository. Read this file completely before doing anything.
+These rules apply to every AI session (Claude Code, Codex, or any other assistant) working in this repository. Read this file completely before doing anything.
 
 ## Project identity
 

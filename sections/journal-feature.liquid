@@ -31,10 +31,10 @@
             {%- assign idx = i | minus: 1 -%}
             {%- assign n = i | modulo: 2 | plus: 1 -%}
             {%- assign placeholder_name = 'lifestyle-' | append: n -%}
-            <div class="journal-card">
+            <a class="journal-card" href="{{ blog.url | default: '/blogs/news' }}">
               <div class="journal-card__media">{{ placeholder_name | placeholder_svg_tag: 'placeholder-svg' }}</div>
               <p class="journal-card__title">{{ sample_titles[idx] }}</p>
-            </div>
+            </a>
           {%- endfor -%}
         {%- endif -%}
       </div>

@@ -7,7 +7,7 @@ These rules apply to every AI session (Claude Code, Codex, or any other assistan
 - **Owner and approver:** <OWNER NAME> (GitHub: `<OWNER GITHUB USERNAME>`). The owner owns the artwork, the business, every account, and the code, and is the only person who approves changes.
 - **Helper:** Tristan Rowland (GitHub: `tjrowland3`) set up this starter project and may help if the owner asks. He has no approval authority.
 - **Repository:** `<OWNER GITHUB USERNAME>/<REPO NAME>`.
-- **Live site:** `https://<CUSTOM DOMAIN>` (hosted on Netlify).
+- **Live site:** `https://<CUSTOM DOMAIN>` (hosted on Cloudflare).
 - **Purpose:** a gallery of the owner's original artwork where visitors can browse pieces and buy prints.
 
 ## First-time setup (do this once, then delete this section)
@@ -25,7 +25,7 @@ If any `<PLACEHOLDER>` values above are still unfilled, the project hasn't been 
 
 ## How the site works
 
-- **Frontend:** a static website (HTML, CSS, JavaScript) in `site/`, deployed by Netlify from the `main` branch.
+- **Frontend:** a static website (HTML, CSS, JavaScript) in `site/`, deployed by Cloudflare (Workers & Pages) from the `main` branch. `wrangler.jsonc` tells Cloudflare to publish the `site/` folder; there is no build step.
 - **Shop:** Shopify **Buy Button** embeds. Shopify handles the cart, checkout, payment, tax, and order emails.
 - **Printing and shipping:** Printful (or a similar print-on-demand service) is connected to Shopify and fulfills orders automatically.
 - **There is no custom backend, database, payment code, or customer login.** Don't add one without the owner's explicit approval.
@@ -37,8 +37,8 @@ If any `<PLACEHOLDER>` values above are still unfilled, the project hasn't been 
 2. **Never sign up for accounts, enter payment details, or buy anything** for the owner. Explain what's needed and guide the owner through doing it.
 3. **Never ask for, store, or commit passwords, secret API keys, admin tokens, `.env` files, or login cookies.**
    - Allowed in code: the Shopify **Storefront access token** and store domain used by the Buy Button. They're designed to be public.
-   - Never allowed: Shopify Admin API tokens, Printful API keys, Netlify tokens, or any key labeled "secret", "admin", or "private".
-4. **Don't change settings in Shopify, Printful, Netlify, or the domain registrar** unless the owner explicitly asks for that exact change.
+   - Never allowed: Shopify Admin API tokens, Printful API keys, Cloudflare API tokens, or any key labeled "secret", "admin", or "private".
+4. **Don't change settings in Shopify, Printful, or Cloudflare** unless the owner explicitly asks for that exact change.
 5. **Never write custom payment, checkout, or card-handling code.** All purchasing goes through Shopify.
 6. **Never delete or rewrite git history** (no force-push, no rebasing shared branches).
 7. **Only use artwork images the owner has provided.** Don't add stock or AI-generated art presented as the owner's work.
@@ -50,7 +50,7 @@ If any `<PLACEHOLDER>` values above are still unfilled, the project hasn't been 
 3. Keep **one logical change per branch**.
 4. Commit with clear messages, then push the branch: `git push -u origin <branch>`.
 5. Open a **pull request into `main`** with the report below in the description.
-6. Netlify posts a **Deploy Preview** link on the pull request. Check the change there.
+6. Cloudflare posts a **preview link** on the pull request. Check the change there.
 7. **Stop.** Tell the owner it's ready and share the preview link. The owner merges when happy.
 
 ## Testing before opening a pull request

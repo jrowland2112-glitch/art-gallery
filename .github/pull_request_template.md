@@ -22,7 +22,7 @@
 ## Rollback
 Revert this pull request.
 
-## Deploy Preview
-<!-- Netlify link -->
+## Preview link
+<!-- Cloudflare preview link -->
 
 STATUS: WAITING FOR OWNER APPROVAL — NOT MERGED

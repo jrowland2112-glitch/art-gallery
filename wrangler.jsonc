@@ -1,0 +1,9 @@
+// Cloudflare config: publish the static files in site/ (no build step).
+{
+  "name": "art-gallery",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./site",
+    "not_found_handling": "404-page"
+  }
+}

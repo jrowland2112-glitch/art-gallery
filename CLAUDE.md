@@ -36,7 +36,7 @@ Once the owner connects this repo to Shopify (Online Store → Themes → Add th
 - **This repository is a Shopify theme** (Liquid, CSS, JavaScript) named "Gallery", built on Shopify's open-source Skeleton theme.
 - **Everyday editing happens in Shopify, not in code.** In the Shopify admin, the owner uploads photos, adds, removes, and reorders sections (Online Store → Themes → Customize), edits the About page, writes blog posts, and manages products, prices, menus, and analytics.
 - **Code changes are only for new kinds of sections or design changes** the theme editor can't already do.
-- **Products and print options** (size, frame, mat, paper) come from the print vendor app (for example Prodigi or Lumaprints) as Shopify product options. The product page builds its option buttons and frame/mat preview from those options automatically. Never hard-code products or prices.
+- **Products and print options** come from the print vendor app (for example Prodigi or Lumaprints) as Shopify product options. The product page builds its selectors, price, availability, finish preview, and cart variant from those options automatically. For products offering several print forms, prefer `Finish` (Canvas, Metal, Matted & framed), `Size`, and one optional third vendor-supported option such as `Frame`; Shopify allows at most three options, so bundle the mat into the framed finish when needed. Never hard-code products or prices.
 - **There is no custom backend, database, payment code, or customer login.** Shopify provides checkout, accounts, and analytics. Don't add a backend without the owner's explicit approval.
 
 ### Theme structure

@@ -2,15 +2,28 @@
   assign current_variant = product.selected_or_first_available_variant
   assign main_image = current_variant.featured_image | default: product.featured_image
   assign form_id = 'product-form-' | append: section.id
+  assign primary_collection = product.collections.first
 -%}
 <section
-  class="section"
+  class="section product-section"
   data-product
+  data-finish-option="{{ section.settings.finish_option_name | escape }}"
   data-frame-option="{{ section.settings.frame_option_name | escape }}"
   data-mat-option="{{ section.settings.mat_option_name | escape }}"
   data-money-format="{{ shop.money_format | escape }}"
 >
-  <div class="page-width product">
+  <div class="page-width">
+    <nav class="product-breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      {%- if primary_collection != blank -%}
+        <span aria-hidden="true">/</span>
+        <a href="{{ primary_collection.url }}">{{ primary_collection.title }}</a>
+      {%- endif -%}
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="product">
     <div class="product__media">
       <div class="product__stage">
         <div class="frame-preview" {% if section.settings.frame_preview %}data-frame-preview{% endif %}>
@@ -28,6 +41,9 @@
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
+        {%- if section.settings.stage_caption != blank -%}
+          <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
+        {%- endif -%}
       </div>
       {%- if section.settings.frame_preview -%}
         <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
@@ -44,8 +60,18 @@
     </div>
 
     <div class="product__info">
-      {%- if section.settings.show_vendor and product.vendor != blank -%}<span class="eyebrow">{{ product.vendor }}</span>{%- endif -%}
+      {%- if section.settings.show_collection and primary_collection != blank -%}
+        <a class="eyebrow product__collection" href="{{ primary_collection.url }}">The {{ primary_collection.title }} collection</a>
+      {%- elsif section.settings.show_vendor and product.vendor != blank -%}
+        <span class="eyebrow">{{ product.vendor }}</span>
+      {%- endif -%}
       <h1>{{ product.title }}</h1>
+      {%- if section.settings.show_vendor and product.vendor != blank and section.settings.show_collection and primary_collection != blank -%}
+        <p class="product__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+      {%- if product.description != blank -%}
+        <div class="rte product__intro">{{ product.description }}</div>
+      {%- endif -%}
       <div class="product__price" data-price>
         {{ current_variant.price | money }}
         {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
@@ -58,24 +84,54 @@
           {%- for option in product.options_with_values -%}
             {%- liquid
               assign option_name_lower = option.name | downcase
+              assign finish_key = section.settings.finish_option_name | downcase
               assign frame_key = section.settings.frame_option_name | downcase
               assign mat_key = section.settings.mat_option_name | downcase
               assign swatch_kind = ''
-              if option_name_lower contains frame_key
+              assign option_kind = 'standard'
+              if option_name_lower contains finish_key
+                assign option_kind = 'finish'
+              elsif option_name_lower contains 'size' or option_name_lower contains 'dimension'
+                assign option_kind = 'size'
+              elsif option_name_lower contains frame_key
                 assign swatch_kind = 'frame'
+                assign option_kind = 'frame'
               elsif option_name_lower contains mat_key
                 assign swatch_kind = 'mat'
+                assign option_kind = 'mat'
               endif
             -%}
-            <fieldset class="option-group" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}">
-              <legend>{{ option.name }}<span data-selected-value>{{ option.selected_value }}</span></legend>
+            <fieldset class="option-group option-group--{{ option_kind }}" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}">
+              <legend>
+                <span class="option-group__step">{{ forloop.index | prepend: '0' }}</span>
+                <span class="option-group__title">Choose your {{ option.name | downcase }}</span>
+                <span class="option-group__selected" data-selected-value>{{ option.selected_value }}</span>
+              </legend>
               <div class="option-values">
                 {%- for value in option.values -%}
-                  {%- assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                  {%- liquid
+                    assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index
+                    assign value_lower = value | downcase
+                    assign value_caption = ''
+                    if option_kind == 'finish'
+                      if value_lower contains 'canvas'
+                        assign value_caption = 'Texture & depth'
+                      elsif value_lower contains 'metal' or value_lower contains 'aluminum' or value_lower contains 'aluminium'
+                        assign value_caption = 'Clean & luminous'
+                      elsif value_lower contains 'frame' or value_lower contains 'matted'
+                        assign value_caption = 'A timeless finish'
+                      elsif value_lower contains 'paper' or value_lower contains 'print'
+                        assign value_caption = 'Archival & classic'
+                      endif
+                    endif
+                  -%}
                   <input type="radio" id="{{ input_id }}" name="option-{{ option.position }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
                   <label for="{{ input_id }}">
                     {%- if swatch_kind != '' -%}<span class="swatch" data-swatch="{{ swatch_kind }}" data-swatch-value="{{ value | escape }}"></span>{%- endif -%}
-                    {{ value }}
+                    <span class="option-value__content">
+                      <strong>{{ value }}</strong>
+                      {%- if value_caption != blank -%}<small>{{ value_caption }}</small>{%- endif -%}
+                    </span>
                   </label>
                 {%- endfor -%}
               </div>
@@ -94,12 +150,9 @@
             {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
           </button>
           {%- if section.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+          {%- if section.settings.buy_note != blank -%}<p class="product__buy-note">{{ section.settings.buy_note }}</p>{%- endif -%}
         </div>
       {%- endform -%}
-
-      {%- if product.description != blank -%}
-        <div class="rte" style="margin-bottom: 2rem">{{ product.description }}</div>
-      {%- endif -%}
 
       <div>
         {%- for block in section.blocks -%}
@@ -113,6 +166,7 @@
         {%- endfor -%}
       </div>
     </div>
+    </div>
   </div>
   <script type="application/json" data-product-json>{{ product.variants | json }}</script>
 </section>
@@ -122,10 +176,14 @@
   "name": "Product page",
   "settings": [
     { "type": "checkbox", "id": "frame_preview", "label": "Show live frame and mat preview", "default": true },
+    { "type": "text", "id": "finish_option_name", "label": "Name of the finish option", "default": "Finish", "info": "Must match the option name on products that offer Canvas, Metal, or Matted & framed" },
     { "type": "text", "id": "frame_option_name", "label": "Name of the frame option", "default": "Frame", "info": "Must match the option name on your products, e.g. \"Frame\"" },
     { "type": "text", "id": "mat_option_name", "label": "Name of the mat option", "default": "Mat", "info": "e.g. \"Mat\" or \"Mount\"" },
+    { "type": "text", "id": "stage_caption", "label": "Preview caption", "default": "Your art, your way · Finish preview" },
+    { "type": "checkbox", "id": "show_collection", "label": "Show collection above title", "default": true },
     { "type": "checkbox", "id": "show_vendor", "label": "Show vendor above title", "default": false },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" button", "default": true }
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" button", "default": false },
+    { "type": "text", "id": "buy_note", "label": "Note below Add to cart", "default": "Made to order · Secure checkout" }
   ],
   "blocks": [
     {

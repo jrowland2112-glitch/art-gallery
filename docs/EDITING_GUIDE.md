@@ -25,9 +25,9 @@ Everything below is done in the Shopify admin.
 
 ## Add a new print for sale
 
-Create the product in your print vendor app (Prodigi or Lumaprints) and sync it to Shopify. To feature it, add it to a collection. It then appears on the site automatically. Size, frame, and mat choices show up as buttons, with a live frame preview.
+Create the product in your print vendor app (Prodigi or Lumaprints) and sync it to Shopify. To feature it, add it to a collection. It then appears on the site automatically. Product options show up as guided selection cards, update the price and availability, and add the exact selected variant to the cart.
 
-Option names should be **Frame** and **Mat** for the preview to work. You can change these names in Customize → Products → Product page.
+For products offered in several forms, use **Finish** (for example Canvas, Metal, and Matted & framed), **Size**, and at most one optional third option such as **Frame**. Shopify permits three options per product, so include the mat in the framed finish when needed. Older products using **Size**, **Frame**, and **Mat** continue to work. You can change the option names recognized by the preview in Customize → Products → Product page.
 
 ## Edit the About page
 

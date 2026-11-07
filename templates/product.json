@@ -7,7 +7,17 @@
         "shipping": { "type": "collapsible", "settings": { "heading": "Shipping & returns", "text": "<p>Each print is made to order and typically ships within 3–5 business days. Damaged in transit? We'll replace it free.</p>" } }
       },
       "block_order": ["details", "shipping"],
-      "settings": {}
+      "settings": {
+        "frame_preview": true,
+        "finish_option_name": "Finish",
+        "frame_option_name": "Frame",
+        "mat_option_name": "Mat",
+        "stage_caption": "Your art, your way · Finish preview",
+        "show_collection": true,
+        "show_vendor": false,
+        "show_dynamic_checkout": false,
+        "buy_note": "Made to order · Secure checkout"
+      }
     },
     "related": { "type": "featured-collection", "settings": { "heading": "You may also like", "eyebrow": "", "limit": 3 } }
   },

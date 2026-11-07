@@ -45,11 +45,13 @@
   }
 
   function initProduct(root) {
+    if (root.dataset.productReady) return;
     var dataEl = root.querySelector('[data-product-json]');
     if (!dataEl) return;
     var variants = JSON.parse(dataEl.textContent);
     var form = root.querySelector('form[action*="/cart/add"]');
     if (!form) return;
+    root.dataset.productReady = '1';
     root.querySelectorAll('[data-swatch]').forEach(function (s) {
       var table = s.dataset.swatch === 'mat' ? MAT_COLORS : FRAME_COLORS;
       var color = lookup(table, s.dataset.swatchValue);
@@ -61,9 +63,12 @@
     var addBtn = form.querySelector('[data-add-to-cart]');
     var frame = root.querySelector('[data-frame-preview]');
     var mainImg = root.querySelector('[data-main-image]');
+    var finishCaption = root.querySelector('[data-finish-caption]');
+    var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
     var groups = Array.prototype.slice.call(root.querySelectorAll('[data-option-index]'));
+    if (finishCaption) finishCaption.dataset.defaultCaption = finishCaption.textContent;
 
     function selected() {
       return groups.map(function (g) {
@@ -86,16 +91,52 @@
 
     function updateFrame(values) {
       if (!frame) return;
-      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false;
+      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
       groups.forEach(function (g, i) {
         var name = (g.dataset.optionName || '').toLowerCase();
-        if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
+        if (name.indexOf(finishOpt) !== -1) finishValue = (values[i] || '').toLowerCase();
+        else if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
         else if (name.indexOf(matOpt) !== -1) { hasMatOption = true; matColor = lookup(MAT_COLORS, values[i]); }
       });
-      frame.classList.toggle('is-framed', hasFrameOption && !!frameColor);
-      frame.classList.toggle('has-mat', hasMatOption && !!matColor);
+      var isCanvas = /canvas/.test(finishValue);
+      var isMetal = /metal|aluminum|aluminium/.test(finishValue);
+      var isFramedFinish = /frame|matted/.test(finishValue);
+      if (isCanvas || isMetal) {
+        frameColor = null;
+        matColor = null;
+      } else if (isFramedFinish) {
+        if (!hasFrameOption) frameColor = '#252522';
+        if (!hasMatOption) matColor = '#f7f5ef';
+      }
+      frame.classList.toggle('is-canvas', isCanvas);
+      frame.classList.toggle('is-metal', isMetal);
+      frame.classList.toggle('is-framed', !!frameColor);
+      frame.classList.toggle('has-mat', !!matColor);
       frame.style.setProperty('--frame-color', frameColor || 'transparent');
       frame.style.setProperty('--mat-color', matColor || 'transparent');
+      if (finishCaption) {
+        if (isCanvas) finishCaption.textContent = 'Canvas · Texture and depth preview';
+        else if (isMetal) finishCaption.textContent = 'Metal · Clean and luminous preview';
+        else if (isFramedFinish) finishCaption.textContent = 'Matted and framed · Finish preview';
+        else finishCaption.textContent = finishCaption.dataset.defaultCaption || '';
+      }
+    }
+
+    function updateAvailability(values) {
+      groups.forEach(function (group, optionIndex) {
+        group.querySelectorAll('input[type="radio"]').forEach(function (input) {
+          var candidate = values.slice();
+          candidate[optionIndex] = input.value;
+          var available = variants.some(function (variant) {
+            return variant.available && variant.options.every(function (optionValue, index) {
+              return optionValue === candidate[index];
+            });
+          });
+          var label = input.nextElementSibling;
+          if (label) label.classList.toggle('is-unavailable', !available);
+          input.setAttribute('aria-label', input.value + (available ? '' : ', unavailable with current selections'));
+        });
+      });
     }
 
     function update() {
@@ -105,6 +146,7 @@
         if (label) label.textContent = values[i] || '';
       });
       updateFrame(values);
+      updateAvailability(values);
       var variant = findVariant(values);
       if (!variant) {
         addBtn.disabled = true;

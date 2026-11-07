@@ -48,7 +48,7 @@ Every new section must have a `{% schema %}` with plain-English labels, sensible
 ## Hard rules
 
 1. **Never publish a theme and never touch the live theme.** Preview with `shopify theme dev` or `shopify theme push --unpublished`. The owner publishes.
-2. **Never push directly to `main` and never merge pull requests.** Every change goes through a pull request, and the owner merges it.
+2. **Never push directly to `main`.** Every change goes through a pull request. An assistant may merge a specific pull request only after the owner explicitly approves that pull request and instructs the assistant to merge it. Otherwise, the owner merges it. Pull requests from Tristan also require the owner's explicit approval.
 3. **Never sign up for accounts, enter payment details, or buy anything** for the owner. Explain what's needed and guide the owner through it.
 4. **Never ask for, store, or commit passwords, API keys, admin tokens, `.env` files, or login cookies.**
 5. **Don't change store settings, products, payments, shipping, taxes, or apps** in the Shopify admin unless the owner explicitly asks for that exact change.
@@ -65,7 +65,7 @@ Every new section must have a `{% schema %}` with plain-English labels, sensible
 4. Run `shopify theme check`. It must report no errors.
 5. Preview: `shopify theme push --unpublished --theme "Preview: <branch>"`, then share the preview link.
 6. Commit, push the branch, and open a **pull request into `main`** with the report below.
-7. **Stop.** Tell the owner it's ready. The owner reviews the preview, merges, and publishes.
+7. **Stop.** Tell the owner it's ready. The owner reviews the preview and either merges the pull request or explicitly instructs the assistant to merge that specific pull request. Only the owner publishes.
 
 ## Testing before opening a pull request
 

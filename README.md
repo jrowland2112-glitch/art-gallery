@@ -15,6 +15,6 @@ A custom Shopify theme for selling fine art and photography prints, with a blog,
 3. Live local preview: `shopify theme dev --store <store>.myshopify.com`
 4. Check for errors: `shopify theme check`
 5. Share a preview: `shopify theme push --unpublished --theme "Preview: <change>"`
-6. Open a pull request. Only the owner merges and publishes.
+6. Open a pull request. An assistant may merge only after the owner explicitly approves that specific pull request; only the owner publishes.
 
 Built on Shopify's [Skeleton theme](https://github.com/Shopify/skeleton-theme). See `LICENSE-SHOPIFY-SKELETON.md`.

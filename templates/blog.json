@@ -1,1 +1,35 @@
-{ "sections": { "main": { "type": "blog", "settings": {} } }, "order": ["main"] }
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "blog",
+      "settings": {}
+    },
+    "image_with_text_dhxYQD": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image": "shopify://shop_images/vermont.jpg",
+        "image_position": "left",
+        "eyebrow": "About the artist",
+        "heading": "Vermont",
+        "text": "<p>Tell your story here: what you photograph, why, and where your work has taken you. Visitors who connect with the story behind the art are far more likely to buy a print.</p>",
+        "button_label": "Read more",
+        "button_link": "",
+        "surface": false
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_with_text_dhxYQD"
+  ]
+}

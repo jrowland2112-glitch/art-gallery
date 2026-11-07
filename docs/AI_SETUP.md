@@ -38,6 +38,6 @@ Don't change anything on the site until I say go.
 ## Notes for the AI
 
 - **Day-to-day content isn't code:** photos, text, blog posts, products, menus, and pages are edited in the **Shopify admin**. Teach Joseph to do those himself (`docs/EDITING_GUIDE.md`) instead of editing files.
-- **Code changes are for new section types or design changes only.** Always use a branch, a preview, and a pull request, and Joseph merges.
+- **Code changes are for new section types or design changes only.** Always use a branch, a preview, and a pull request. Joseph either merges it himself or explicitly approves that specific pull request and instructs the assistant to merge it.
 - **If GitHub is connected to the store** (Guide 3, step 4), editor saves land on `main` as commits. Run `git pull` before every task.
 - **Never ask for passwords or secret keys.** If store data must be changed through the API, Joseph creates the access himself and keeps the key out of the repo.

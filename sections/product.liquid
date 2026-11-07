@@ -25,7 +25,7 @@
               alt="{{ main_image.alt | default: product.title | escape }}"
             >
           {%- else -%}
-            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
       </div>

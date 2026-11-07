@@ -142,3 +142,6 @@ h1, h2, h3 { font-weight: 400; }
   color: var(--color-foreground); font-size: 0.92rem; align-items: center;
 }
 .site-footer__brand { font-size: 0.78rem; letter-spacing: 0.34em; text-transform: uppercase; }
+
+.site-header__nav a[aria-current="page"] { border-bottom: 0; color: var(--color-highlight); }
+.site-header__logo { color: var(--color-foreground); }

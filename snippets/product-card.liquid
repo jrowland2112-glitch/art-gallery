@@ -13,7 +13,7 @@
       {%- if product.featured_image -%}
         {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: product.featured_image.alt | default: product.title }}
       {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {%- endif -%}
     </div>
     <div class="card__info">
@@ -25,7 +25,7 @@
     </div>
   </a>
 {%- else -%}
-  {%- assign placeholder_name = 'product-' | append: index | default: 'product-1' -%}
+  {%- assign n = index | default: 1 | modulo: 2 | plus: 1 -%}{%- assign placeholder_name = 'lifestyle-' | append: n -%}
   <div class="card" style="--ratio: {{ ratio | default: '4 / 5' }}">
     <div class="card__media">{{ placeholder_name | placeholder_svg_tag: 'placeholder-svg' }}</div>
     <div class="card__info">

@@ -34,7 +34,7 @@
     { "type": "collection", "id": "collection", "label": "Collection to show" },
     { "type": "range", "id": "limit", "min": 2, "max": 12, "step": 1, "label": "Number of prints", "default": 6 },
     { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "Columns on desktop", "default": 3 },
-    { "type": "range", "id": "columns_mobile", "min": 1, "max": 2, "step": 1, "label": "Columns on phone", "default": 1 },
+    { "type": "select", "id": "columns_mobile", "label": "Columns on phone", "default": "1", "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ] },
     {
       "type": "select", "id": "ratio", "label": "Image shape", "default": "4 / 5",
       "options": [ { "value": "4 / 5", "label": "Portrait" }, { "value": "1 / 1", "label": "Square" }, { "value": "3 / 2", "label": "Landscape" } ]

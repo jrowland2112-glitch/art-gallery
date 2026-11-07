@@ -9,7 +9,20 @@ These rules apply to every AI session (Claude Code, Codex, or any other assistan
 - **Shopify store:** `rowland-photography-0v8ydig1.myshopify.com` (live site: `https://<CUSTOM DOMAIN>`).
 - **Purpose:** a gallery of the owner's original photography and art where visitors browse pieces, read the blog, and buy prints.
 
-Until the store is transferred, Tristan is the acting owner and the remaining placeholders above stay unfilled.
+Until the store is transferred, Tristan is the acting owner and the remaining placeholders above stay unfilled. After the handoff, fill them in (see `docs/AI_SETUP.md`).
+
+### Current site content (built November 2026)
+
+- **Homepage:** Photo slideshow ("Latest work": grist mill, Vermont, Long Island), Journal highlight (two Story cards linked to blog posts), Instagram call-out (@jrowland).
+- **Header links** are theme blocks (Customize → Header): Shop → `/collections/all`, Blog → `/blogs/behind-the-lense`, About → `/pages/about`.
+- **Blog:** "Behind the Lense" (`behind-the-lense`), with posts `vermont` and `long-island`. The default "News" blog is unused.
+- **Pages:** About (template `page.about`) and Contact (template `page.contact`).
+- **Photos** live in Shopify Files: `gristmill.jpg`, `vermont.jpg`, `longi_slandf.jpg`.
+- **Not done yet:** products and the print vendor, payments, domain, and real text for the About page and blog posts.
+
+### Theme editor and GitHub stay in sync
+
+Once the owner connects this repo to Shopify (Online Store → Themes → Add theme → Connect from GitHub), every save in the theme editor becomes a commit on `main`, and every merge to `main` updates the theme. So **always `git pull` before starting work**, and never edit `templates/*.json`, `sections/*-group.json`, or `config/settings_data.json` from an old copy.
 
 ## How the site works
 

@@ -3,7 +3,9 @@
 A custom Shopify theme for selling fine art and photography prints, with a blog, an About page, and a contact page. Everything visitors see can be edited in the Shopify theme editor, with no code needed.
 
 - **Rules for AI assistants:** [`CLAUDE.md`](CLAUDE.md) (Codex reads [`AGENTS.md`](AGENTS.md), which points to it)
-- **Accounts, costs, and setup:** [`docs/ACCOUNTS_AND_SETUP.md`](docs/ACCOUNTS_AND_SETUP.md)
+- **Guide 1, accounts and setup:** [`docs/ACCOUNTS_AND_SETUP.md`](docs/ACCOUNTS_AND_SETUP.md)
+- **Guide 2, AI assistant setup and starter prompt:** [`docs/AI_SETUP.md`](docs/AI_SETUP.md)
+- **Guide 3, transferring the store and code to the owner:** [`docs/HANDOFF.md`](docs/HANDOFF.md)
 - **Editing the site without code:** [`docs/EDITING_GUIDE.md`](docs/EDITING_GUIDE.md)
 
 ## Developer quick start

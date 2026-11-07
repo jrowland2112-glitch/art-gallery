@@ -24,6 +24,13 @@ Until the store is transferred, Tristan is the acting owner and the remaining pl
 
 Once the owner connects this repo to Shopify (Online Store → Themes → Add theme → Connect from GitHub), every save in the theme editor becomes a commit on `main`, and every merge to `main` updates the theme. So **always `git pull` before starting work**, and never edit `templates/*.json`, `sections/*-group.json`, or `config/settings_data.json` from an old copy.
 
+### Owner-requested editing workflow
+
+- When the owner asks an assistant to edit the theme, make the change locally on a branch, run the required checks, upload or update an **unpublished** preview theme named `Preview: <branch>`, and give the owner the preview link. Routine theme work should not require opening Shopify Admin.
+- The owner reviews the preview. Merge only after the owner explicitly approves that specific pull request and instructs the assistant to merge it. Only the owner publishes.
+- The saved Shopify CLI login and `shopify.theme.toml` may identify the store, but never store a password, access token, secret, or live-theme target in the repository.
+- Blog posts, page records, products, menus, Shopify Files, payments, and other admin-managed resources aren't managed by the theme CLI. Explain when a requested change requires Shopify Admin; never request an Admin API token or other secret as a workaround.
+
 ## How the site works
 
 - **This repository is a Shopify theme** (Liquid, CSS, JavaScript) named "Gallery", built on Shopify's open-source Skeleton theme.

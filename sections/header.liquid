@@ -1,19 +1,20 @@
 {%- liquid
   assign menu = section.settings.menu
-  assign use_fallback = true
-  if menu != blank and menu.links.size > 0
-    assign use_fallback = false
-  endif
 -%}
 {%- capture nav_links -%}
-  {%- if use_fallback -%}
-    <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
-    <li><a href="/blogs/news">Blog</a></li>
-    <li><a href="/pages/about">About</a></li>
-  {%- else -%}
+  {%- if section.settings.use_store_menu and menu != blank and menu.links.size > 0 -%}
     {%- for link in menu.links -%}
       <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a></li>
     {%- endfor -%}
+  {%- elsif section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      {%- assign link_url = block.settings.link | default: '#' -%}
+      <li {{ block.shopify_attributes }}><a href="{{ link_url }}"{% if request.path == link_url %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>
+    {%- endfor -%}
+  {%- else -%}
+    <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
+    <li><a href="/blogs/news">Blog</a></li>
+    <li><a href="/pages/about">About</a></li>
   {%- endif -%}
 {%- endcapture -%}
 
@@ -69,11 +70,24 @@
   "settings": [
     { "type": "text", "id": "wordmark_name", "label": "Logo name", "default": "Rowland", "info": "Shown in script when no logo image is uploaded (Theme settings → Logo)" },
     { "type": "text", "id": "wordmark_subtitle", "label": "Logo subtitle", "default": "Photography" },
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Edit in Online Store → Navigation. If empty, shows Shop, Blog, and About." },
+    { "type": "header", "content": "Menu links", "info": "Add, rename, reorder, or remove the links on the left under Header (Menu link blocks)." },
+    { "type": "checkbox", "id": "use_store_menu", "label": "Use a Shopify menu instead", "default": false, "info": "Only needed for advanced menus made in Content → Menus" },
+    { "type": "link_list", "id": "menu", "label": "Shopify menu", "default": "main-menu" },
     { "type": "checkbox", "id": "show_instagram", "label": "Show Instagram icon", "default": true },
     { "type": "checkbox", "id": "show_cart", "label": "Always show cart icon", "default": false, "info": "When off, the cart icon only appears once something is in the cart" },
     { "type": "checkbox", "id": "sticky", "label": "Keep header visible when scrolling", "default": false }
   ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Menu link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Link" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
   "enabled_on": { "groups": ["header"] }
 }
 {% endschema %}

@@ -2,7 +2,16 @@
   "type": "header",
   "name": "Header group",
   "sections": {
-    "header": { "type": "header", "settings": {} }
+    "header": {
+      "type": "header",
+      "blocks": {
+        "shop": { "type": "link", "settings": { "label": "Shop", "link": "/collections/all" } },
+        "blog": { "type": "link", "settings": { "label": "Blog", "link": "/blogs/news" } },
+        "about": { "type": "link", "settings": { "label": "About", "link": "/pages/about" } }
+      },
+      "block_order": ["shop", "blog", "about"],
+      "settings": {}
+    }
   },
   "order": ["header"]
 }

@@ -10,7 +10,7 @@
       "block_order": ["s1", "s2", "s3"],
       "settings": {}
     },
-    "journal": { "type": "journal-feature", "settings": {} },
+    "journal": { "type": "journal-feature", "settings": { "blog": "news" } },
     "follow": { "type": "social-cta", "settings": {} }
   },
   "order": ["latest", "journal", "follow"]

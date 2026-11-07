@@ -7,7 +7,7 @@
         <h2 class="display-italic">{{ section.settings.heading }}</h2>
         {%- if section.settings.text != blank -%}<div class="rte journal-feature__text">{{ section.settings.text }}</div>{%- endif -%}
         {%- if section.settings.link_label != blank -%}
-          <a class="text-link" href="{{ section.settings.link | default: blog.url | default: '/blogs/journal' }}">{{ section.settings.link_label }} <span aria-hidden="true">&#8599;</span></a>
+          <a class="text-link" href="{{ section.settings.link | default: blog.url | default: '/blogs/news' }}">{{ section.settings.link_label }} <span aria-hidden="true">&#8599;</span></a>
         {%- endif -%}
       </div>
 

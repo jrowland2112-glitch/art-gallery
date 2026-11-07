@@ -16,7 +16,7 @@
 ## Shop impact
 <!-- Does this touch Shopify buttons or checkout? -->
 
-## Accounts or settings Tristan needs to change
+## Account or settings changes the owner needs to make
 <!-- None, or exact steps -->
 
 ## Rollback
@@ -25,4 +25,4 @@ Revert this pull request.
 ## Deploy Preview
 <!-- Netlify link -->
 
-STATUS: WAITING FOR TRISTAN APPROVAL — NOT MERGED OR DEPLOYED
+STATUS: WAITING FOR OWNER APPROVAL — NOT MERGED

@@ -1,7 +1,7 @@
 .env
 .env.*
 node_modules/
-.wrangler/
+.shopify/
 .DS_Store
 Thumbs.db
 *.log

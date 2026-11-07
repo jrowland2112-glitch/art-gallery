@@ -1,0 +1,21 @@
+{%- if section.settings.text != blank -%}
+  <div class="announcement">
+    {%- if section.settings.link != blank -%}
+      <a href="{{ section.settings.link }}">{{ section.settings.text }}</a>
+    {%- else -%}
+      <p>{{ section.settings.text }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    { "type": "text", "id": "text", "label": "Message", "default": "Free shipping on prints over $150", "info": "Leave empty to hide the bar" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "enabled_on": { "groups": ["header"] },
+  "presets": [ { "name": "Announcement bar" } ]
+}
+{% endschema %}

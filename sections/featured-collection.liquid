@@ -1,0 +1,48 @@
+{%- assign collection = section.settings.collection -%}
+<section class="section{% if section.settings.surface %} section--surface{% endif %}">
+  <div class="page-width">
+    <div class="section-header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.show_view_all -%}
+        <a class="link-arrow" href="{{ collection.url | default: routes.all_products_collection_url }}">View all</a>
+      {%- endif -%}
+    </div>
+    <div class="grid" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
+      {%- if collection != blank and collection.products_count > 0 -%}
+        {%- for product in collection.products limit: section.settings.limit -%}
+          {% render 'product-card', product: product, ratio: section.settings.ratio, contain: section.settings.contain %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..section.settings.limit) -%}
+          {%- assign n = i | modulo: 6 | plus: 1 -%}
+          {% render 'product-card', index: n, ratio: section.settings.ratio %}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured prints",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small text above heading", "default": "The collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured prints" },
+    { "type": "collection", "id": "collection", "label": "Collection to show" },
+    { "type": "range", "id": "limit", "min": 2, "max": 12, "step": 1, "label": "Number of prints", "default": 6 },
+    { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "Columns on desktop", "default": 3 },
+    { "type": "select", "id": "columns_mobile", "label": "Columns on phone", "default": "1", "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ] },
+    {
+      "type": "select", "id": "ratio", "label": "Image shape", "default": "4 / 5",
+      "options": [ { "value": "4 / 5", "label": "Portrait" }, { "value": "1 / 1", "label": "Square" }, { "value": "3 / 2", "label": "Landscape" } ]
+    },
+    { "type": "checkbox", "id": "contain", "label": "Show whole image (no cropping)", "default": false },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show \"View all\" link", "default": true },
+    { "type": "checkbox", "id": "surface", "label": "Use alternate background", "default": false }
+  ],
+  "presets": [ { "name": "Featured prints" } ]
+}
+{% endschema %}

@@ -1,0 +1,142 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign main_image = current_variant.featured_image | default: product.featured_image
+  assign form_id = 'product-form-' | append: section.id
+-%}
+<section
+  class="section"
+  data-product
+  data-frame-option="{{ section.settings.frame_option_name | escape }}"
+  data-mat-option="{{ section.settings.mat_option_name | escape }}"
+  data-money-format="{{ shop.money_format | escape }}"
+>
+  <div class="page-width product">
+    <div class="product__media">
+      <div class="product__stage">
+        <div class="frame-preview" {% if section.settings.frame_preview %}data-frame-preview{% endif %}>
+          {%- if main_image -%}
+            <img
+              data-main-image
+              src="{{ main_image | image_url: width: 1600 }}"
+              srcset="{{ main_image | image_url: width: 800 }} 800w, {{ main_image | image_url: width: 1200 }} 1200w, {{ main_image | image_url: width: 1600 }} 1600w"
+              sizes="(min-width: 990px) 55vw, 100vw"
+              width="{{ main_image.width }}"
+              height="{{ main_image.height }}"
+              alt="{{ main_image.alt | default: product.title | escape }}"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if section.settings.frame_preview -%}
+        <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
+      {%- endif -%}
+      {%- if product.images.size > 1 -%}
+        <div class="product__thumbs">
+          {%- for image in product.images -%}
+            <button type="button" data-thumb="{{ image | image_url: width: 1600 }}" aria-current="{% if image == main_image %}true{% else %}false{% endif %}" aria-label="Show image {{ forloop.index }}">
+              {{ image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      {%- if section.settings.show_vendor and product.vendor != blank -%}<span class="eyebrow">{{ product.vendor }}</span>{%- endif -%}
+      <h1>{{ product.title }}</h1>
+      <div class="product__price" data-price>
+        {{ current_variant.price | money }}
+        {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+      </div>
+
+      {%- form 'product', product, id: form_id -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- liquid
+              assign option_name_lower = option.name | downcase
+              assign frame_key = section.settings.frame_option_name | downcase
+              assign mat_key = section.settings.mat_option_name | downcase
+              assign swatch_kind = ''
+              if option_name_lower contains frame_key
+                assign swatch_kind = 'frame'
+              elsif option_name_lower contains mat_key
+                assign swatch_kind = 'mat'
+              endif
+            -%}
+            <fieldset class="option-group" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}">
+              <legend>{{ option.name }}<span data-selected-value>{{ option.selected_value }}</span></legend>
+              <div class="option-values">
+                {%- for value in option.values -%}
+                  {%- assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index -%}
+                  <input type="radio" id="{{ input_id }}" name="option-{{ option.position }}" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %}>
+                  <label for="{{ input_id }}">
+                    {%- if swatch_kind != '' -%}<span class="swatch" data-swatch="{{ swatch_kind }}" data-swatch-value="{{ value | escape }}"></span>{%- endif -%}
+                    {{ value }}
+                  </label>
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <div class="product__buy">
+          <div class="qty">
+            <button type="button" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+            <label class="visually-hidden" for="{{ form_id }}-qty">Quantity</label>
+            <input id="{{ form_id }}-qty" type="number" name="quantity" value="1" min="1">
+            <button type="button" data-qty-step="1" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="button button--full" type="submit" data-add-to-cart {% unless current_variant.available %}disabled{% endunless %}>
+            {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+          </button>
+          {%- if section.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+        </div>
+      {%- endform -%}
+
+      {%- if product.description != blank -%}
+        <div class="rte" style="margin-bottom: 2rem">{{ product.description }}</div>
+      {%- endif -%}
+
+      <div>
+        {%- for block in section.blocks -%}
+          <details class="accordion" {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.heading }}</summary>
+            <div class="rte">
+              {{ block.settings.text }}
+              {%- if block.settings.page != blank -%}{{ block.settings.page.content }}{%- endif -%}
+            </div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-product-json>{{ product.variants | json }}</script>
+</section>
+
+{% schema %}
+{
+  "name": "Product page",
+  "settings": [
+    { "type": "checkbox", "id": "frame_preview", "label": "Show live frame and mat preview", "default": true },
+    { "type": "text", "id": "frame_option_name", "label": "Name of the frame option", "default": "Frame", "info": "Must match the option name on your products, e.g. \"Frame\"" },
+    { "type": "text", "id": "mat_option_name", "label": "Name of the mat option", "default": "Mat", "info": "e.g. \"Mat\" or \"Mount\"" },
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor above title", "default": false },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" button", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "collapsible",
+      "name": "Collapsible row",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shipping & returns" },
+        { "type": "richtext", "id": "text", "label": "Text" },
+        { "type": "page", "id": "page", "label": "Or show content from a page" }
+      ]
+    }
+  ]
+}
+{% endschema %}

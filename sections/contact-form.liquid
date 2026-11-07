@@ -1,0 +1,40 @@
+<section class="section">
+  <div class="page-width page-width--narrow">
+    {%- if section.settings.heading != blank -%}<h2 class="text-center">{{ section.settings.heading }}</h2>{%- endif -%}
+    {%- if section.settings.text != blank -%}<div class="rte text-center muted" style="margin-bottom: 2rem">{{ section.settings.text }}</div>{%- endif -%}
+    {%- form 'contact', id: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-message">Thanks for reaching out. We'll get back to you soon.</p>
+      {%- endif -%}
+      {%- if form.errors -%}<div class="form-message form-message--error">{{ form.errors | default_errors }}</div>{%- endif -%}
+      <div class="field">
+        <label for="contact-name">Name</label>
+        <input id="contact-name" type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}">
+      </div>
+      <div class="field">
+        <label for="contact-email">Email *</label>
+        <input id="contact-email" type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}">
+      </div>
+      <div class="field">
+        <label for="contact-phone">Phone</label>
+        <input id="contact-phone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}">
+      </div>
+      <div class="field">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="contact[body]">{{ form.body }}</textarea>
+      </div>
+      <button class="button" type="submit">Send message</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get in touch" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Questions about a print, commissions, or licensing? Send a message.</p>" }
+  ],
+  "presets": [ { "name": "Contact form" } ]
+}
+{% endschema %}

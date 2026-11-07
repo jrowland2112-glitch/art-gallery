@@ -1,0 +1,100 @@
+{
+  "sections": {
+    "latest": {
+      "type": "slideshow",
+      "blocks": {
+        "s1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/gristmill.jpg",
+            "title": "Where autumn slows",
+            "subtitle": "Glade Creek Grist Mill · West Virginia",
+            "link": ""
+          }
+        },
+        "s2": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/vermont.jpg",
+            "title": "Chasing autumn",
+            "subtitle": "Vermont",
+            "link": ""
+          }
+        },
+        "s3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/longi_slandf.jpg",
+            "title": "Finding stillness",
+            "subtitle": "Long Island · New York",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "eyebrow": "Latest work",
+        "heading": "A moment. A <em>feeling</em>. A photograph.",
+        "ratio": "16 / 8.5",
+        "autoplay_seconds": 6,
+        "show_counter": true,
+        "divider": false
+      }
+    },
+    "journal": {
+      "type": "journal-feature",
+      "blocks": {
+        "vermont": {
+          "type": "story",
+          "settings": {
+            "article": "behind-the-lense/vermont",
+            "image": "shopify://shop_images/vermont.jpg",
+            "title": "Chasing autumn in Vermont",
+            "link": ""
+          }
+        },
+        "longisland": {
+          "type": "story",
+          "settings": {
+            "article": "behind-the-lense/long-island",
+            "image": "shopify://shop_images/longi_slandf.jpg",
+            "title": "Finding stillness on Long Island",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "vermont",
+        "longisland"
+      ],
+      "settings": {
+        "eyebrow": "Journal",
+        "heading": "Stories behind the frame.",
+        "text": "<p>The places, the light, and the moments that make the photograph.</p>",
+        "link_label": "Explore the blog",
+        "link": "",
+        "blog": "behind-the-lense",
+        "limit": 2,
+        "divider": true
+      }
+    },
+    "follow": {
+      "type": "social-cta",
+      "settings": {
+        "heading": "Follow the light.",
+        "label": "Instagram · @jrowland",
+        "link": "",
+        "divider": true
+      }
+    }
+  },
+  "order": [
+    "latest",
+    "journal",
+    "follow"
+  ]
+}

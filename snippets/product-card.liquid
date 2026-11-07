@@ -1,0 +1,36 @@
+{% doc %}
+  Product card used in grids.
+
+  @param {product} [product] - The product to show. If blank, a placeholder card is shown.
+  @param {string} [ratio] - CSS aspect ratio for the image, e.g. "4 / 5"
+  @param {boolean} [contain] - Show the whole image instead of cropping it
+  @param {number} [index] - Placeholder number when no product is given
+{% enddoc %}
+
+{%- if product != blank -%}
+  <a class="card" href="{{ product.url }}" style="--ratio: {{ ratio | default: '4 / 5' }}">
+    <div class="card__media{% if contain %} card__media--contain{% endif %}">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: product.featured_image.alt | default: product.title }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+    <div class="card__info">
+      <h3 class="card__title">{{ product.title }}</h3>
+      <div class="card__meta">
+        {%- if product.price_varies -%}From {% endif -%}{{ product.price_min | money }}
+      </div>
+      {%- unless product.available -%}<span class="badge">Sold out</span>{%- endunless -%}
+    </div>
+  </a>
+{%- else -%}
+  {%- assign n = index | default: 1 | modulo: 2 | plus: 1 -%}{%- assign placeholder_name = 'lifestyle-' | append: n -%}
+  <div class="card" style="--ratio: {{ ratio | default: '4 / 5' }}">
+    <div class="card__media">{{ placeholder_name | placeholder_svg_tag: 'placeholder-svg' }}</div>
+    <div class="card__info">
+      <h3 class="card__title">Artwork title</h3>
+      <div class="card__meta">From $45</div>
+    </div>
+  </div>
+{%- endif -%}

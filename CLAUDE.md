@@ -4,9 +4,9 @@ These rules apply to every AI session (Claude Code, Codex, or any other assistan
 
 ## Project identity
 
-- **Owner and approver:** Joseph Rowland (GitHub: `<OWNER GITHUB USERNAME>`). The owner owns the artwork, the business, the Shopify store, every account, and the code, and is the only person who approves changes.
+- **Owner and approver:** Joseph Rowland (GitHub: `jrowland2112-glitch`). The owner owns the artwork, the business, the Shopify store, every account, and the code, and is the only person who approves changes.
 - **Helper:** Tristan Rowland (GitHub: `tjrowland3`) built the first version and may help if the owner asks. He has no approval authority after the handoff.
-- **Shopify store:** `rowland-photography-0v8ydig1.myshopify.com` (live site: `https://<CUSTOM DOMAIN>`).
+- **Shopify store:** `rowland-photography-0v8ydig1.myshopify.com` (live site: not yet).
 - **Purpose:** a gallery of the owner's original photography and art where visitors browse pieces, read the blog, and buy prints.
 
 Until the store is transferred, Tristan is the acting owner and the remaining placeholders above stay unfilled. After the handoff, fill them in (see `docs/AI_SETUP.md`).

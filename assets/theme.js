@@ -145,8 +145,62 @@
     update();
   }
 
+  function initSlideshow(root) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+    var slides = Array.prototype.slice.call(root.querySelectorAll('[data-slide]'));
+    if (slides.length < 2) return;
+    var section = root.closest('section') || root.parentElement;
+    var dots = Array.prototype.slice.call(section.querySelectorAll('[data-slide-dot]'));
+    var current = 0;
+    var timer = null;
+    var delay = parseInt(root.dataset.autoplay, 10) || 0;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function go(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach(function (s, i) { s.classList.toggle('is-active', i === current); });
+      dots.forEach(function (d, i) { d.setAttribute('aria-current', i === current ? 'true' : 'false'); });
+    }
+    function start() {
+      stop();
+      if (delay > 0 && !reduceMotion) timer = setInterval(function () { go(current + 1); }, delay * 1000);
+    }
+    function stop() { if (timer) clearInterval(timer); timer = null; }
+
+    var prev = root.querySelector('[data-slide-prev]');
+    var next = root.querySelector('[data-slide-next]');
+    if (prev) prev.addEventListener('click', function () { go(current - 1); start(); });
+    if (next) next.addEventListener('click', function () { go(current + 1); start(); });
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () { go(parseInt(d.dataset.slideDot, 10)); start(); });
+    });
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+
+    // Swipe on phones
+    var startX = null;
+    root.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { go(current + (dx < 0 ? 1 : -1)); start(); }
+      startX = null;
+    });
+
+    // Theme editor: show the slide being edited
+    document.addEventListener('shopify:block:select', function (e) {
+      var i = slides.indexOf(e.target);
+      if (i !== -1) { stop(); go(i); }
+    });
+
+    start();
+  }
+
   function initAll() {
     document.querySelectorAll('[data-product]').forEach(initProduct);
+    document.querySelectorAll('[data-slideshow]').forEach(initSlideshow);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);

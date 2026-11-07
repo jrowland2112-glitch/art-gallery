@@ -7,6 +7,12 @@
 
     {% render 'css-variables' %}
     {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'design.css' | asset_url | stylesheet_tag }}
+    {%- if settings.logo == blank -%}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap">
+    {%- endif -%}
     {% render 'meta-tags' %}
 
     {{ content_for_header }}

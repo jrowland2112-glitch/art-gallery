@@ -1,51 +1,42 @@
 <footer class="site-footer">
   <div class="page-width">
-    <div class="site-footer__grid">
-      <div>
-        <h2>{{ section.settings.about_heading }}</h2>
-        <div class="rte muted">{{ section.settings.about_text }}</div>
-        <div class="social-links">
-          {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" target="_blank" rel="noopener">Instagram</a>{%- endif -%}
-          {%- if settings.social_facebook != blank -%}<a href="{{ settings.social_facebook }}" target="_blank" rel="noopener">Facebook</a>{%- endif -%}
-          {%- if settings.social_pinterest != blank -%}<a href="{{ settings.social_pinterest }}" target="_blank" rel="noopener">Pinterest</a>{%- endif -%}
-          {%- if settings.social_tiktok != blank -%}<a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener">TikTok</a>{%- endif -%}
-          {%- if settings.social_youtube != blank -%}<a href="{{ settings.social_youtube }}" target="_blank" rel="noopener">YouTube</a>{%- endif -%}
-        </div>
+    {%- if section.settings.show_menu or section.settings.show_newsletter -%}
+      <div class="site-footer__grid">
+        {%- if section.settings.show_menu -%}
+          <div>
+            <h2>{{ section.settings.menu_heading }}</h2>
+            <ul>
+              {%- for link in section.settings.menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_newsletter -%}
+          <div>
+            <h2>{{ section.settings.newsletter_heading }}</h2>
+            <p class="muted">{{ section.settings.newsletter_text }}</p>
+            {%- form 'customer', id: 'footer-newsletter' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              {%- if form.posted_successfully? -%}
+                <p class="form-message">Thanks for subscribing.</p>
+              {%- else -%}
+                {%- if form.errors -%}<div class="form-message form-message--error">{{ form.errors | default_errors }}</div>{%- endif -%}
+                <div class="newsletter-form">
+                  <label class="visually-hidden" for="footer-newsletter-email">Email</label>
+                  <input id="footer-newsletter-email" type="email" name="contact[email]" placeholder="Email address" autocomplete="email" required>
+                  <button class="button" type="submit">Join</button>
+                </div>
+              {%- endif -%}
+            {%- endform -%}
+          </div>
+        {%- endif -%}
       </div>
-
-      <div>
-        <h2>{{ section.settings.menu_heading }}</h2>
-        <ul>
-          {%- for link in section.settings.menu.links -%}
-            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-          {%- endfor -%}
-        </ul>
-      </div>
-
-      {%- if section.settings.show_newsletter -%}
-        <div>
-          <h2>{{ section.settings.newsletter_heading }}</h2>
-          <p class="muted">{{ section.settings.newsletter_text }}</p>
-          {%- form 'customer', id: 'footer-newsletter' -%}
-            <input type="hidden" name="contact[tags]" value="newsletter">
-            {%- if form.posted_successfully? -%}
-              <p class="form-message">Thanks for subscribing.</p>
-            {%- else -%}
-              {%- if form.errors -%}<div class="form-message form-message--error">{{ form.errors | default_errors }}</div>{%- endif -%}
-              <div class="newsletter-form">
-                <label class="visually-hidden" for="footer-newsletter-email">Email</label>
-                <input id="footer-newsletter-email" type="email" name="contact[email]" placeholder="Email address" autocomplete="email" required>
-                <button class="button" type="submit">Join</button>
-              </div>
-            {%- endif -%}
-          {%- endform -%}
-        </div>
-      {%- endif -%}
-    </div>
+    {%- endif -%}
 
     <div class="site-footer__bottom">
-      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All artwork is copyrighted and may not be reproduced without permission.</span>
-      <span>{{ powered_by_link }}</span>
+      <span class="site-footer__brand">{{ section.settings.brand | default: shop.name }}</span>
+      <span>&copy; {{ section.settings.copyright_name | default: shop.name }}</span>
     </div>
   </div>
 </footer>
@@ -54,13 +45,14 @@
 {
   "name": "Footer",
   "settings": [
-    { "type": "text", "id": "about_heading", "label": "About heading", "default": "The Gallery" },
-    { "type": "richtext", "id": "about_text", "label": "About text", "default": "<p>Original fine art photography and limited prints, printed on museum-grade paper and shipped ready to hang.</p>" },
-    { "type": "text", "id": "menu_heading", "label": "Menu heading", "default": "Explore" },
-    { "type": "link_list", "id": "menu", "label": "Footer menu", "default": "footer" },
-    { "type": "checkbox", "id": "show_newsletter", "label": "Show email sign-up", "default": true },
+    { "type": "text", "id": "brand", "label": "Name on the left", "default": "Rowland Photography" },
+    { "type": "text", "id": "copyright_name", "label": "Copyright name", "default": "Joseph Rowland" },
+    { "type": "checkbox", "id": "show_menu", "label": "Show footer menu", "default": false },
+    { "type": "text", "id": "menu_heading", "label": "Menu heading", "default": "Info" },
+    { "type": "link_list", "id": "menu", "label": "Footer menu", "default": "footer", "info": "Good for Shipping, Returns, Contact, and policy links" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show email sign-up", "default": false },
     { "type": "text", "id": "newsletter_heading", "label": "Sign-up heading", "default": "Stay in touch" },
-    { "type": "text", "id": "newsletter_text", "label": "Sign-up text", "default": "New releases, behind-the-scenes stories, and print sales." }
+    { "type": "text", "id": "newsletter_text", "label": "Sign-up text", "default": "New work and print releases, a few times a year." }
   ],
   "enabled_on": { "groups": ["footer"] }
 }

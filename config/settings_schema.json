@@ -18,20 +18,21 @@
   {
     "name": "Typography",
     "settings": [
-      { "type": "font_picker", "id": "type_heading_font", "default": "playfair_display_n4", "label": "Heading font" },
-      { "type": "font_picker", "id": "type_body_font", "default": "work_sans_n4", "label": "Body font" },
+      { "type": "font_picker", "id": "type_heading_font", "default": "lora_n4", "label": "Heading font" },
+      { "type": "font_picker", "id": "type_body_font", "default": "lora_n4", "label": "Body font" },
       { "type": "range", "id": "heading_scale", "min": 80, "max": 150, "step": 5, "unit": "%", "label": "Heading size", "default": 100 }
     ]
   },
   {
     "name": "Colors",
     "settings": [
-      { "type": "color", "id": "background_color", "default": "#FFFFFF", "label": "Background" },
-      { "type": "color", "id": "surface_color", "default": "#F6F4F0", "label": "Alternate background", "info": "Used for highlighted sections and cards" },
-      { "type": "color", "id": "foreground_color", "default": "#1C1C1C", "label": "Text" },
-      { "type": "color", "id": "muted_color", "default": "#6B6B6B", "label": "Secondary text" },
-      { "type": "color", "id": "border_color", "default": "#E4E1DC", "label": "Lines and borders" },
-      { "type": "color", "id": "accent_color", "default": "#1C1C1C", "label": "Buttons" },
+      { "type": "color", "id": "background_color", "default": "#FDFCFA", "label": "Background" },
+      { "type": "color", "id": "surface_color", "default": "#F5F1EA", "label": "Alternate background", "info": "Used for highlighted sections and cards" },
+      { "type": "color", "id": "foreground_color", "default": "#1E1A17", "label": "Text" },
+      { "type": "color", "id": "muted_color", "default": "#5E5650", "label": "Secondary text" },
+      { "type": "color", "id": "border_color", "default": "#C9A582", "label": "Divider lines" },
+      { "type": "color", "id": "highlight_color", "default": "#8A4A1C", "label": "Highlight (small headings, links, dots)" },
+      { "type": "color", "id": "accent_color", "default": "#1E1A17", "label": "Buttons" },
       { "type": "color", "id": "accent_text_color", "default": "#FFFFFF", "label": "Button text" }
     ]
   },

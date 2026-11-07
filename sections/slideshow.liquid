@@ -1,0 +1,108 @@
+<section class="section section--tight{% if section.settings.divider %} section--ruled{% endif %}">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank -%}
+      <div class="intro-heading">
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--highlight">{{ section.settings.eyebrow }}</span>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h1 class="intro-heading__title">{{ section.settings.heading }}</h1>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="slideshow" data-slideshow data-autoplay="{{ section.settings.autoplay_seconds }}" style="--slide-ratio: {{ section.settings.ratio }}">
+      <div class="slideshow__track">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign num = forloop.index
+            if num < 10
+              assign num = '0' | append: forloop.index
+            endif
+            assign total = forloop.length
+            if total < 10
+              assign total = '0' | append: forloop.length
+            endif
+          -%}
+          <figure class="slideshow__slide{% if forloop.first %} is-active{% endif %}" data-slide aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ forloop.length }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}<a class="slideshow__link" href="{{ block.settings.link }}" tabindex="-1" aria-hidden="true"></a>{%- endif -%}
+            {%- if block.settings.image != blank -%}
+              {%- if forloop.first -%}
+                {{ block.settings.image | image_url: width: 2400 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1600px) 1600px, 100vw', widths: '750, 1100, 1600, 2000, 2400', alt: block.settings.title }}
+              {%- else -%}
+                {{ block.settings.image | image_url: width: 2400 | image_tag: loading: 'lazy', sizes: '(min-width: 1600px) 1600px, 100vw', widths: '750, 1100, 1600, 2000, 2400', alt: block.settings.title }}
+              {%- endif -%}
+            {%- else -%}
+              {%- assign n = forloop.index | modulo: 2 | plus: 1 -%}
+              {%- assign placeholder_name = 'lifestyle-' | append: n -%}
+              {{ placeholder_name | placeholder_svg_tag: 'slideshow__placeholder' }}
+            {%- endif -%}
+            <figcaption class="slideshow__caption">
+              <span>
+                {%- if block.settings.title != blank -%}<span class="slideshow__title">{{ block.settings.title }}</span>{%- endif -%}
+                {%- if block.settings.subtitle != blank -%}<span class="slideshow__subtitle">{{ block.settings.subtitle }}</span>{%- endif -%}
+              </span>
+              {%- if section.settings.show_counter -%}<span class="slideshow__counter">{{ num }} / {{ total }}</span>{%- endif -%}
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+      </div>
+      {%- if section.blocks.size > 1 -%}
+        <button class="slideshow__arrow slideshow__arrow--prev" type="button" data-slide-prev aria-label="Previous photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+        </button>
+        <button class="slideshow__arrow slideshow__arrow--next" type="button" data-slide-next aria-label="Next photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+        </button>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="slideshow__dots" role="tablist" aria-label="Choose photo">
+        {%- for block in section.blocks -%}
+          <button type="button" data-slide-dot="{{ forloop.index0 }}" aria-label="Photo {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Photo slideshow",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small text above heading", "default": "Latest work" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "A moment. A <em>feeling</em>. A photograph.", "info": "Use the italic button to slant words" },
+    {
+      "type": "select", "id": "ratio", "label": "Photo shape", "default": "16 / 8.5",
+      "options": [
+        { "value": "16 / 8.5", "label": "Wide" },
+        { "value": "3 / 2", "label": "Classic (3:2)" },
+        { "value": "21 / 9", "label": "Panorama" }
+      ]
+    },
+    { "type": "range", "id": "autoplay_seconds", "min": 0, "max": 12, "step": 1, "unit": "s", "label": "Auto-advance every", "default": 6, "info": "0 turns auto-advance off" },
+    { "type": "checkbox", "id": "show_counter", "label": "Show 01 / 03 counter", "default": true },
+    { "type": "checkbox", "id": "divider", "label": "Line above section", "default": false }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Landscape, at least 2400px wide" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Photo title" },
+        { "type": "text", "id": "subtitle", "label": "Location / subtitle", "default": "Location · State" },
+        { "type": "url", "id": "link", "label": "Link (optional)", "info": "e.g. the print's product page" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Photo slideshow",
+      "blocks": [
+        { "type": "slide", "settings": { "title": "Where autumn slows", "subtitle": "Glade Creek Grist Mill · West Virginia" } },
+        { "type": "slide", "settings": { "title": "Chasing autumn", "subtitle": "Vermont" } },
+        { "type": "slide", "settings": { "title": "Finding stillness", "subtitle": "Long Island · New York" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

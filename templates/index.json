@@ -1,28 +1,17 @@
 {
   "sections": {
-    "hero": { "type": "hero", "settings": {} },
-    "featured": { "type": "featured-collection", "settings": {} },
-    "intro": {
-      "type": "rich-text",
+    "latest": {
+      "type": "slideshow",
       "blocks": {
-        "h": { "type": "heading", "settings": { "heading": "Every print is made to order" } },
-        "t": { "type": "text", "settings": { "text": "<p>Printed on archival, museum-grade paper with pigment inks rated to last generations. Choose your size, frame, and mat, and your print ships ready to hang.</p>" } }
+        "s1": { "type": "slide", "settings": { "title": "Where autumn slows", "subtitle": "Glade Creek Grist Mill · West Virginia" } },
+        "s2": { "type": "slide", "settings": { "title": "Chasing autumn", "subtitle": "Vermont" } },
+        "s3": { "type": "slide", "settings": { "title": "Finding stillness", "subtitle": "Long Island · New York" } }
       },
-      "block_order": ["h", "t"],
-      "settings": { "surface": true }
-    },
-    "collections": {
-      "type": "collection-list",
-      "blocks": {
-        "c1": { "type": "collection", "settings": { "title": "Landscapes" } },
-        "c2": { "type": "collection", "settings": { "title": "Wildlife" } },
-        "c3": { "type": "collection", "settings": { "title": "Black & White" } }
-      },
-      "block_order": ["c1", "c2", "c3"],
+      "block_order": ["s1", "s2", "s3"],
       "settings": {}
     },
-    "about": { "type": "image-with-text", "settings": { "button_link": "/pages/about" } },
-    "journal": { "type": "featured-blog", "settings": { "surface": true } }
+    "journal": { "type": "journal-feature", "settings": {} },
+    "follow": { "type": "social-cta", "settings": {} }
   },
-  "order": ["hero", "featured", "intro", "collections", "about", "journal"]
+  "order": ["latest", "journal", "follow"]
 }

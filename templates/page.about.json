@@ -1,16 +1,51 @@
 {
   "sections": {
-    "hero": { "type": "hero", "settings": { "height": "small", "eyebrow": "About", "heading": "The artist", "text": "", "button_label": "", "button2_label": "", "text_position": "bottom-center" } },
-    "story": { "type": "image-with-text", "settings": { "eyebrow": "My story", "heading": "Behind the lens", "button_label": "" } },
-    "main": { "type": "page", "settings": { "show_title": false } },
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "height": "small",
+        "eyebrow": "About",
+        "heading": "The artist",
+        "text": "",
+        "button_label": "",
+        "button2_label": "",
+        "text_position": "bottom-center",
+        "image": "shopify://shop_images/gristmill.jpg"
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "My story",
+        "heading": "Behind the lens",
+        "button_label": "",
+        "image": "shopify://shop_images/vermont.jpg"
+      }
+    },
+    "main": {
+      "type": "page",
+      "settings": {
+        "show_title": false
+      }
+    },
     "process": {
       "type": "image-with-text",
       "settings": {
-        "image_position": "right", "eyebrow": "The process", "heading": "From field to frame",
+        "image_position": "right",
+        "eyebrow": "The process",
+        "heading": "From field to frame",
         "text": "<p>Describe how you work: the places you travel, the gear you use, and how each print is produced and checked before it ships.</p>",
-        "button_label": "Shop prints", "button_link": "/collections/all", "surface": true
+        "button_label": "Shop prints",
+        "button_link": "/collections/all",
+        "surface": true,
+        "image": "shopify://shop_images/longi_slandf.jpg"
       }
     }
   },
-  "order": ["hero", "story", "main", "process"]
+  "order": [
+    "hero",
+    "story",
+    "main",
+    "process"
+  ]
 }

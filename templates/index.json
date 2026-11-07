@@ -47,38 +47,40 @@
     },
     "journal": {
       "type": "journal-feature",
-      "settings": {
-        "eyebrow": "Journal",
-        "heading": "Stories behind the frame.",
-        "text": "<p>The places, the light, and the moments that make the photograph.</p>",
-        "link_label": "Explore the blog",
-        "link": "",
-        "blog": "news",
-        "limit": 2,
-        "divider": true
-      },
       "blocks": {
         "vermont": {
           "type": "story",
           "settings": {
+            "article": "behind-the-lense/vermont",
             "image": "shopify://shop_images/vermont.jpg",
             "title": "Chasing autumn in Vermont",
-            "link": "/blogs/news"
+            "link": ""
           }
         },
         "longisland": {
           "type": "story",
           "settings": {
+            "article": "behind-the-lense/long-island",
             "image": "shopify://shop_images/longi_slandf.jpg",
             "title": "Finding stillness on Long Island",
-            "link": "/blogs/news"
+            "link": ""
           }
         }
       },
       "block_order": [
         "vermont",
         "longisland"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "Journal",
+        "heading": "Stories behind the frame.",
+        "text": "<p>The places, the light, and the moments that make the photograph.</p>",
+        "link_label": "Explore the blog",
+        "link": "",
+        "blog": "behind-the-lense",
+        "limit": 2,
+        "divider": true
+      }
     },
     "follow": {
       "type": "social-cta",

@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "latest": {
@@ -65,7 +56,29 @@
         "blog": "news",
         "limit": 2,
         "divider": true
-      }
+      },
+      "blocks": {
+        "vermont": {
+          "type": "story",
+          "settings": {
+            "image": "shopify://shop_images/vermont.jpg",
+            "title": "Chasing autumn in Vermont",
+            "link": "/blogs/news"
+          }
+        },
+        "longisland": {
+          "type": "story",
+          "settings": {
+            "image": "shopify://shop_images/longi_slandf.jpg",
+            "title": "Finding stillness on Long Island",
+            "link": "/blogs/news"
+          }
+        }
+      },
+      "block_order": [
+        "vermont",
+        "longisland"
+      ]
     },
     "follow": {
       "type": "social-cta",

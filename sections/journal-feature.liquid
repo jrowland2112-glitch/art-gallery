@@ -11,8 +11,33 @@
         {%- endif -%}
       </div>
 
-      <div class="journal-feature__posts" style="--cols: {{ section.settings.limit }}">
-        {%- if blog != blank and blog.articles_count > 0 -%}
+      {%- liquid
+        assign cols = section.settings.limit
+        if section.blocks.size > 0
+          assign cols = section.blocks.size
+        endif
+      -%}
+      <div class="journal-feature__posts" style="--cols: {{ cols }}">
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign a = block.settings.article
+              assign card_image = block.settings.image | default: a.image
+              assign card_title = block.settings.title | default: a.title
+              assign card_url = block.settings.link | default: a.url | default: blog.url | default: '/blogs/news'
+            -%}
+            <a class="journal-card" href="{{ card_url }}" {{ block.shopify_attributes }}>
+              <div class="journal-card__media">
+                {%- if card_image != blank -%}
+                  {{ card_image | image_url: width: 1000 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '400, 600, 800, 1000', alt: card_title }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              <p class="journal-card__title">{{ card_title }}</p>
+            </a>
+          {%- endfor -%}
+        {%- elsif blog != blank and blog.articles_count > 0 -%}
           {%- for article in blog.articles limit: section.settings.limit -%}
             <a class="journal-card" href="{{ article.url }}">
               <div class="journal-card__media">
@@ -52,9 +77,22 @@
     { "type": "text", "id": "link_label", "label": "Link label", "default": "Explore the blog" },
     { "type": "url", "id": "link", "label": "Link", "info": "Defaults to the selected blog" },
     { "type": "blog", "id": "blog", "label": "Blog to show posts from" },
-    { "type": "range", "id": "limit", "min": 1, "max": 3, "step": 1, "label": "Number of posts", "default": 2 },
+    { "type": "range", "id": "limit", "min": 1, "max": 3, "step": 1, "label": "Number of posts", "default": 2, "info": "Used when no Story cards are added below. Then the newest blog posts are shown automatically." },
     { "type": "checkbox", "id": "divider", "label": "Line above section", "default": true }
   ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story card",
+      "settings": [
+        { "type": "article", "id": "article", "label": "Blog post", "info": "Pick a post to link to. Its photo and title are used unless you set your own below." },
+        { "type": "image_picker", "id": "image", "label": "Photo (optional)" },
+        { "type": "text", "id": "title", "label": "Title (optional)" },
+        { "type": "url", "id": "link", "label": "Custom link (optional)", "info": "Overrides the blog post link" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
   "presets": [ { "name": "Journal highlight" } ]
 }
 {% endschema %}

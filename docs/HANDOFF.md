@@ -54,7 +54,21 @@ This keeps the code and the theme editor in sync automatically.
    - Theme editor saves are committed to GitHub automatically.
    - Merged pull requests update the store.
 
-## Step 5: Hand Joseph the guides
+## Step 5: Keep Tristan on as a helper (optional, Joseph decides)
+
+Joseph stays the owner and approves everything. Tristan can still prepare changes.
+
+1. **Shopify:** check **Settings → Users**.
+   - If Tristan isn't listed as a collaborator, Joseph adds him (collaborator, or a staff account with Tristan's email).
+   - Give him **Themes** and **Content** permissions only. No payments or payouts.
+2. **GitHub:** in the repo, **Settings → Collaborators → Add people → `tjrowland3`**.
+3. **How changes flow:**
+   - Tristan (or his AI) makes a change on a branch and previews it on an **unpublished** theme.
+   - He opens a pull request, and **Joseph merges it**.
+   - Because GitHub is connected, the merge updates the store.
+4. Joseph can remove either access at any time.
+
+## Step 6: Hand Joseph the guides
 
 - **Guide 1** (`docs/ACCOUNTS_AND_SETUP.md`): payments, print vendor, domain, launch checklist
 - **Guide 2** (`docs/AI_SETUP.md`): set up his own Claude/Codex, including the starter prompt

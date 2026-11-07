@@ -4,14 +4,15 @@
   @param {product} [product] - The product to show. If blank, a placeholder card is shown.
   @param {string} [ratio] - CSS aspect ratio for the image, e.g. "4 / 5"
   @param {boolean} [contain] - Show the whole image instead of cropping it
+  @param {boolean} [natural] - Preserve the photograph's natural proportions
   @param {number} [index] - Placeholder number when no product is given
 {% enddoc %}
 
 {%- if product != blank -%}
   <a class="card" href="{{ product.url }}" style="--ratio: {{ ratio | default: '4 / 5' }}">
-    <div class="card__media{% if contain %} card__media--contain{% endif %}">
+    <div class="card__media{% if contain %} card__media--contain{% endif %}{% if natural %} card__media--natural{% endif %}">
       {%- if product.featured_image -%}
-        {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: product.featured_image.alt | default: product.title }}
+        {{ product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, (min-width: 750px) 50vw, 100vw', widths: '360, 540, 720, 900, 1200', alt: product.featured_image.alt | default: product.title }}
       {%- else -%}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {%- endif -%}

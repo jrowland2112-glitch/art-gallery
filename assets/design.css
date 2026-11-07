@@ -145,3 +145,41 @@ h1, h2, h3 { font-weight: 400; }
 
 .site-header__nav a[aria-current="page"] { border-bottom: 0; color: var(--color-highlight); }
 .site-header__logo { color: var(--color-foreground); }
+
+/* ---------- Shop gallery ---------- */
+.collection-gallery .collection-hero { padding-block: clamp(3rem, 7vw, 6rem) 2.25rem; }
+.collection-gallery .collection-hero h1 { margin-bottom: 0.3em; }
+.collection-filters {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 0.65rem 1.6rem;
+  margin: 0 auto 2.5rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--color-border);
+}
+.collection-filters a {
+  color: var(--color-muted); font-size: 0.86rem; letter-spacing: 0.1em;
+  text-decoration: none; text-transform: uppercase;
+}
+.collection-filters a:hover,
+.collection-filters a[aria-current="page"] { color: var(--color-foreground); }
+.collection-filters a[aria-current="page"] { border-bottom: 1px solid currentColor; }
+.collection-gallery__grid {
+  display: grid; grid-template-columns: repeat(var(--cols-mobile, 1), minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 2vw, 1.75rem);
+}
+.collection-gallery__grid--natural { display: block; columns: var(--cols-mobile, 1); column-gap: clamp(1rem, 2vw, 1.75rem); }
+.collection-gallery__grid--natural .card { break-inside: avoid; margin: 0 0 clamp(2rem, 4vw, 3.5rem); }
+.collection-gallery .card__media--natural { aspect-ratio: auto; }
+.collection-gallery .card__media--natural img { width: 100%; height: auto; object-fit: contain; }
+.collection-gallery .card__info { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 0.5rem 1rem; }
+.collection-gallery .card__title { font-style: italic; }
+.collection-gallery .card__meta { white-space: nowrap; }
+.collection-gallery .badge { grid-column: 1 / -1; justify-self: start; }
+.collection-gallery__empty { padding: clamp(4rem, 9vw, 8rem) 1rem; border-block: 1px solid var(--color-border); }
+.collection-gallery__empty h2 { font-style: italic; }
+.collection-gallery__empty p { max-width: 34rem; margin-inline: auto; }
+@media (min-width: 750px) {
+  .collection-gallery__grid { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+  .collection-gallery__grid--natural { display: block; columns: var(--cols, 3); }
+}
+@media (max-width: 749px) {
+  .collection-gallery .toolbar { margin-bottom: 1.5rem; }
+  .collection-gallery .card__info { padding-top: 0.7rem; }
+}

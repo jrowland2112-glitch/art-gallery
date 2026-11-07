@@ -1,13 +1,23 @@
-<section class="section" style="padding-top: 0">
+<section class="section collection-gallery" style="padding-top: 0">
   <div class="page-width">
     <div class="collection-hero text-center">
+      {%- if section.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--highlight">{{ section.settings.eyebrow }}</span>{%- endif -%}
       <h1>{%- if collection.handle == 'all' -%}{{ section.settings.all_title }}{%- else -%}{{ collection.title }}{%- endif -%}</h1>
       {%- if collection.description != blank -%}<div class="rte muted page-width--narrow" style="margin: 0 auto">{{ collection.description }}</div>{%- endif -%}
     </div>
 
+    {%- if section.settings.category_collections != blank -%}
+      <nav class="collection-filters" aria-label="Browse print collections">
+        <a href="{{ routes.all_products_collection_url }}"{% if collection.handle == 'all' %} aria-current="page"{% endif %}>All photographs</a>
+        {%- for category_collection in section.settings.category_collections -%}
+          <a href="{{ category_collection.url }}"{% if category_collection.handle == collection.handle %} aria-current="page"{% endif %}>{{ category_collection.title }}</a>
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+
     {%- paginate collection.products by section.settings.per_page -%}
       <div class="toolbar">
-        <span>{%- if collection.products_count > 0 -%}{{ collection.products_count }} prints{%- endif -%}</span>
+        <span>{%- if collection.products_count > 0 -%}{{ collection.products_count }} {% if collection.products_count == 1 %}photograph{% else %}photographs{% endif %}{%- endif -%}</span>
         {%- if section.settings.show_sort -%}
           {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
           <label>
@@ -21,15 +31,20 @@
         {%- endif -%}
       </div>
 
-      <div class="grid" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
-        {%- for product in collection.products -%}
-          {% render 'product-card', product: product, ratio: section.settings.ratio, contain: section.settings.contain %}
-        {%- else -%}
-          {%- for i in (1..6) -%}
-            {% render 'product-card', index: i, ratio: section.settings.ratio %}
+      {%- if collection.products_count > 0 -%}
+        {%- assign natural_images = false -%}
+        {%- if section.settings.image_style == 'natural' -%}{%- assign natural_images = true -%}{%- endif -%}
+        <div class="collection-gallery__grid{% if section.settings.image_style == 'natural' %} collection-gallery__grid--natural{% endif %}" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product, ratio: section.settings.ratio, contain: section.settings.contain, natural: natural_images %}
           {%- endfor -%}
-        {%- endfor -%}
-      </div>
+        </div>
+      {%- else -%}
+        <div class="collection-gallery__empty text-center">
+          <h2>{{ section.settings.empty_title }}</h2>
+          {%- if section.settings.empty_text != blank -%}<p class="muted">{{ section.settings.empty_text }}</p>{%- endif -%}
+        </div>
+      {%- endif -%}
 
       {%- if paginate.pages > 1 -%}
         <nav class="pagination" aria-label="Pages">{{ paginate | default_pagination: previous: '&larr;', next: '&rarr;' }}</nav>
@@ -42,7 +57,9 @@
 {
   "name": "Collection page",
   "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "The print collection" },
     { "type": "text", "id": "all_title", "label": "Title of the all-prints page", "default": "Shop" },
+    { "type": "collection_list", "id": "category_collections", "label": "Browse categories", "limit": 6 },
     { "type": "range", "id": "per_page", "min": 6, "max": 48, "step": 3, "label": "Prints per page", "default": 24 },
     { "type": "range", "id": "columns", "min": 2, "max": 4, "step": 1, "label": "Columns on desktop", "default": 3 },
     { "type": "select", "id": "columns_mobile", "label": "Columns on phone", "default": "1", "options": [ { "value": "1", "label": "1" }, { "value": "2", "label": "2" } ] },
@@ -50,8 +67,14 @@
       "type": "select", "id": "ratio", "label": "Image shape", "default": "4 / 5",
       "options": [ { "value": "4 / 5", "label": "Portrait" }, { "value": "1 / 1", "label": "Square" }, { "value": "3 / 2", "label": "Landscape" } ]
     },
+    {
+      "type": "select", "id": "image_style", "label": "Image presentation", "default": "natural",
+      "options": [ { "value": "natural", "label": "Natural proportions" }, { "value": "uniform", "label": "Matching shapes" } ]
+    },
     { "type": "checkbox", "id": "contain", "label": "Show whole image (no cropping)", "default": false },
-    { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true }
+    { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true },
+    { "type": "text", "id": "empty_title", "label": "Empty shop heading", "default": "The print collection is coming soon" },
+    { "type": "textarea", "id": "empty_text", "label": "Empty shop text", "default": "New photographs are being prepared for the shop. Please check back shortly." }
   ]
 }
 {% endschema %}

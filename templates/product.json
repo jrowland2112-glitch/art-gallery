@@ -19,7 +19,7 @@
         "buy_note": "Made to order · Secure checkout"
       }
     },
-    "related": { "type": "featured-collection", "settings": { "heading": "You may also like", "eyebrow": "", "limit": 3 } }
+    "related": { "type": "featured-collection", "settings": { "heading": "You may also like", "eyebrow": "", "limit": 3, "ratio": "natural", "contain": true } }
   },
   "order": ["main", "related"]
 }

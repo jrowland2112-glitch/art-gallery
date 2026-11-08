@@ -9,7 +9,9 @@ This tool turns photographs into Shopify **Draft** products. It cannot activate 
 - An existing Active or Archived product is never modified.
 - A stable handle makes reruns update the same Draft instead of creating duplicates.
 - API credentials are read from local environment variables and never printed.
-- Full-resolution originals stay private. Shopify receives a maximum-3000-pixel sRGB JPEG.
+- Full-resolution print files stay private in R2. Shopify receives a separate maximum-3000-pixel sRGB JPEG.
+- The source photograph is never modified. A separate full-resolution, embedded-sRGB print JPEG is prepared for WHCC and compressed to at most 39 MiB before private R2 upload.
+- Every offered size is checked before upload. A file below 150 PPI at its largest size is rejected; the dry run reports the actual value against WHCC's preferred 300 PPI.
 - Without private object storage, uploads stop unless `--allow-local-original` is explicitly supplied. Such a Draft is marked by a warning and is not ready for automated fulfillment.
 
 ## One-time setup
@@ -34,6 +36,8 @@ Joseph creates the accounts and credentials. Do not paste any secret into chat a
    - `ORIGINALS_S3_BUCKET`
    - `ORIGINALS_S3_ACCESS_KEY_ID`
    - `ORIGINALS_S3_SECRET_ACCESS_KEY`
+
+The private R2 object is the prepared print file, not the untouched source photograph. Keep the source photograph in the upload folder or your normal archival storage.
 5. Install the tool once with `npm install`.
 
 PowerShell user-level environment variables can be entered locally without exposing their values in the command history by using a secure prompt:
@@ -84,6 +88,7 @@ An optional `photos.csv` provides titles, alt text, tags, and descriptions. With
 For every photograph, the dry run shows:
 
 - source dimensions and format;
+- print-file dimensions, file size, JPEG quality, and lowest effective PPI;
 - optimized storefront-image dimensions and size;
 - product title and handle;
 - every Finish/Size price;

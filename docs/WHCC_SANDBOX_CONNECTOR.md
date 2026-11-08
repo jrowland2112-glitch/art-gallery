@@ -18,7 +18,7 @@ Enabling WHCC Live later requires a separate `CLAUDE.md` change, pull request, r
 1. Shopify sends an `orders/paid` webhook.
 2. The worker verifies Shopify's HMAC over the unmodified request body, verifies the store and topic, and deduplicates `X-Shopify-Webhook-Id` in D1.
 3. It reads each Shopify variant's `rowland.whcc_mapping` metafield and the product's `rowland.source_object_key` metafield.
-4. It confirms the original exists in the private R2 bucket and gives WHCC a signed, short-lived download URL. The bucket remains private.
+4. It confirms the prepared print file exists in the private R2 bucket and gives WHCC a signed seven-day download URL, matching WHCC's reprint-access guidance. The bucket remains private.
 5. It builds the configured product on WHCC Test, saves each returned ID before continuing, and polls rather than rebuilding.
 6. It calls WHCC `submissions/calculate` and stops if validation fails, the currency is not USD, or the sandbox total exceeds the configured limit.
 7. With sandbox submission still off, the job stops at `calculated`. With the second switch on, it submits only to WHCC Test using a stable idempotency key based on the Shopify order ID.

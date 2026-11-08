@@ -66,16 +66,6 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
-      <details class="accordion accordion--story product__story">
-        <summary>The Story Behind the Shot</summary>
-        <div class="rte">
-          {%- if product.description != blank -%}
-            {{ product.description }}
-          {%- else -%}
-            <p>The story behind this photograph is coming soon.</p>
-          {%- endif -%}
-        </div>
-      </details>
     </div>
 
     <div class="product__info">
@@ -195,6 +185,16 @@
       {%- endform -%}
 
       <div class="product__accordions">
+        <details class="accordion accordion--story">
+          <summary>The Story Behind the Shot</summary>
+          <div class="rte">
+            {%- if product.description != blank -%}
+              {{ product.description }}
+            {%- else -%}
+              <p>The story behind this photograph is coming soon.</p>
+            {%- endif -%}
+          </div>
+        </details>
         {%- for block in section.blocks -%}
           <details class="accordion" {{ block.shopify_attributes }}>
             <summary>{{ block.settings.heading }}</summary>

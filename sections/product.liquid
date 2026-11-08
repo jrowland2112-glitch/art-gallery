@@ -2,7 +2,6 @@
   assign current_variant = product.selected_or_first_available_variant
   assign main_image = current_variant.featured_image | default: product.featured_image
   assign form_id = 'product-form-' | append: section.id
-  assign primary_collection = product.collections.first
   assign use_frame_preview = section.settings.frame_preview
   assign hide_product_thumbnails = false
   for product_option_name in product.options
@@ -24,10 +23,8 @@
   <div class="page-width">
     <nav class="product-breadcrumb" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
-      {%- if primary_collection != blank -%}
-        <span aria-hidden="true">/</span>
-        <a href="{{ primary_collection.url }}">{{ primary_collection.title }}</a>
-      {%- endif -%}
+      <span aria-hidden="true">/</span>
+      <a href="{{ routes.all_products_collection_url }}">Shop</a>
       <span aria-hidden="true">/</span>
       <span aria-current="page">{{ product.title }}</span>
     </nav>
@@ -69,13 +66,13 @@
     </div>
 
     <div class="product__info">
-      {%- if section.settings.show_collection and primary_collection != blank -%}
-        <a class="eyebrow product__collection" href="{{ primary_collection.url }}">The {{ primary_collection.title }} collection</a>
+      {%- if section.settings.show_collection -%}
+        <a class="eyebrow product__collection" href="{{ routes.all_products_collection_url }}">The Shop collection</a>
       {%- elsif section.settings.show_vendor and product.vendor != blank -%}
         <span class="eyebrow">{{ product.vendor }}</span>
       {%- endif -%}
       <h1>{{ product.title }}</h1>
-      {%- if section.settings.show_vendor and product.vendor != blank and section.settings.show_collection and primary_collection != blank -%}
+      {%- if section.settings.show_vendor and product.vendor != blank and section.settings.show_collection -%}
         <p class="product__vendor">{{ product.vendor }}</p>
       {%- endif -%}
       {%- form 'product', product, id: form_id -%}

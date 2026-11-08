@@ -183,6 +183,8 @@ textarea { min-height: 9rem; resize: vertical; }
 .card__media img, .card__media svg { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
 .card__media--contain img { object-fit: contain; padding: 8%; }
 .card:hover .card__media img { transform: scale(1.03); }
+.search-results__grid .card__media { aspect-ratio: 3 / 2; }
+.search-results__grid .card__media img { object-fit: contain; padding: 0; }
 .card__info { padding-top: 0.9rem; }
 .card__title { font-family: var(--font-heading); font-size: 1.1rem; margin: 0 0 0.2rem; font-weight: var(--font-heading-weight); }
 .card__meta { font-size: 0.88rem; color: var(--color-muted); }

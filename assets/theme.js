@@ -111,6 +111,16 @@
         return parts.length === 2 ? (parseFloat(parts[0]) || 0) * (parseFloat(parts[1]) || 0) : 0;
       }
 
+      function updateRoomScale(value) {
+        if (!frame || !root.querySelector('.product__stage--room')) return;
+        var parts = value.toLowerCase().split('x');
+        if (parts.length !== 2) return;
+        var longEdge = Math.max(parseFloat(parts[0]) || 0, parseFloat(parts[1]) || 0);
+        var width = 40 + ((longEdge - 18) / 18) * 28;
+        width = Math.max(34, Math.min(68, width));
+        frame.style.setProperty('--room-artwork-width', width + '%');
+      }
+
       function renderChoices(container, values, selectedValue, name, onChange) {
         container.innerHTML = '';
         values.forEach(function (value, index) {
@@ -145,6 +155,7 @@
         input.checked = true;
         finishSelected.textContent = finish;
         sizeSelected.textContent = size;
+        updateRoomScale(size);
         input.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
@@ -169,6 +180,7 @@
       });
       finishSelected.textContent = currentFinish;
       renderSizes();
+      updateRoomScale(currentSize);
     }
 
     function selected() {

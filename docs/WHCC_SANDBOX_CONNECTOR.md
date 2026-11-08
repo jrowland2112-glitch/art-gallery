@@ -60,7 +60,7 @@ The real catalog output must be used to replace the placeholder selection files 
 
 ## Deployment sequence (not performed yet)
 
-1. Create R2 and D1 after Joseph approves any account or cost implications.
+1. Create R2 and D1 after Joseph approves any account or cost implications. The local importer may use the existing Wrangler login and `ORIGINALS_R2_BUCKET`, avoiding a separate R2 S3 key.
 2. Copy `connector/wrangler.example.toml` to the ignored `connector/wrangler.toml`; enter only non-secret resource names and IDs.
 3. Apply `connector/migrations/0001_initial.sql` to D1.
 4. Add secrets with `wrangler secret put`; never put secret values in files or command history.

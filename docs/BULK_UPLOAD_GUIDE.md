@@ -19,7 +19,16 @@ Joseph creates the accounts and credentials. Do not paste any secret into chat a
 1. Create/install a Shopify app for Joseph's store with `read_products` and `write_products` access.
 2. Store its client ID and client secret in the local user environment as `SHOPIFY_CLIENT_ID` and `SHOPIFY_CLIENT_SECRET`.
 3. Store `rowland-photography-0v8ydig1.myshopify.com` as `SHOPIFY_STORE` (optional because this store is the safe default).
-4. For durable originals, create a private S3-compatible bucket such as Cloudflare R2 and store these local environment variables:
+4. For the configured Cloudflare R2 bucket, sign in once with Wrangler and set the non-secret bucket name:
+
+   ```powershell
+   npx wrangler login
+   [Environment]::SetEnvironmentVariable("ORIGINALS_R2_BUCKET", "rowland-photo-originals", "User")
+   ```
+
+   The importer uses that login to upload originals privately, so it does not need another long-lived R2 API key. Open a new PowerShell window after setting the variable.
+
+   Other S3-compatible storage remains supported as an alternative through these local environment variables:
    - `ORIGINALS_S3_ENDPOINT`
    - `ORIGINALS_S3_REGION` (`auto` for R2)
    - `ORIGINALS_S3_BUCKET`

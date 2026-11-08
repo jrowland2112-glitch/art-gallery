@@ -20,8 +20,16 @@
     if card_ratio == 'natural' and card_image.aspect_ratio
       assign card_ratio = card_image.aspect_ratio
     endif
+    assign card_orientation = 'square'
+    if card_image
+      if card_image.aspect_ratio > 1.1
+        assign card_orientation = 'landscape'
+      elsif card_image.aspect_ratio < 0.9
+        assign card_orientation = 'portrait'
+      endif
+    endif
   -%}
-  <a class="card" href="{{ product.url }}" style="--ratio: {{ card_ratio }}">
+  <a class="card card--{{ card_orientation }}" href="{{ product.url }}" style="--ratio: {{ card_ratio }}; --natural-ratio: {{ card_image.aspect_ratio | default: 1 }}">
     <div class="card__media{% if contain %} card__media--contain{% endif %}">
       {%- if card_image -%}
         {{ card_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: card_image.alt | default: product.title }}

@@ -47,7 +47,7 @@ Prices are approximate. Check each site before signing up.
 2. Create the vendor account through the app. Add a card for print costs.
 3. **Order 1–2 sample prints** from each vendor, including a framed print with a mat. Compare quality before going live.
 4. **Create products in the vendor app:** upload the full-resolution photo, pick paper, sizes, frames, and mats, set prices, and sync to Shopify.
-   - **Name the options exactly `Size`, `Frame`, and `Mat`.** The site's live frame preview looks for those names.
+   - For products offered in several forms, use **`Finish`** (values such as `Canvas`, `Metal`, and `Matted & framed`), **`Size`**, and at most one optional third vendor-supported option such as **`Frame`**. Shopify allows three product options, so include the mat in the framed finish when needed. Older products using `Size`, `Frame`, and `Mat` are also supported.
 5. In Shopify, add each product to a **collection** (e.g. "Landscapes"), so it appears on the Shop page.
 
 ### 6. Domain (10 min)

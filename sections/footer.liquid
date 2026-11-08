@@ -44,7 +44,13 @@
     {%- endif -%}
 
     <div class="site-footer__bottom">
-      <span class="site-footer__brand">{{ section.settings.brand | default: shop.name }}</span>
+      <a class="site-footer__brand" href="{{ routes.root_url }}" aria-label="Rowland Photography home">
+        {%- if settings.logo != blank -%}
+          {{ settings.logo | image_url: width: 360 | image_tag: alt: 'Rowland Photography' }}
+        {%- else -%}
+          <img src="{{ 'rowland-photography-logo.png' | asset_url }}" width="912" height="268" alt="Rowland Photography">
+        {%- endif -%}
+      </a>
       <span>&copy; {{ section.settings.copyright_name | default: shop.name }}</span>
     </div>
   </div>

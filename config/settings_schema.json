@@ -11,7 +11,7 @@
     "name": "Logo and favicon",
     "settings": [
       { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Leave empty to show the store name as text" },
-      { "type": "range", "id": "logo_width", "min": 60, "max": 300, "step": 10, "unit": "px", "label": "Logo width", "default": 140 },
+      { "type": "range", "id": "logo_width", "min": 60, "max": 300, "step": 10, "unit": "px", "label": "Logo width", "default": 280 },
       { "type": "image_picker", "id": "favicon", "label": "Favicon (browser tab icon)", "info": "Square image, at least 64 × 64px" }
     ]
   },

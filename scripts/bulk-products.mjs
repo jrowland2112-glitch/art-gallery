@@ -9,9 +9,9 @@ import {
   readPriceSheet,
   variantsFromShopifyProduct,
 } from './lib/catalog.mjs';
-import { prepareDisplayImage } from './lib/images.mjs';
+import { PREFERRED_PRINT_PPI, prepareProductImages } from './lib/images.mjs';
 import { createShopifyClient, getProductByHandle, stageProductImage, upsertDraftProduct } from './lib/shopify.mjs';
-import { storeOriginal } from './lib/storage.mjs';
+import { storePrintFile } from './lib/storage.mjs';
 
 function usage() {
   return `
@@ -72,6 +72,8 @@ function printPlan(record, image, variants, mode) {
   console.log(`  Handle: ${record.handle}`);
   console.log(`  Original: ${record.filename}`);
   console.log(`  Source: ${image.source.width}x${image.source.height} ${image.source.format || ''}`);
+  console.log(`  WHCC print file: ${image.print.width}x${image.print.height}, ${(image.print.size / 1024 / 1024).toFixed(2)} MB, sRGB JPEG quality ${image.print.quality}`);
+  console.log(`  Largest-size resolution: ${Math.floor(image.print.resolution.lowestPpi)} PPI at ${image.print.resolution.lowestSize} (${PREFERRED_PRINT_PPI} PPI preferred)`);
   console.log(`  Storefront copy: ${image.display.width}x${image.display.height}, ${(image.display.size / 1024 / 1024).toFixed(2)} MB`);
   console.log(`  Variants: ${variants.length}`);
   for (const variant of variants) console.log(`    ${variant.finish} / ${variant.size}: $${variant.price}`);
@@ -103,7 +105,7 @@ export async function main(argv = process.argv.slice(2)) {
   const prepared = [];
   for (const filename of filenames) {
     const record = buildProductRecord(filename, variants, overrides, args.title);
-    const image = await prepareDisplayImage(record, cacheDir);
+    const image = await prepareProductImages(record, cacheDir, variants);
     prepared.push({ record, image });
     printPlan(record, image, variants, args.apply ? 'Create or update Draft' : 'DRY RUN — no Shopify or storage writes');
   }
@@ -121,15 +123,15 @@ export async function main(argv = process.argv.slice(2)) {
       throw new Error(`Refusing to modify existing ${existing.status} product “${existing.title}”.`);
     }
 
-    const original = await storeOriginal(item.record.filename, item.image.checksum);
-    if (!original && !args.allowLocalOriginal) {
-      throw new Error('Private original storage is not configured. Configure ORIGINALS_S3_* locally or explicitly use --allow-local-original for a Draft that cannot yet be fulfilled automatically.');
+    const printFile = await storePrintFile(item.image.print.output, item.image.checksum);
+    if (!printFile && !args.allowLocalOriginal) {
+      throw new Error('Private print-file storage is not configured. Configure ORIGINALS_S3_* locally or explicitly use --allow-local-original for a Draft that cannot yet be fulfilled automatically.');
     }
-    if (!original) console.warn(`WARNING: ${item.record.title} original remains local; this Draft is not ready for automated fulfillment.`);
+    if (!printFile) console.warn(`WARNING: ${item.record.title} print file remains local; this Draft is not ready for automated fulfillment.`);
 
     const sameImage = existing?.metafield?.value === item.image.checksum && existing.media.nodes.length > 0;
     if (!sameImage) item.image.resourceUrl = await stageProductImage(client, item.image.output);
-    const product = await upsertDraftProduct(client, item.record, item.image, original, existing);
+    const product = await upsertDraftProduct(client, item.record, item.image, printFile, existing);
     results.push(product);
     console.log(`Created/updated Draft: ${product.title} (${product.handle})`);
   }

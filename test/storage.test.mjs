@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { storageConfig, storeOriginal } from '../scripts/lib/storage.mjs';
+import { storageConfig, storePrintFile } from '../scripts/lib/storage.mjs';
 
 test('private storage is optional when no storage credentials are set', () => {
   assert.equal(storageConfig({}), null);
@@ -31,16 +31,16 @@ test('Wrangler R2 and S3 credential modes cannot be mixed', () => {
   );
 });
 
-test('uploads a deterministic private-object key through Wrangler', async () => {
+test('uploads a deterministic private print-file key through Wrangler', async () => {
   let input;
-  const result = await storeOriginal(
-    'E:/SHots/Mountain Light.jpg',
+  const result = await storePrintFile(
+    'C:/cache/Mountain Light-print.jpg',
     'abc123',
     { ORIGINALS_R2_BUCKET: 'rowland-photo-originals' },
     { putWithWrangler: async (value) => { input = value; } },
   );
   assert.equal(input.bucket, 'rowland-photo-originals');
-  assert.equal(input.key, 'originals/abc123/Mountain Light.jpg');
+  assert.equal(input.key, 'print-ready/abc123/Mountain Light-print.jpg');
   assert.equal(input.contentType, 'image/jpeg');
   assert.deepEqual(result, { bucket: 'rowland-photo-originals', key: input.key, existed: null });
 });

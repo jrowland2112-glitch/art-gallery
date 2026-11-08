@@ -46,10 +46,10 @@ async function putWithWrangler({ bucket, key, filename, contentType }) {
   ], { windowsHide: true, maxBuffer: 1024 * 1024 });
 }
 
-export async function storeOriginal(filename, checksum, env = process.env, dependencies = {}) {
+export async function storePrintFile(filename, checksum, env = process.env, dependencies = {}) {
   const config = storageConfig(env);
   if (!config) return null;
-  const key = `originals/${checksum}/${path.basename(filename)}`;
+  const key = `print-ready/${checksum}/${path.basename(filename)}`;
   if (config.provider === 'wrangler-r2') {
     await (dependencies.putWithWrangler || putWithWrangler)({
       bucket: config.bucket,

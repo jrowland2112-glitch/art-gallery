@@ -8,7 +8,7 @@ PUBLIC_BASE_URL = "https://replace-with-the-deployed-worker.example"
 CONNECTOR_ENABLED = "false"
 WHCC_SANDBOX_SUBMIT_ENABLED = "false"
 WHCC_MAX_ORDER_TOTAL = "500"
-ASSET_URL_TTL_SECONDS = "1800"
+ASSET_URL_TTL_SECONDS = "604800"
 
 [[r2_buckets]]
 binding = "ORIGINALS"

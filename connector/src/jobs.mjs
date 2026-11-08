@@ -12,7 +12,7 @@ function publicBaseUrl(env) {
 }
 
 async function signedAssetUrl(key, env) {
-  const expires = Math.floor(Date.now() / 1000) + Number(env.ASSET_URL_TTL_SECONDS || 1800);
+  const expires = Math.floor(Date.now() / 1000) + Number(env.ASSET_URL_TTL_SECONDS || 604800);
   const signature = await signAsset(key, expires, env.IMAGE_URL_SIGNING_SECRET);
   const url = new URL('/fulfillment-assets', publicBaseUrl(env));
   url.searchParams.set('key', key);

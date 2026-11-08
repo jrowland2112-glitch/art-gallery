@@ -1,6 +1,6 @@
 <footer class="site-footer">
   <div class="page-width">
-    {%- if section.settings.show_menu or section.settings.show_newsletter -%}
+    {%- if section.settings.show_menu or section.settings.show_newsletter or section.settings.show_contact -%}
       <div class="site-footer__grid">
         {%- if section.settings.show_menu -%}
           <div>
@@ -13,7 +13,7 @@
           </div>
         {%- endif -%}
         {%- if section.settings.show_newsletter -%}
-          <div>
+          <div class="site-footer__column">
             <h2>{{ section.settings.newsletter_heading }}</h2>
             <p class="muted">{{ section.settings.newsletter_text }}</p>
             {%- form 'customer', id: 'footer-newsletter' -%}
@@ -29,6 +29,15 @@
                 </div>
               {%- endif -%}
             {%- endform -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_contact -%}
+          <div class="site-footer__column">
+            <h2>{{ section.settings.contact_heading }}</h2>
+            <p class="muted">{{ section.settings.contact_text }}</p>
+            <a class="button button--secondary" href="{{ section.settings.contact_link | default: '/pages/contact' }}">
+              {{ section.settings.contact_link_label }}
+            </a>
           </div>
         {%- endif -%}
       </div>
@@ -56,9 +65,14 @@
     { "type": "checkbox", "id": "show_menu", "label": "Show footer menu", "default": false },
     { "type": "text", "id": "menu_heading", "label": "Menu heading", "default": "Info" },
     { "type": "link_list", "id": "menu", "label": "Footer menu", "default": "footer", "info": "Good for Shipping, Returns, Contact, and policy links" },
-    { "type": "checkbox", "id": "show_newsletter", "label": "Show email sign-up", "default": false },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show email sign-up", "default": true },
     { "type": "text", "id": "newsletter_heading", "label": "Sign-up heading", "default": "Stay in touch" },
-    { "type": "text", "id": "newsletter_text", "label": "Sign-up text", "default": "New work and print releases, a few times a year." }
+    { "type": "text", "id": "newsletter_text", "label": "Sign-up text", "default": "New work and print releases, a few times a year." },
+    { "type": "checkbox", "id": "show_contact", "label": "Show contact section", "default": true },
+    { "type": "text", "id": "contact_heading", "label": "Contact heading", "default": "Contact me" },
+    { "type": "textarea", "id": "contact_text", "label": "Contact text", "default": "Have a question about a photograph, print, or custom order? I would be glad to hear from you." },
+    { "type": "text", "id": "contact_link_label", "label": "Contact link label", "default": "Send a message" },
+    { "type": "url", "id": "contact_link", "label": "Contact page", "info": "Defaults to /pages/contact when left blank" }
   ],
   "enabled_on": { "groups": ["footer"] }
 }

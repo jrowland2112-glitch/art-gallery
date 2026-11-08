@@ -45,11 +45,13 @@
   }
 
   function initProduct(root) {
+    if (root.dataset.productReady) return;
     var dataEl = root.querySelector('[data-product-json]');
     if (!dataEl) return;
     var variants = JSON.parse(dataEl.textContent);
     var form = root.querySelector('form[action*="/cart/add"]');
     if (!form) return;
+    root.dataset.productReady = '1';
     root.querySelectorAll('[data-swatch]').forEach(function (s) {
       var table = s.dataset.swatch === 'mat' ? MAT_COLORS : FRAME_COLORS;
       var color = lookup(table, s.dataset.swatchValue);
@@ -61,9 +63,113 @@
     var addBtn = form.querySelector('[data-add-to-cart]');
     var frame = root.querySelector('[data-frame-preview]');
     var mainImg = root.querySelector('[data-main-image]');
+    var finishCaption = root.querySelector('[data-finish-caption]');
+    var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
     var groups = Array.prototype.slice.call(root.querySelectorAll('[data-option-index]'));
+    if (finishCaption) finishCaption.dataset.defaultCaption = finishCaption.textContent;
+
+    function whccDetails(value) {
+      var title = (value || '').trim();
+      var sizeMatch = title.match(/\d+(?:\.\d+)?\s*[x×]\s*\d+(?:\.\d+)?/i);
+      var size = sizeMatch ? sizeMatch[0].replace(/\s+/g, '').replace('×', 'x') : title;
+      var lower = title.toLowerCase();
+      var finish = 'Print';
+      if (/frame|framed/.test(lower)) finish = 'Framed';
+      else if (/metal|aluminum|aluminium/.test(lower)) finish = 'Metal';
+      else if (/canvas|gallery\s*wrap/.test(lower)) finish = 'Gallery Wrap';
+      return { title: title, finish: finish, size: size };
+    }
+
+    function initWhccPicker() {
+      var picker = root.querySelector('[data-whcc-picker]');
+      var source = root.querySelector('[data-whcc-source]');
+      if (!picker || !source) return;
+      var finishContainer = picker.querySelector('[data-whcc-finishes]');
+      var sizeContainer = picker.querySelector('[data-whcc-sizes]');
+      var finishSelected = picker.querySelector('[data-whcc-finish-selected]');
+      var sizeSelected = picker.querySelector('[data-whcc-size-selected]');
+      var sourceInputs = Array.prototype.slice.call(source.querySelectorAll('input[type="radio"]'));
+      var items = variants.map(function (variant) {
+        var details = whccDetails(variant.options[0]);
+        details.variant = variant;
+        return details;
+      });
+      var checkedSource = source.querySelector('input:checked');
+      var initial = whccDetails(checkedSource ? checkedSource.value : items[0].title);
+      var currentFinish = initial.finish;
+      var currentSize = initial.size;
+      var finishPriority = { Framed: 0, Metal: 1, 'Gallery Wrap': 2, Print: 3 };
+
+      function unique(values) {
+        return values.filter(function (value, index) { return values.indexOf(value) === index; });
+      }
+
+      function sizeArea(value) {
+        var parts = value.toLowerCase().split('x');
+        return parts.length === 2 ? (parseFloat(parts[0]) || 0) * (parseFloat(parts[1]) || 0) : 0;
+      }
+
+      function renderChoices(container, values, selectedValue, name, onChange) {
+        container.innerHTML = '';
+        values.forEach(function (value, index) {
+          var id = form.id + '-' + name + '-' + index;
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.id = id;
+          input.name = form.id + '-' + name;
+          input.value = value;
+          input.checked = value === selectedValue;
+          input.addEventListener('change', function () { if (input.checked) onChange(value); });
+          var label = document.createElement('label');
+          label.setAttribute('for', id);
+          var content = document.createElement('span');
+          content.className = 'option-value__content';
+          var strong = document.createElement('strong');
+          strong.textContent = value;
+          content.appendChild(strong);
+          label.appendChild(content);
+          container.appendChild(input);
+          container.appendChild(label);
+        });
+      }
+
+      function selectSource(finish, size) {
+        var item = items.find(function (candidate) { return candidate.finish === finish && candidate.size === size; });
+        if (!item) return;
+        var input = sourceInputs.find(function (candidate) { return candidate.value === item.title; });
+        if (!input) return;
+        currentFinish = finish;
+        currentSize = size;
+        input.checked = true;
+        finishSelected.textContent = finish;
+        sizeSelected.textContent = size;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function renderSizes() {
+        var sizes = unique(items.filter(function (item) { return item.finish === currentFinish; }).map(function (item) { return item.size; }));
+        sizes.sort(function (a, b) { return sizeArea(a) - sizeArea(b); });
+        if (sizes.indexOf(currentSize) === -1) currentSize = sizes[0];
+        renderChoices(sizeContainer, sizes, currentSize, 'size', function (size) { selectSource(currentFinish, size); });
+        sizeSelected.textContent = currentSize;
+      }
+
+      var finishes = unique(items.map(function (item) { return item.finish; }));
+      finishes.sort(function (a, b) {
+        var aPriority = Object.prototype.hasOwnProperty.call(finishPriority, a) ? finishPriority[a] : 99;
+        var bPriority = Object.prototype.hasOwnProperty.call(finishPriority, b) ? finishPriority[b] : 99;
+        return aPriority - bPriority;
+      });
+      renderChoices(finishContainer, finishes, currentFinish, 'finish', function (finish) {
+        currentFinish = finish;
+        renderSizes();
+        selectSource(currentFinish, currentSize);
+      });
+      finishSelected.textContent = currentFinish;
+      renderSizes();
+    }
 
     function selected() {
       return groups.map(function (g) {
@@ -86,16 +192,53 @@
 
     function updateFrame(values) {
       if (!frame) return;
-      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false;
+      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
       groups.forEach(function (g, i) {
         var name = (g.dataset.optionName || '').toLowerCase();
-        if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
+        var kind = (g.dataset.optionKind || '').toLowerCase();
+        if (kind === 'finish' || name.indexOf(finishOpt) !== -1) finishValue = (values[i] || '').toLowerCase();
+        else if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
         else if (name.indexOf(matOpt) !== -1) { hasMatOption = true; matColor = lookup(MAT_COLORS, values[i]); }
       });
-      frame.classList.toggle('is-framed', hasFrameOption && !!frameColor);
-      frame.classList.toggle('has-mat', hasMatOption && !!matColor);
+      var isCanvas = /canvas/.test(finishValue);
+      var isMetal = /metal|aluminum|aluminium/.test(finishValue);
+      var isFramedFinish = /frame|matted/.test(finishValue);
+      if (isCanvas || isMetal) {
+        frameColor = null;
+        matColor = null;
+      } else if (isFramedFinish) {
+        if (!hasFrameOption) frameColor = '#252522';
+        if (!hasMatOption) matColor = '#f7f5ef';
+      }
+      frame.classList.toggle('is-canvas', isCanvas);
+      frame.classList.toggle('is-metal', isMetal);
+      frame.classList.toggle('is-framed', !!frameColor);
+      frame.classList.toggle('has-mat', !!matColor);
       frame.style.setProperty('--frame-color', frameColor || 'transparent');
       frame.style.setProperty('--mat-color', matColor || 'transparent');
+      if (finishCaption) {
+        if (isCanvas) finishCaption.textContent = 'Canvas · Texture and depth preview';
+        else if (isMetal) finishCaption.textContent = 'Metal · Clean and luminous preview';
+        else if (isFramedFinish) finishCaption.textContent = 'Matted and framed · Finish preview';
+        else finishCaption.textContent = finishCaption.dataset.defaultCaption || '';
+      }
+    }
+
+    function updateAvailability(values) {
+      groups.forEach(function (group, optionIndex) {
+        group.querySelectorAll('input[type="radio"]').forEach(function (input) {
+          var candidate = values.slice();
+          candidate[optionIndex] = input.value;
+          var available = variants.some(function (variant) {
+            return variant.available && variant.options.every(function (optionValue, index) {
+              return optionValue === candidate[index];
+            });
+          });
+          var label = input.nextElementSibling;
+          if (label) label.classList.toggle('is-unavailable', !available);
+          input.setAttribute('aria-label', input.value + (available ? '' : ', unavailable with current selections'));
+        });
+      });
     }
 
     function update() {
@@ -105,6 +248,7 @@
         if (label) label.textContent = values[i] || '';
       });
       updateFrame(values);
+      updateAvailability(values);
       var variant = findVariant(values);
       if (!variant) {
         addBtn.disabled = true;
@@ -131,6 +275,7 @@
     }
 
     groups.forEach(function (g) { g.addEventListener('change', update); });
+    initWhccPicker();
 
     root.querySelectorAll('[data-thumb]').forEach(function (thumb) {
       thumb.addEventListener('click', function () {

@@ -89,7 +89,11 @@
               assign mat_key = section.settings.mat_option_name | downcase
               assign swatch_kind = ''
               assign option_kind = 'standard'
-              if option_name_lower contains finish_key
+              assign option_label = option.name
+              if option_name_lower == 'title'
+                assign option_kind = 'finish'
+                assign option_label = 'Print option'
+              elsif option_name_lower contains finish_key
                 assign option_kind = 'finish'
               elsif option_name_lower contains 'size' or option_name_lower contains 'dimension'
                 assign option_kind = 'size'
@@ -101,10 +105,10 @@
                 assign option_kind = 'mat'
               endif
             -%}
-            <fieldset class="option-group option-group--{{ option_kind }}" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}">
+            <fieldset class="option-group option-group--{{ option_kind }}" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}" data-option-kind="{{ option_kind }}">
               <legend>
                 <span class="option-group__step">{{ forloop.index | prepend: '0' }}</span>
-                <span class="option-group__title">Choose your {{ option.name | downcase }}</span>
+                <span class="option-group__title">Choose your {{ option_label | downcase }}</span>
                 <span class="option-group__selected" data-selected-value>{{ option.selected_value }}</span>
               </legend>
               <div class="option-values">
@@ -176,7 +180,7 @@
   "name": "Product page",
   "settings": [
     { "type": "checkbox", "id": "frame_preview", "label": "Show live frame and mat preview", "default": true },
-    { "type": "text", "id": "finish_option_name", "label": "Name of the finish option", "default": "Finish", "info": "Must match the option name on products that offer Canvas, Metal, or Matted & framed" },
+    { "type": "text", "id": "finish_option_name", "label": "Name of the finish option", "default": "Finish", "info": "Must match the option name on products that offer Canvas, Metal, or Matted & framed. WHCC's default Title option is recognized automatically." },
     { "type": "text", "id": "frame_option_name", "label": "Name of the frame option", "default": "Frame", "info": "Must match the option name on your products, e.g. \"Frame\"" },
     { "type": "text", "id": "mat_option_name", "label": "Name of the mat option", "default": "Mat", "info": "e.g. \"Mat\" or \"Mount\"" },
     { "type": "text", "id": "stage_caption", "label": "Preview caption", "default": "Your art, your way · Finish preview" },

@@ -94,7 +94,8 @@
       var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
       groups.forEach(function (g, i) {
         var name = (g.dataset.optionName || '').toLowerCase();
-        if (name.indexOf(finishOpt) !== -1) finishValue = (values[i] || '').toLowerCase();
+        var kind = (g.dataset.optionKind || '').toLowerCase();
+        if (kind === 'finish' || name.indexOf(finishOpt) !== -1) finishValue = (values[i] || '').toLowerCase();
         else if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
         else if (name.indexOf(matOpt) !== -1) { hasMatOption = true; matColor = lookup(MAT_COLORS, values[i]); }
       });

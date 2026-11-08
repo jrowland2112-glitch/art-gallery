@@ -37,7 +37,7 @@ Once the owner connects this repo to Shopify (Online Store → Themes → Add th
 - **Everyday editing happens in Shopify, not in code.** In the Shopify admin, the owner uploads photos, adds, removes, and reorders sections (Online Store → Themes → Customize), edits the About page, writes blog posts, and manages products, prices, menus, and analytics.
 - **Code changes are only for new kinds of sections or design changes** the theme editor can't already do.
 - **Products and print options** come from the print vendor app (for example Prodigi or Lumaprints) as Shopify product options. The product page builds its selectors, price, availability, finish preview, and cart variant from those options automatically. For products offering several print forms, prefer `Finish` (Canvas, Metal, Matted & framed), `Size`, and one optional third vendor-supported option such as `Frame`; Shopify allows at most three options, so bundle the mat into the framed finish when needed. Never hard-code products or prices.
-- **There is no custom backend, database, payment code, or customer login.** Shopify provides checkout, accounts, and analytics. Don't add a backend without the owner's explicit approval.
+- **The storefront theme has no general-purpose custom backend, payment code, or customer login.** Joseph approved one narrow exception on November 8, 2026: `connector/` may contain a small serverless service that sends paid print orders to the **WHCC Test API only**. It must default to disabled, keep WHCC submission behind a second kill switch, use durable idempotency, and never handle card data. Connecting to WHCC Live requires a separate rule change, pull request, review, and explicit owner approval.
 
 ### Theme structure
 

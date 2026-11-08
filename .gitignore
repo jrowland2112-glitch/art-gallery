@@ -7,3 +7,8 @@ Thumbs.db
 *.log
 .bulk-upload/
 incoming/
+connector/.dev.vars
+connector/.dev.vars.*
+connector/wrangler.toml
+.wrangler/
+connector/.wrangler/

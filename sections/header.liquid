@@ -26,12 +26,12 @@
           {%- assign logo_width_2x = settings.logo_width | times: 2 -%}
           {{ settings.logo | image_url: width: logo_width_2x | image_tag: alt: shop.name }}
         {%- else -%}
-          <span class="wordmark">
-            <span class="wordmark__name">{{ section.settings.wordmark_name | default: shop.name }}</span>
-            {%- if section.settings.wordmark_subtitle != blank -%}
-              <span class="wordmark__sub">{{ section.settings.wordmark_subtitle }}</span>
-            {%- endif -%}
-          </span>
+          <img
+            src="{{ 'rowland-photography-logo.png' | asset_url }}"
+            width="912"
+            height="268"
+            alt="Rowland Photography"
+          >
         {%- endif -%}
       </a>
 

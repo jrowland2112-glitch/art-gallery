@@ -185,8 +185,20 @@ textarea { min-height: 9rem; resize: vertical; }
 .card:hover .card__media img { transform: scale(1.03); }
 .search-results__grid .card__media { aspect-ratio: 3 / 2; }
 .search-results__grid .card__media img { object-fit: contain; padding: 0; }
-.shop-results__grid .card__media { aspect-ratio: 3 / 2; }
+.shop-results__grid { align-items: start; }
+.shop-results__grid .card__media {
+  aspect-ratio: var(--natural-ratio, 3 / 2);
+  background: transparent;
+}
 .shop-results__grid .card__media img { object-fit: contain; padding: 0; }
+@media (min-width: 750px) {
+  .shop-results__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-flow: dense;
+  }
+  .shop-results__grid .card { grid-column: span 4; }
+  .shop-results__grid .card--landscape { grid-column: span 6; }
+}
 .card__info { padding-top: 0.9rem; }
 .card__title { font-family: var(--font-heading); font-size: 1.1rem; margin: 0 0 0.2rem; font-weight: var(--font-heading-weight); }
 .card__meta { font-size: 0.88rem; color: var(--color-muted); }

@@ -104,7 +104,27 @@
                 assign option_kind = 'mat'
               endif
             -%}
-            <fieldset class="option-group option-group--{{ option_kind }}" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}" data-option-kind="{{ option_kind }}">
+            {%- if option_name_lower == 'title' -%}
+              <div class="whcc-option-picker" data-whcc-picker>
+                <fieldset class="option-group option-group--finish">
+                  <legend>
+                    <span class="option-group__step">01</span>
+                    <span class="option-group__title">Choose your finish</span>
+                    <span class="option-group__selected" data-whcc-finish-selected></span>
+                  </legend>
+                  <div class="option-values" data-whcc-finishes></div>
+                </fieldset>
+                <fieldset class="option-group option-group--size">
+                  <legend>
+                    <span class="option-group__step">02</span>
+                    <span class="option-group__title">Choose your size</span>
+                    <span class="option-group__selected" data-whcc-size-selected></span>
+                  </legend>
+                  <div class="option-values" data-whcc-sizes></div>
+                </fieldset>
+              </div>
+            {%- endif -%}
+            <fieldset class="option-group option-group--{{ option_kind }}" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}" data-option-kind="{{ option_kind }}"{% if option_name_lower == 'title' %} data-whcc-source hidden{% endif %}>
               <legend>
                 <span class="option-group__step">{{ forloop.index | prepend: '0' }}</span>
                 <span class="option-group__title">Choose your {{ option_label | downcase }}</span>
@@ -142,6 +162,11 @@
           {%- endfor -%}
         {%- endunless -%}
 
+        <div class="product__price" data-price>
+          {{ current_variant.price | money }}
+          {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+        </div>
+
         <div class="product__buy">
           <div class="qty">
             <button type="button" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
@@ -154,11 +179,6 @@
           </button>
           {%- if section.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
           {%- if section.settings.buy_note != blank -%}<p class="product__buy-note">{{ section.settings.buy_note }}</p>{%- endif -%}
-        </div>
-
-        <div class="product__price" data-price>
-          {{ current_variant.price | money }}
-          {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
         </div>
       {%- endform -%}
 

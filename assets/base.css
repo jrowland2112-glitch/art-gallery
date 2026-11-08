@@ -206,7 +206,7 @@ textarea { min-height: 9rem; resize: vertical; }
   .product__info { position: sticky; top: 6.5rem; }
 }
 .product__stage {
-  background: var(--color-surface); display: grid; place-items: center;
+  background: transparent; display: grid; place-items: center;
   grid-template-rows: 1fr auto; gap: 2.5rem;
   padding: clamp(1.5rem, 5vw, 4rem); min-height: clamp(26rem, 58vw, 44rem);
 }

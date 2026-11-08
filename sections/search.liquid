@@ -12,7 +12,7 @@
     {%- if search.performed -%}
       {%- paginate search.results by 12 -%}
         <p class="muted">{{ search.results_count }} results for "{{ search.terms | escape }}"</p>
-        <div class="grid" style="--cols: 3; --cols-mobile: 1;">
+        <div class="grid search-results__grid" style="--cols: 3; --cols-mobile: 1;">
           {%- for item in search.results -%}
             {%- if item.object_type == 'product' -%}
               {% render 'product-card', product: item, ratio: '4 / 3', contain: true %}

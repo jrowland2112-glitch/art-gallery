@@ -21,7 +21,7 @@
         {%- endif -%}
       </div>
 
-      <div class="grid" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
+      <div class="grid{% if collection.handle == 'all' %} shop-results__grid{% endif %}" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
         {%- for product in collection.products -%}
           {% render 'product-card', product: product, ratio: section.settings.ratio, contain: section.settings.contain %}
         {%- else -%}

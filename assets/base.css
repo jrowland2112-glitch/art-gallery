@@ -120,6 +120,17 @@ textarea { min-height: 9rem; resize: vertical; }
 .site-header__nav a[aria-current="page"] { border-bottom: 1px solid currentColor; }
 .site-header__icons { justify-self: end; display: flex; align-items: center; gap: 1.1rem; }
 .site-header__icons svg { width: 1.35rem; height: 1.35rem; }
+.header-search summary { cursor: pointer; display: inline-flex; list-style: none; padding: 0.25rem; }
+.header-search summary::-webkit-details-marker { display: none; }
+.header-search summary:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.header-search__panel {
+  background: var(--color-background); border: 1px solid var(--color-border); padding: 1.25rem;
+  position: absolute; right: 0; top: calc(100% + 1px); width: min(32rem, calc(100vw - (2 * var(--page-margin)))); z-index: 2;
+}
+.header-search__form { display: grid; gap: 0.7rem; }
+.header-search__form > label { font-family: var(--font-heading); font-size: 1.25rem; }
+.header-search__controls { display: grid; gap: 0.6rem; grid-template-columns: minmax(0, 1fr) auto; }
+.header-search__controls input { min-width: 0; }
 .cart-link { position: relative; display: inline-flex; }
 .cart-count {
   position: absolute; top: -0.45rem; right: -0.65rem; min-width: 1.1rem; height: 1.1rem;
@@ -142,6 +153,10 @@ textarea { min-height: 9rem; resize: vertical; }
   .site-header--left .site-header__nav { justify-self: center; }
   .site-header__nav { display: block; }
   .menu-drawer { display: none; }
+}
+@media (max-width: 749px) {
+  .header-search__controls { grid-template-columns: 1fr; }
+  .header-search__controls .button { width: 100%; }
 }
 
 /* ---------- Hero ---------- */

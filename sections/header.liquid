@@ -40,6 +40,27 @@
       </nav>
 
       <div class="site-header__icons">
+        {%- if section.settings.show_search -%}
+          <details class="header-search">
+            <summary aria-label="Search products">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                <path d="m16 16 4.2 4.2"></path>
+              </svg>
+            </summary>
+            <div class="header-search__panel">
+              <form action="{{ routes.search_url }}" method="get" role="search" class="header-search__form">
+                <input type="hidden" name="type" value="product">
+                <input type="hidden" name="options[prefix]" value="last">
+                <label for="header-search-q">Search the print collection</label>
+                <div class="header-search__controls">
+                  <input id="header-search-q" type="search" name="q" placeholder="Enter a title, place, or subject" autocomplete="off" required>
+                  <button class="button" type="submit">Search</button>
+                </div>
+              </form>
+            </div>
+          </details>
+        {%- endif -%}
         {%- if section.settings.show_instagram and settings.social_instagram != blank -%}
           <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon-instagram' %}</a>
         {%- elsif section.settings.show_instagram -%}
@@ -73,6 +94,7 @@
     { "type": "header", "content": "Menu links", "info": "Add, rename, reorder, or remove the links on the left under Header (Menu link blocks)." },
     { "type": "checkbox", "id": "use_store_menu", "label": "Use a Shopify menu instead", "default": false, "info": "Only needed for advanced menus made in Content → Menus" },
     { "type": "link_list", "id": "menu", "label": "Shopify menu", "default": "main-menu" },
+    { "type": "checkbox", "id": "show_search", "label": "Show product search", "default": true },
     { "type": "checkbox", "id": "show_instagram", "label": "Show Instagram icon", "default": true },
     { "type": "checkbox", "id": "show_cart", "label": "Always show cart icon", "default": false, "info": "When off, the cart icon only appears once something is in the cart" },
     { "type": "checkbox", "id": "sticky", "label": "Keep header visible when scrolling", "default": false }

@@ -1,9 +1,11 @@
 <section class="section">
   <div class="page-width">
-    <h1 class="text-center">Search</h1>
+    <h1 class="text-center">Search prints</h1>
     <form action="{{ routes.search_url }}" method="get" role="search" class="page-width--narrow newsletter-form" style="margin: 0 auto 3rem">
-      <label class="visually-hidden" for="search-q">Search</label>
-      <input id="search-q" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search prints, collections, stories">
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <label class="visually-hidden" for="search-q">Search prints</label>
+      <input id="search-q" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search by title, place, or subject">
       <button class="button" type="submit">Search</button>
     </form>
 

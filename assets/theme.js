@@ -63,9 +63,6 @@
     var addBtn = form.querySelector('[data-add-to-cart]');
     var frame = root.querySelector('[data-frame-preview]');
     var mainImg = root.querySelector('[data-main-image]');
-    var roomPreview = root.querySelector('[data-room-preview]');
-    var roomImg = root.querySelector('[data-room-image]');
-    var roomSizeLabel = root.querySelector('[data-room-size-label]');
     var finishCaption = root.querySelector('[data-finish-caption]');
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
@@ -244,52 +241,6 @@
       });
     }
 
-    function roomSelection(values) {
-      var selection = { finish: 'Print', size: '' };
-      groups.forEach(function (group, index) {
-        var name = (group.dataset.optionName || '').toLowerCase();
-        var kind = (group.dataset.optionKind || '').toLowerCase();
-        var value = values[index] || '';
-        if (name === 'title') {
-          var details = whccDetails(value);
-          selection.finish = details.finish;
-          selection.size = details.size;
-        } else {
-          if (kind === 'finish' || name.indexOf(finishOpt) !== -1) selection.finish = value;
-          if (kind === 'size' || name.indexOf('size') !== -1 || name.indexOf('dimension') !== -1) selection.size = value;
-        }
-      });
-      return selection;
-    }
-
-    function updateRoom(values) {
-      if (!roomPreview) return;
-      var selection = roomSelection(values);
-      var match = selection.size.match(/(\d+(?:\.\d+)?)\s*(?:x|\u00d7)\s*(\d+(?:\.\d+)?)/i);
-      var widthInches = 18;
-      if (match) {
-        var first = parseFloat(match[1]);
-        var second = parseFloat(match[2]);
-        var imageIsLandscape = !mainImg || !mainImg.naturalWidth || mainImg.naturalWidth >= mainImg.naturalHeight;
-        widthInches = imageIsLandscape ? Math.max(first, second) : Math.min(first, second);
-        if (roomSizeLabel) roomSizeLabel.textContent = first + ' × ' + second + ' in · Approximate scale';
-      } else if (roomSizeLabel) {
-        roomSizeLabel.textContent = 'Selected size · Approximate scale';
-      }
-
-      var roomWidths = { living: 144, kitchen: 168, office: 132 };
-      var roomType = roomPreview.dataset.roomType || 'living';
-      var widthPercent = (widthInches / roomWidths[roomType]) * 100;
-      roomPreview.style.setProperty('--room-art-width', Math.max(11, Math.min(30, widthPercent)) + '%');
-
-      var finish = (selection.finish || 'print').toLowerCase();
-      if (/frame|matted/.test(finish)) roomPreview.dataset.roomFinish = 'framed';
-      else if (/metal|aluminum|aluminium/.test(finish)) roomPreview.dataset.roomFinish = 'metal';
-      else if (/canvas|gallery\s*wrap/.test(finish)) roomPreview.dataset.roomFinish = 'gallery-wrap';
-      else roomPreview.dataset.roomFinish = 'print';
-      if (roomImg && mainImg && roomImg.src !== mainImg.src) roomImg.src = mainImg.src;
-    }
-
     function update() {
       var values = selected();
       groups.forEach(function (g, i) {
@@ -318,7 +269,6 @@
         mainImg.src = variant.featured_image.src;
         mainImg.removeAttribute('srcset');
       }
-      updateRoom(values);
       var url = new URL(window.location.href);
       url.searchParams.set('variant', variant.id);
       window.history.replaceState({}, '', url.toString());
@@ -332,20 +282,8 @@
         if (!mainImg) return;
         mainImg.src = thumb.dataset.thumb;
         mainImg.removeAttribute('srcset');
-        if (roomImg) roomImg.src = thumb.dataset.thumb;
         root.querySelectorAll('[data-thumb]').forEach(function (t) { t.setAttribute('aria-current', 'false'); });
         thumb.setAttribute('aria-current', 'true');
-      });
-    });
-
-    root.querySelectorAll('[data-room-option]').forEach(function (button) {
-      button.addEventListener('click', function () {
-        if (!roomPreview) return;
-        roomPreview.dataset.roomType = button.dataset.roomOption;
-        root.querySelectorAll('[data-room-option]').forEach(function (option) {
-          option.setAttribute('aria-pressed', option === button ? 'true' : 'false');
-        });
-        updateRoom(selected());
       });
     });
 

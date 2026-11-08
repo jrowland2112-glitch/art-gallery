@@ -15,7 +15,7 @@
         <div class="grid" style="--cols: 3; --cols-mobile: 1;">
           {%- for item in search.results -%}
             {%- if item.object_type == 'product' -%}
-              {% render 'product-card', product: item %}
+              {% render 'product-card', product: item, ratio: '4 / 3', contain: true %}
             {%- else -%}
               <a class="card" href="{{ item.url }}">
                 <div class="card__info">

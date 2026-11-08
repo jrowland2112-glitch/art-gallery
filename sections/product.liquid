@@ -160,12 +160,19 @@
           {{ current_variant.price | money }}
           {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
         </div>
-        {%- if product.description != blank -%}
-          <div class="rte product__intro">{{ product.description }}</div>
-        {%- endif -%}
       {%- endform -%}
 
-      <div>
+      <div class="product__accordions">
+        <details class="accordion accordion--story">
+          <summary>The Story Behind the Shot</summary>
+          <div class="rte">
+            {%- if product.description != blank -%}
+              {{ product.description }}
+            {%- else -%}
+              <p>The story behind this photograph is coming soon.</p>
+            {%- endif -%}
+          </div>
+        </details>
         {%- for block in section.blocks -%}
           <details class="accordion" {{ block.shopify_attributes }}>
             <summary>{{ block.settings.heading }}</summary>

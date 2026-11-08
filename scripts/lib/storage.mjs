@@ -2,7 +2,7 @@ import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import { HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-function storageConfig(env = process.env) {
+export function storageConfig(env = process.env) {
   const values = {
     endpoint: env.ORIGINALS_S3_ENDPOINT,
     region: env.ORIGINALS_S3_REGION || 'auto',
@@ -10,7 +10,7 @@ function storageConfig(env = process.env) {
     accessKeyId: env.ORIGINALS_S3_ACCESS_KEY_ID,
     secretAccessKey: env.ORIGINALS_S3_SECRET_ACCESS_KEY,
   };
-  const present = Object.values(values).filter(Boolean).length;
+  const present = [values.endpoint, values.bucket, values.accessKeyId, values.secretAccessKey].filter(Boolean).length;
   if (present === 0) return null;
   if (!values.endpoint || !values.bucket || !values.accessKeyId || !values.secretAccessKey) {
     throw new Error('Original-storage settings are incomplete. Set endpoint, bucket, access key ID, and secret access key in the local environment.');

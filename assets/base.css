@@ -241,17 +241,17 @@ textarea { min-height: 9rem; resize: vertical; }
 .option-group { border: 0; border-top: 1px solid var(--color-border); padding: 1.35rem 0 0; margin: 0 0 1.45rem; }
 .option-group legend {
   width: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 0.7rem;
-  font-size: 0.76rem; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 0.85rem; padding: 0;
+  font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.85rem; padding: 0;
 }
 .option-group__step { color: var(--color-muted); font-variant-numeric: tabular-nums; }
 .option-group__title { color: var(--color-foreground); }
-.option-group__selected { text-transform: none; letter-spacing: 0; color: var(--color-muted); font-size: 0.78rem; }
+.option-group__selected { text-transform: none; letter-spacing: 0; color: var(--color-muted); font-size: 0.9rem; }
 .option-values { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .option-group--finish .option-values, .option-group--size .option-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.55rem; }
 .option-values input { position: absolute; opacity: 0; pointer-events: none; }
 .option-values label {
   border: 1px solid var(--color-border); padding: 0.75rem 0.95rem; cursor: pointer;
-  min-height: 3.25rem; font-size: 0.88rem; border-radius: var(--radius);
+  min-height: 3.25rem; font-size: 1.05rem; border-radius: var(--radius);
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; text-align: center;
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 }

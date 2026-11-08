@@ -210,6 +210,29 @@ textarea { min-height: 9rem; resize: vertical; }
   grid-template-rows: 1fr auto; gap: 2.5rem;
   padding: clamp(1.5rem, 5vw, 4rem); min-height: clamp(26rem, 58vw, 44rem);
 }
+.product__stage--room {
+  position: relative; isolation: isolate; overflow: hidden;
+  align-items: start; padding-bottom: clamp(10rem, 19vw, 14rem);
+  background:
+    linear-gradient(to bottom, transparent 70%, rgba(92,72,55,0.18) 70%, rgba(92,72,55,0.18) 70.5%, transparent 70.5%),
+    linear-gradient(to bottom, #f5f2ec 0 71%, #cdbba4 71% 100%);
+}
+.product__stage--room::before {
+  content: ""; position: absolute; z-index: 0;
+  left: 20%; right: 20%; bottom: 7%; height: 14%;
+  border-radius: 3px; background: linear-gradient(90deg, #77563f, #967158 48%, #77563f);
+  box-shadow: 0 0.45rem 1.2rem rgba(52,38,28,0.22), inset 0 1px rgba(255,255,255,0.18);
+}
+.product__stage--room::after {
+  content: ""; position: absolute; z-index: 0;
+  left: 25%; right: 25%; bottom: 0; height: 8%;
+  background: linear-gradient(90deg, #5f4433 0 5%, transparent 5% 95%, #5f4433 95% 100%);
+}
+.product__stage--room .frame-preview {
+  position: relative; z-index: 1; max-width: 68%;
+  box-shadow: 0 1rem 2rem rgba(43,35,29,0.2);
+}
+.product__stage--room .frame-preview img { max-height: 46vh; max-width: 100%; }
 .frame-preview {
   --frame-color: transparent; --frame-width: 0px; --mat-color: transparent; --mat-width: 0px;
   border: var(--frame-width) solid var(--frame-color);
@@ -282,6 +305,10 @@ textarea { min-height: 9rem; resize: vertical; }
   .product-section { --section-pad: 1.5rem 4rem; }
   .product-breadcrumb { margin-bottom: 1.25rem; }
   .product__stage { min-height: 24rem; }
+  .product__stage--room { min-height: 28rem; padding-bottom: 9rem; }
+  .product__stage--room::before { left: 10%; right: 10%; height: 12%; }
+  .product__stage--room::after { left: 17%; right: 17%; }
+  .product__stage--room .frame-preview { max-width: 86%; }
   .product__info h1 { font-size: calc(clamp(2rem, 11vw, 3rem) * var(--heading-scale)); }
   .product__buy { grid-template-columns: 1fr; }
   .product__buy .qty { width: 100%; justify-content: space-between; }

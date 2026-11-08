@@ -4,10 +4,12 @@
   assign form_id = 'product-form-' | append: section.id
   assign primary_collection = product.collections.first
   assign use_frame_preview = section.settings.frame_preview
+  assign use_room_preview = false
   for product_option_name in product.options
     assign product_option_name_lower = product_option_name | downcase
     if product_option_name_lower == 'title'
       assign use_frame_preview = false
+      assign use_room_preview = true
     endif
   endfor
 -%}
@@ -32,7 +34,7 @@
 
     <div class="product">
     <div class="product__media">
-      <div class="product__stage">
+      <div class="product__stage{% if use_room_preview %} product__stage--room{% endif %}">
         <div class="frame-preview" {% if use_frame_preview %}data-frame-preview{% endif %}>
           {%- if main_image -%}
             <img
@@ -55,7 +57,7 @@
       {%- if use_frame_preview -%}
         <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
       {%- endif -%}
-      {%- if product.images.size > 1 -%}
+      {%- if product.images.size > 1 and use_room_preview == false -%}
         <div class="product__thumbs">
           {%- for image in product.images -%}
             <button type="button" data-thumb="{{ image | image_url: width: 1600 }}" aria-current="{% if image == main_image %}true{% else %}false{% endif %}" aria-label="Show image {{ forloop.index }}">

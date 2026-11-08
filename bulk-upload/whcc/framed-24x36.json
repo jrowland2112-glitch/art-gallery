@@ -1,0 +1,13 @@
+{
+  "size": "24x36",
+  "moulding": "academie_black",
+  "surface": "photo_print",
+  "photo_print": "lustre_photo_print",
+  "lamination": "no",
+  "mat": "2_in",
+  "mat_color": "single_white",
+  "acrylic": "standard",
+  "dynamic_layout": "no",
+  "mounting": "standard",
+  "backing": "wire_wall_hanger_paper_backing"
+}

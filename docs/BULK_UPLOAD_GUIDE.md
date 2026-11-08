@@ -77,7 +77,7 @@ npm run photos:upload -- --folder "E:\Print Uploads" --prices "E:\Print Uploads\
 
 An optional `photos.csv` provides titles, alt text, tags, and descriptions. Without it, the filename becomes the title.
 
-WHCC selection JSON contains catalog choices, not secrets. The example files are placeholders; real IDs must come from the Test catalog before they are used for automatic fulfillment.
+`bulk-upload/prices.standard.csv` contains the approved nine variants and current Glade Creek retail prices. Its WHCC selection JSON uses catalog IDs validated against WHCC Test. Run `npm run whcc:validate-mappings` after any catalog or configuration change; this builds Test previews only and never submits an order.
 
 ## What a successful run reports
 

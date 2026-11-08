@@ -6,6 +6,7 @@
     "photos:check": "node scripts/bulk-products.mjs",
     "photos:upload": "node scripts/bulk-products.mjs --apply",
     "whcc:doctor": "node scripts/whcc-doctor.mjs",
+    "whcc:validate-mappings": "node scripts/whcc-validate-mappings.mjs",
     "connector:test": "node --test test/connector-*.test.mjs",
     "connector:dev": "wrangler dev --config connector/wrangler.example.toml",
     "test": "node --test"

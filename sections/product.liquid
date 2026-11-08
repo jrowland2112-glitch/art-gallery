@@ -66,6 +66,38 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
+      {%- if section.settings.show_room_preview and main_image -%}
+        <div class="room-preview" data-room-preview data-room-type="living" data-room-finish="print">
+          <div class="room-preview__header">
+            <div>
+              <span class="eyebrow">Picture it at home</span>
+              <h2>See it in your space</h2>
+            </div>
+            <p data-room-size-label>Selected size · Approximate scale</p>
+          </div>
+          <div class="room-preview__tabs" aria-label="Choose a room setting">
+            <button type="button" data-room-option="living" aria-pressed="true">Living room</button>
+            <button type="button" data-room-option="kitchen" aria-pressed="false">Kitchen</button>
+            <button type="button" data-room-option="office" aria-pressed="false">Office</button>
+          </div>
+          <div class="room-preview__scene">
+            <img class="room-preview__background room-preview__background--living" src="{{ 'room-living.jpg' | asset_url }}" alt="" loading="lazy" width="1600" height="2400">
+            <img class="room-preview__background room-preview__background--kitchen" src="{{ 'room-kitchen.jpg' | asset_url }}" alt="" loading="lazy" width="1600" height="1067">
+            <img class="room-preview__background room-preview__background--office" src="{{ 'room-office.jpg' | asset_url }}" alt="" loading="lazy" width="1600" height="1067">
+            <div class="room-preview__art" data-room-art>
+              <img
+                data-room-image
+                src="{{ main_image | image_url: width: 900 }}"
+                width="{{ main_image.width }}"
+                height="{{ main_image.height }}"
+                alt="{{ product.title | escape }} shown in the selected room"
+                loading="lazy"
+              >
+            </div>
+          </div>
+          <p class="room-preview__note">Room preview is for approximate scale and visualization. Actual appearance may vary.</p>
+        </div>
+      {%- endif -%}
     </div>
 
     <div class="product__info">
@@ -220,6 +252,7 @@
     { "type": "text", "id": "frame_option_name", "label": "Name of the frame option", "default": "Frame", "info": "Must match the option name on your products, e.g. \"Frame\"" },
     { "type": "text", "id": "mat_option_name", "label": "Name of the mat option", "default": "Mat", "info": "e.g. \"Mat\" or \"Mount\"" },
     { "type": "text", "id": "stage_caption", "label": "Preview caption", "default": "Your art, your way · Finish preview" },
+    { "type": "checkbox", "id": "show_room_preview", "label": "Show room setting preview", "default": true },
     { "type": "checkbox", "id": "show_collection", "label": "Show collection above title", "default": true },
     { "type": "checkbox", "id": "show_vendor", "label": "Show vendor above title", "default": false },
     { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show \"Buy it now\" button", "default": false },

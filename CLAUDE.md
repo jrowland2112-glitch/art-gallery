@@ -27,7 +27,7 @@ Once the owner connects this repo to Shopify (Online Store → Themes → Add th
 ### Owner-requested editing workflow
 
 - When the owner asks an assistant to edit the theme, make the change locally on a branch, run the required checks, upload or update an **unpublished** preview theme named `Preview: <branch>`, and give the owner the preview link. Routine theme work should not require opening Shopify Admin.
-- The owner reviews the preview. Merge only after the owner explicitly approves that specific pull request and instructs the assistant to merge it. Only the owner publishes.
+- The owner reviews the preview. Merge only after the owner explicitly approves that specific pull request and instructs the assistant to merge it. An assistant may publish only when the owner explicitly approves and instructs the assistant to publish a specific unpublished preview theme by name or theme ID.
 - The saved Shopify CLI login and `shopify.theme.toml` may identify the store, but never store a password, access token, secret, or live-theme target in the repository.
 - Blog posts, page records, products, menus, Shopify Files, payments, and other admin-managed resources aren't managed by the theme CLI. Explain when a requested change requires Shopify Admin; never request an Admin API token or other secret as a workaround.
 
@@ -54,7 +54,7 @@ Every new section must have a `{% schema %}` with plain-English labels, sensible
 
 ## Hard rules
 
-1. **Never publish a theme and never touch the live theme.** Preview with `shopify theme dev` or `shopify theme push --unpublished`. The owner publishes.
+1. **Never publish or modify the live theme without explicit owner authorization.** Preview with `shopify theme dev` or `shopify theme push --unpublished`. After the owner reviews a specific unpublished theme, the assistant may publish it only when the owner explicitly names or identifies that theme and instructs the assistant to publish it. Never push theme files directly to the current live theme; publish the already-verified preview theme instead.
 2. **Never push directly to `main`.** Every change goes through a pull request. An assistant may merge a specific pull request only after the owner explicitly approves that pull request and instructs the assistant to merge it. Otherwise, the owner merges it. Pull requests from Tristan also require the owner's explicit approval.
 3. **Never sign up for accounts, enter payment details, or buy anything** for the owner. Explain what's needed and guide the owner through it.
 4. **Never ask for, store, or commit passwords, API keys, admin tokens, `.env` files, or login cookies.**
@@ -72,7 +72,7 @@ Every new section must have a `{% schema %}` with plain-English labels, sensible
 4. Run `shopify theme check`. It must report no errors.
 5. Preview: `shopify theme push --unpublished --theme "Preview: <branch>"`, then share the preview link.
 6. Commit, push the branch, and open a **pull request into `main`** with the report below.
-7. **Stop.** Tell the owner it's ready. The owner reviews the preview and either merges the pull request or explicitly instructs the assistant to merge that specific pull request. Only the owner publishes.
+7. **Stop.** Tell the owner it's ready. The owner reviews the preview and either merges the pull request or explicitly instructs the assistant to merge that specific pull request. Publishing remains a separate approval: publish only when the owner explicitly instructs the assistant to publish that exact reviewed preview theme.
 
 ## Testing before opening a pull request
 

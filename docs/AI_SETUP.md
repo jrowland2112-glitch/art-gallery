@@ -37,7 +37,7 @@ Don't change anything on the site until I say go.
 
 ## Notes for the AI
 
-- **Theme edits can be handled for Joseph:** when Joseph asks for a theme design, section, photo-setting, or theme-text change, make it locally on a branch and give him an unpublished preview link. Blog posts, page records, products, menus, Shopify Files, payments, and other admin-managed resources still require the **Shopify admin**; explain those limits without requesting passwords or API tokens.
+- **Theme edits can be handled for Joseph:** when Joseph asks for a theme design, section, photo-setting, or theme-text change, make it locally on a branch and give him an unpublished preview link. An assistant may publish only after Joseph explicitly approves and identifies the exact unpublished preview theme to publish. Blog posts, page records, products, menus, Shopify Files, payments, and other admin-managed resources still require the **Shopify admin**; explain those limits without requesting passwords or API tokens.
 - **Code changes are for new section types or design changes only.** Always use a branch, a preview, and a pull request. Joseph either merges it himself or explicitly approves that specific pull request and instructs the assistant to merge it.
 - **If GitHub is connected to the store** (Guide 3, step 4), editor saves land on `main` as commits. Run `git pull` before every task.
 - **Never ask for passwords or secret keys.** If store data must be changed through the API, Joseph creates the access himself and keeps the key out of the repo.

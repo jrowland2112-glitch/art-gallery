@@ -1,0 +1,4 @@
+finish,size,retail_price,whcc_product_ref,whcc_selections_file,enabled
+Framed,12x18,225.00,framed-print,whcc/framed-12x18.example.json,true
+Metal,12x18,200.00,metal-print,whcc/metal-12x18.example.json,true
+Gallery Wrap,12x18,195.00,gallery-wrap,whcc/gallery-wrap-12x18.example.json,true

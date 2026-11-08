@@ -5,11 +5,17 @@
   "scripts": {
     "photos:check": "node scripts/bulk-products.mjs",
     "photos:upload": "node scripts/bulk-products.mjs --apply",
+    "whcc:doctor": "node scripts/whcc-doctor.mjs",
+    "connector:test": "node --test test/connector-*.test.mjs",
+    "connector:dev": "wrangler dev --config connector/wrangler.example.toml",
     "test": "node --test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.922.0",
     "csv-parse": "^7.0.3",
     "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.47.0"
   }
 }

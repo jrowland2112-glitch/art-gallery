@@ -7,6 +7,7 @@ A custom Shopify theme for selling fine art and photography prints, with a blog,
 - **Guide 2, AI assistant setup and starter prompt:** [`docs/AI_SETUP.md`](docs/AI_SETUP.md)
 - **Guide 3, transferring the store and code to the owner:** [`docs/HANDOFF.md`](docs/HANDOFF.md)
 - **Editing the site without code:** [`docs/EDITING_GUIDE.md`](docs/EDITING_GUIDE.md)
+- **WHCC Test connector (disabled, not deployed):** [`docs/WHCC_SANDBOX_CONNECTOR.md`](docs/WHCC_SANDBOX_CONNECTOR.md)
 
 ## Developer quick start
 

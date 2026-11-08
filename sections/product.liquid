@@ -3,6 +3,13 @@
   assign main_image = current_variant.featured_image | default: product.featured_image
   assign form_id = 'product-form-' | append: section.id
   assign primary_collection = product.collections.first
+  assign use_frame_preview = section.settings.frame_preview
+  for product_option_name in product.options
+    assign product_option_name_lower = product_option_name | downcase
+    if product_option_name_lower == 'title'
+      assign use_frame_preview = false
+    endif
+  endfor
 -%}
 <section
   class="section product-section"
@@ -26,7 +33,7 @@
     <div class="product">
     <div class="product__media">
       <div class="product__stage">
-        <div class="frame-preview" {% if section.settings.frame_preview %}data-frame-preview{% endif %}>
+        <div class="frame-preview" {% if use_frame_preview %}data-frame-preview{% endif %}>
           {%- if main_image -%}
             <img
               data-main-image
@@ -41,11 +48,11 @@
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
-        {%- if section.settings.stage_caption != blank -%}
+        {%- if section.settings.stage_caption != blank and use_frame_preview -%}
           <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
         {%- endif -%}
       </div>
-      {%- if section.settings.frame_preview -%}
+      {%- if use_frame_preview -%}
         <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
       {%- endif -%}
       {%- if product.images.size > 1 -%}
@@ -69,14 +76,6 @@
       {%- if section.settings.show_vendor and product.vendor != blank and section.settings.show_collection and primary_collection != blank -%}
         <p class="product__vendor">{{ product.vendor }}</p>
       {%- endif -%}
-      {%- if product.description != blank -%}
-        <div class="rte product__intro">{{ product.description }}</div>
-      {%- endif -%}
-      <div class="product__price" data-price>
-        {{ current_variant.price | money }}
-        {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
-      </div>
-
       {%- form 'product', product, id: form_id -%}
         <input type="hidden" name="id" value="{{ current_variant.id }}">
 
@@ -142,6 +141,14 @@
             </fieldset>
           {%- endfor -%}
         {%- endunless -%}
+
+        <div class="product__price" data-price>
+          {{ current_variant.price | money }}
+          {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+        </div>
+        {%- if product.description != blank -%}
+          <div class="rte product__intro">{{ product.description }}</div>
+        {%- endif -%}
 
         <div class="product__buy">
           <div class="qty">

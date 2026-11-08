@@ -142,14 +142,6 @@
           {%- endfor -%}
         {%- endunless -%}
 
-        <div class="product__price" data-price>
-          {{ current_variant.price | money }}
-          {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
-        </div>
-        {%- if product.description != blank -%}
-          <div class="rte product__intro">{{ product.description }}</div>
-        {%- endif -%}
-
         <div class="product__buy">
           <div class="qty">
             <button type="button" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
@@ -163,6 +155,14 @@
           {%- if section.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
           {%- if section.settings.buy_note != blank -%}<p class="product__buy-note">{{ section.settings.buy_note }}</p>{%- endif -%}
         </div>
+
+        <div class="product__price" data-price>
+          {{ current_variant.price | money }}
+          {%- if current_variant.compare_at_price > current_variant.price -%} <s>{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+        </div>
+        {%- if product.description != blank -%}
+          <div class="rte product__intro">{{ product.description }}</div>
+        {%- endif -%}
       {%- endform -%}
 
       <div>

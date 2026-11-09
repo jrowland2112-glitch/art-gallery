@@ -163,17 +163,9 @@ h1, h2, h3 { font-weight: 400; }
 .social-cta__link .icon-instagram { width: 1.6rem; height: 1.6rem; }
 
 /* ---------- Footer ---------- */
-.footer-project-inquiry { padding-block: clamp(2.5rem, 5vw, 4.5rem); }
-.footer-project-inquiry__inner { max-width: 76rem; }
-.footer-project-inquiry h2 {
-  margin: 0 0 0.85rem;
-  font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
-  font-weight: 600;
-}
-.footer-project-inquiry .rte { font-size: clamp(1rem, 1.25vw, 1.12rem); line-height: 1.7; }
-.footer-project-inquiry .rte p:last-child { margin-bottom: 0; }
-.footer-project-inquiry a { color: inherit; text-underline-offset: 0.18em; }
+.site-footer__project-inquiry { margin-top: 1.25rem; }
+.site-footer__project-inquiry p { margin-bottom: 0.85rem; }
+.site-footer__project-inquiry a { color: inherit; text-underline-offset: 0.18em; }
 .site-footer { border-top: 1px solid var(--color-border); margin-top: 0; padding-block: 2.5rem 2rem; }
 .site-footer__grid { padding-bottom: 2.5rem; }
 .site-footer__bottom {

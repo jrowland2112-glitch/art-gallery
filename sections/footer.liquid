@@ -1,12 +1,3 @@
-{%- if section.settings.show_project_inquiry -%}
-  <aside class="footer-project-inquiry" aria-labelledby="footer-project-inquiry-heading">
-    <div class="page-width footer-project-inquiry__inner">
-      <h2 id="footer-project-inquiry-heading">{{ section.settings.project_inquiry_heading }}</h2>
-      <div class="rte">{{ section.settings.project_inquiry_text }}</div>
-    </div>
-  </aside>
-{%- endif -%}
-
 <footer class="site-footer">
   <div class="page-width">
     {%- if section.settings.show_menu or section.settings.show_newsletter or section.settings.show_contact -%}
@@ -44,6 +35,12 @@
           <div class="site-footer__column">
             <h2>{{ section.settings.contact_heading }}</h2>
             <p class="muted">{{ section.settings.contact_text }}</p>
+            {%- if section.settings.show_project_inquiry -%}
+              <div class="muted site-footer__project-inquiry">
+                <p><strong>{{ section.settings.project_inquiry_heading }}</strong></p>
+                <div class="rte">{{ section.settings.project_inquiry_text }}</div>
+              </div>
+            {%- endif -%}
             <a class="button button--secondary" href="{{ section.settings.contact_link | default: '/pages/contact' }}">
               {{ section.settings.contact_link_label }}
             </a>

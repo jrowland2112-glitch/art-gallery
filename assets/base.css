@@ -225,6 +225,13 @@ textarea { min-height: 9rem; resize: vertical; }
   object-fit: contain;
 }
 .card:hover .card__media--framed img { transform: none; }
+.card__media--framed + .card__info {
+  width: 92%;
+  margin-inline: auto;
+}
+.card--portrait .card__media--framed + .card__info {
+  width: 38.5%;
+}
 .search-results__grid .card__media { aspect-ratio: 3 / 2; }
 .search-results__grid .card__media img { object-fit: contain; padding: 0; }
 .shop-results__grid { align-items: start; }

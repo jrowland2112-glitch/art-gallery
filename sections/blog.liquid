@@ -1,5 +1,5 @@
-<section class="section" style="padding-top: 0">
-  <div class="page-width">
+<section class="section journal-page journal-page--index">
+  <div class="page-width journal-page__sheet">
     <div class="collection-hero text-center"><h1>{{ section.settings.heading | default: blog.title }}</h1></div>
     {%- paginate blog.articles by 9 -%}
       <div class="grid" style="--cols: 3; --cols-mobile: 1;">

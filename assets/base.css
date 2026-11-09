@@ -200,7 +200,7 @@ textarea { min-height: 9rem; resize: vertical; }
 .shop-results__grid .card__media {
   display: grid;
   place-items: center;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1 / 1;
   background: transparent;
   overflow: visible;
 }
@@ -213,10 +213,16 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .shop-results__grid .card--portrait .card__media img {
   width: auto;
-  height: 82%;
+  height: 85%;
   max-width: 100%;
 }
 .shop-results__grid .card:hover .card__media img { transform: none; }
+@media (min-width: 750px) {
+  .shop-results__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .shop-results__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 .card__info { padding-top: 0.9rem; }
 .card__title { font-family: var(--font-heading); font-size: 1.1rem; margin: 0 0 0.2rem; font-weight: var(--font-heading-weight); }
 .card__meta { font-size: 0.88rem; color: var(--color-muted); }

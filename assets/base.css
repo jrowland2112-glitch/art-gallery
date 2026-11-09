@@ -210,12 +210,12 @@ textarea { min-height: 9rem; resize: vertical; }
   box-sizing: border-box;
 }
 .card--portrait .card__media--framed .card__frame {
-  width: 38.5%;
+  width: 48%;
   height: 100%;
   aspect-ratio: var(--natural-ratio, 2 / 3);
 }
 .card--portrait .card__media--framed {
-  aspect-ratio: 1.74 / 1;
+  aspect-ratio: 1.39 / 1;
 }
 .card__media--framed .card__frame img {
   display: block;
@@ -230,7 +230,7 @@ textarea { min-height: 9rem; resize: vertical; }
   margin-inline: auto;
 }
 .card--portrait .card__media--framed + .card__info {
-  width: 38.5%;
+  width: 48%;
   text-align: left;
 }
 .search-results__grid .card__media { aspect-ratio: 3 / 2; }

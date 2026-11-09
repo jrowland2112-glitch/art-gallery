@@ -196,13 +196,13 @@ textarea { min-height: 9rem; resize: vertical; }
 .card__media--framed {
   display: grid;
   place-items: start center;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1.63 / 1;
   background: transparent;
   overflow: visible;
 }
 .card__frame {
   width: 92%;
-  height: 92%;
+  height: 100%;
   padding: clamp(12px, 2.4vw, 30px);
   border: clamp(7px, 1vw, 12px) solid #242422;
   background: #fff;

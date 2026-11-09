@@ -275,6 +275,10 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .frame-preview.is-framed { --frame-width: clamp(10px, 1.8vw, 18px); --frame-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.15); }
 .frame-preview.has-mat { --mat-width: clamp(18px, 4.5vw, 46px); }
+.frame-preview.has-mat img {
+  border: clamp(5px, 0.7vw, 9px) solid #fff;
+  outline: 1px solid rgba(55, 49, 42, 0.2);
+}
 .frame-preview.is-canvas { --frame-shadow: 8px 10px 24px rgba(33,30,25,0.2), inset -5px -4px 0 rgba(70,59,43,0.13); }
 .frame-preview.is-metal { --frame-shadow: 0 16px 34px rgba(20,24,26,0.2), 0 0 0 1px rgba(110,120,125,0.45); }
 .frame-preview img, .frame-preview svg { max-height: 70vh; width: auto; margin: 0 auto; }

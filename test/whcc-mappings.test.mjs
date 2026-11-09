@@ -20,7 +20,7 @@ test('approved finish details remain consistent across sizes', async () => {
     if (variant.finish === 'Framed') {
       assert.equal(variant.whccSelections.moulding, 'academie_black');
       assert.equal(variant.whccSelections.mat, '2_in');
-      assert.equal(variant.whccSelections.mat_color, 'single_white');
+      assert.equal(variant.whccSelections.mat_color, 'double_white');
     } else if (variant.finish === 'Metal') {
       assert.equal(variant.whccSelections.surface, 'white_high_gloss');
       assert.equal(variant.whccSelections.display_options, '3_4in_float_mount');

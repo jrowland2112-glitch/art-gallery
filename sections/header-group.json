@@ -8,14 +8,14 @@
         "shop": {
           "type": "link",
           "settings": {
-            "label": "Shop",
+            "label": "The Gallery",
             "link": "/collections/all"
           }
         },
         "blog": {
           "type": "link",
           "settings": {
-            "label": "Blog",
+            "label": "The Journal",
             "link": "/blogs/behind-the-lense"
           }
         },

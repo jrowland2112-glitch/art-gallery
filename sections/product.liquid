@@ -47,13 +47,15 @@
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
-        {%- if section.settings.stage_caption != blank and use_frame_preview -%}
-          <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
+        {%- if use_frame_preview -%}
+          <div class="product__stage-copy">
+            {%- if section.settings.stage_caption != blank -%}
+              <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
+            {%- endif -%}
+            <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
+          </div>
         {%- endif -%}
       </div>
-      {%- if use_frame_preview -%}
-        <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
-      {%- endif -%}
       {%- if product.images.size > 1 and hide_product_thumbnails == false -%}
         <div class="product__thumbs">
           {%- for image in product.images -%}

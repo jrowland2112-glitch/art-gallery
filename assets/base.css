@@ -323,9 +323,10 @@ textarea { min-height: 9rem; resize: vertical; }
 .frame-preview.is-metal { --frame-shadow: 0 16px 34px rgba(20,24,26,0.2), 0 0 0 1px rgba(110,120,125,0.45); }
 .frame-preview img, .frame-preview svg { max-height: 70vh; width: auto; margin: 0 auto; }
 .frame-preview svg { width: min(100%, 32rem); aspect-ratio: 4 / 3; }
-.frame-preview__note { font-size: 0.8rem; color: var(--color-muted); text-align: center; margin-top: 0.75rem; }
+.product__stage-copy { align-self: end; text-align: center; }
+.frame-preview__note { font-size: 0.8rem; color: var(--color-muted); font-style: italic; text-align: center; margin: 0.3rem 0 0; }
 .product__stage-caption {
-  align-self: end; margin: 0; color: var(--color-muted); font-size: 0.7rem;
+  margin: 0; color: var(--color-muted); font-size: 0.7rem;
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }

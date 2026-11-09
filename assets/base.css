@@ -284,6 +284,12 @@ textarea { min-height: 9rem; resize: vertical; }
   font-weight: 400;
   line-height: 1.1;
 }
+.split__signature-image {
+  display: block;
+  width: min(100%, 24rem);
+  height: auto;
+  margin-top: 1.5rem;
+}
 
 /* ---------- Gallery wall ---------- */
 .gallery-wall { columns: var(--cols-mobile, 1); column-gap: 1.25rem; }

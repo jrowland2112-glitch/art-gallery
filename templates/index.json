@@ -85,7 +85,8 @@
         "grist_mill": {
           "type": "artwork",
           "settings": {
-            "product": "glade-creek-grist-mill"
+            "product": "glade-creek-grist-mill",
+            "image": "shopify://shop_images/01a1b80c-3854-77a8-8976-da2692d4e135.jpg"
           }
         }
       },

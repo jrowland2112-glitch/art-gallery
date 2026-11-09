@@ -7,7 +7,7 @@
     <div class="art-transcends__grid">
       {%- for block in section.blocks -%}
         {%- assign featured_product = block.settings.product -%}
-        {%- assign artwork = featured_product.featured_image -%}
+        {%- assign artwork = block.settings.image | default: featured_product.featured_image -%}
         {%- if featured_product != blank -%}
           <a class="art-transcends__item" href="{{ featured_product.url }}" aria-label="View {{ featured_product.title | escape }}" {{ block.shopify_attributes }}>
         {%- else -%}
@@ -38,7 +38,8 @@
       "type": "artwork",
       "name": "Framed artwork",
       "settings": [
-        { "type": "product", "id": "product", "label": "Product" }
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "image", "label": "Artwork override", "info": "Optional. Use when the product's featured image already includes a frame." }
       ]
     }
   ],

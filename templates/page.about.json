@@ -30,6 +30,7 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify://shop_images/IMG_1900.jpg",
+        "image_asset": "about-joseph-framed-print.jpg",
         "image_position": "left",
         "vertical_alignment": "top",
         "eyebrow": "My story",

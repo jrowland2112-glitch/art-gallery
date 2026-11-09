@@ -10,7 +10,8 @@
         "button_label": "",
         "button2_label": "",
         "text_position": "bottom-center",
-        "image": "shopify://shop_images/gristmill.jpg"
+        "image": "shopify://shop_images/gristmill.jpg",
+        "theme_asset": "about-joseph-photographer.jpg"
       }
     },
     "story": {

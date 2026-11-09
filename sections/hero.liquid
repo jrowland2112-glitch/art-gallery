@@ -17,7 +17,16 @@
 -%}
 <section class="hero hero--{{ section.settings.height }}" style="--overlay: {{ overlay }}; --v-align: {{ v }}; --h-align: {{ h }}; --text-align: {{ ta }};">
   <div class="hero__media">
-    {%- if section.settings.image != blank -%}
+    {%- if section.settings.theme_asset != blank -%}
+      <img
+        src="{{ section.settings.theme_asset | asset_url }}"
+        loading="eager"
+        fetchpriority="high"
+        width="2400"
+        height="1556"
+        alt="{{ section.settings.heading | escape }}"
+      >
+    {%- elsif section.settings.image != blank -%}
       {{ section.settings.image | image_url: width: 3000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '750, 1100, 1500, 2200, 3000' }}
     {%- else -%}
       {{ 'lifestyle-1' | placeholder_svg_tag }}
@@ -46,6 +55,7 @@
   "name": "Large image banner",
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Image", "info": "Landscape images work best (at least 2400px wide)" },
+    { "type": "text", "id": "theme_asset", "label": "Theme image filename (advanced)", "info": "When set, this theme asset is shown instead of the image above" },
     {
       "type": "select", "id": "height", "label": "Height", "default": "large",
       "options": [ { "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "large", "label": "Full screen" } ]

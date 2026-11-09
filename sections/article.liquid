@@ -24,7 +24,13 @@
       {%- endif -%}
       {{ article.content }}
     </div>
-    <p style="margin-top: 3rem"><a class="link-arrow" href="{{ blog.url }}">&larr; Back to {{ blog.title }}</a></p>
+    {%- liquid
+      assign blog_back_label = blog.title
+      if blog.handle == 'behind-the-lense'
+        assign blog_back_label = 'Behind the Lens'
+      endif
+    -%}
+    <p style="margin-top: 3rem"><a class="link-arrow" href="{{ blog.url }}">&larr; Back to {{ blog_back_label }}</a></p>
   </div>
 </article>
 

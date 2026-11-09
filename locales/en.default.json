@@ -2,7 +2,7 @@
   "404": {
     "title": "404",
     "not_found": "Page not found.",
-    "back_to_shopping": "Back to shopping"
+    "back_to_shopping": "Back to The Gallery"
   },
   "blog": {
     "article_comments": "Comments",
@@ -38,7 +38,7 @@
     "use_at_checkout": "Use this gift card at checkout"
   },
   "password": {
-    "title": "This shop is private",
+    "title": "The Gallery is private",
     "password": "Password",
     "enter": "Enter"
   },

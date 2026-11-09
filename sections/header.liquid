@@ -12,8 +12,8 @@
       <li {{ block.shopify_attributes }}><a href="{{ link_url }}"{% if request.path == link_url %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>
     {%- endfor -%}
   {%- else -%}
-    <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
-    <li><a href="/blogs/news">Blog</a></li>
+    <li><a href="{{ routes.all_products_collection_url }}">The Gallery</a></li>
+    <li><a href="/blogs/news">The Journal</a></li>
     <li><a href="/pages/about">About</a></li>
   {%- endif -%}
 {%- endcapture -%}

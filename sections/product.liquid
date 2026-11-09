@@ -24,7 +24,7 @@
     <nav class="product-breadcrumb" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
       <span aria-hidden="true">/</span>
-      <a href="{{ routes.all_products_collection_url }}">Shop</a>
+      <a href="{{ routes.all_products_collection_url }}">The Gallery</a>
       <span aria-hidden="true">/</span>
       <span aria-current="page">{{ product.title }}</span>
     </nav>
@@ -67,7 +67,7 @@
 
     <div class="product__info">
       {%- if section.settings.show_collection -%}
-        <a class="eyebrow product__collection" href="{{ routes.all_products_collection_url }}">The Shop collection</a>
+        <a class="eyebrow product__collection" href="{{ routes.all_products_collection_url }}">The Gallery</a>
       {%- elsif section.settings.show_vendor and product.vendor != blank -%}
         <span class="eyebrow">{{ product.vendor }}</span>
       {%- endif -%}

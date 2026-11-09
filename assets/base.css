@@ -257,6 +257,13 @@ textarea { min-height: 9rem; resize: vertical; }
   max-width: 100%;
 }
 .shop-results__grid .card:hover .card__media img { transform: none; }
+.shop-results__grid .card__info { padding-top: 0.35rem; }
+.shop-results__grid .card--landscape .card__info { margin-top: -15%; }
+.shop-results__grid .card--portrait .card__info {
+  width: 92%;
+  margin: -12% 0 0 8%;
+  text-align: left;
+}
 @media (min-width: 750px) {
   .shop-results__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

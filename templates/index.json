@@ -46,45 +46,21 @@
         "s3"
       ],
       "settings": {
-        "eyebrow": "Latest work",
+        "eyebrow": "Fine Art prints",
         "heading": "A moment. A <em>feeling</em>. A photograph.",
         "ratio": "16 / 8.5",
         "autoplay_seconds": 6,
         "show_counter": true,
-        "divider": false
+        "divider": true
       }
     },
     "journal": {
       "type": "journal-feature",
-      "blocks": {
-        "vermont": {
-          "type": "story",
-          "settings": {
-            "article": "behind-the-lense/vermont",
-            "image": "shopify://shop_images/vermont.jpg",
-            "title": "Chasing autumn in Vermont",
-            "link": ""
-          }
-        },
-        "longisland": {
-          "type": "story",
-          "settings": {
-            "article": "behind-the-lense/long-island",
-            "image": "shopify://shop_images/longi_slandf.jpg",
-            "title": "Finding stillness on Long Island",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "vermont",
-        "longisland"
-      ],
       "settings": {
-        "eyebrow": "Journal",
-        "heading": "Stories behind the frame.",
+        "eyebrow": "",
+        "heading": "My Field Journal",
         "text": "<p>The places, the light, and the moments that make the photograph.</p>",
-        "link_label": "Explore The Journal",
+        "link_label": "Explore My Field Journal",
         "link": "",
         "blog": "behind-the-lense",
         "limit": 2,

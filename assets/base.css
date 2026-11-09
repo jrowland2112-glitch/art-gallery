@@ -210,7 +210,7 @@ textarea { min-height: 9rem; resize: vertical; }
   box-sizing: border-box;
 }
 .card--portrait .card__media--framed .card__frame {
-  width: auto;
+  width: 38.5%;
   height: 100%;
   aspect-ratio: var(--natural-ratio, 2 / 3);
 }
@@ -231,6 +231,7 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .card--portrait .card__media--framed + .card__info {
   width: 38.5%;
+  text-align: left;
 }
 .search-results__grid .card__media { aspect-ratio: 3 / 2; }
 .search-results__grid .card__media img { object-fit: contain; padding: 0; }

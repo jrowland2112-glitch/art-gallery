@@ -270,6 +270,7 @@ textarea { min-height: 9rem; resize: vertical; }
 
 /* ---------- Image with text ---------- */
 .split { display: grid; gap: 2.5rem; align-items: center; }
+.split--align-top { align-items: start; }
 @media (min-width: 750px) {
   .split { grid-template-columns: 1fr 1fr; gap: 4rem; }
   .split--image-right .split__media { order: 2; }

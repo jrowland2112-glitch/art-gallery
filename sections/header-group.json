@@ -15,7 +15,7 @@
         "blog": {
           "type": "link",
           "settings": {
-            "label": "The Journal",
+            "label": "My Field Journal",
             "link": "/blogs/behind-the-lense"
           }
         },

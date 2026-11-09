@@ -67,6 +67,39 @@
         "divider": true
       }
     },
+    "art_transcends": {
+      "type": "art-transcends",
+      "blocks": {
+        "enchantment": {
+          "type": "artwork",
+          "settings": {
+            "product": "enchantment-wide"
+          }
+        },
+        "stillness": {
+          "type": "artwork",
+          "settings": {
+            "product": "democrat-point-bw"
+          }
+        },
+        "grist_mill": {
+          "type": "artwork",
+          "settings": {
+            "product": "glade-creek-grist-mill",
+            "image": "shopify://shop_images/01a1b80c-3854-77a8-8976-da2692d4e135.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "enchantment",
+        "stillness",
+        "grist_mill"
+      ],
+      "settings": {
+        "heading": "Art That Transcends",
+        "divider": true
+      }
+    },
     "follow": {
       "type": "social-cta",
       "blocks": {
@@ -103,6 +136,7 @@
   "order": [
     "latest",
     "journal",
+    "art_transcends",
     "follow"
   ]
 }

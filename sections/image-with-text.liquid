@@ -2,7 +2,15 @@
   <div class="page-width">
     <div class="split split--image-{{ section.settings.image_position }} split--align-{{ section.settings.vertical_alignment }}">
       <div class="split__media">
-        {%- if section.settings.image != blank -%}
+        {%- if section.settings.image_asset != blank -%}
+          <img
+            src="{{ section.settings.image_asset | asset_url }}"
+            width="1600"
+            height="2471"
+            loading="lazy"
+            alt="{{ section.settings.heading | escape }}"
+          >
+        {%- elsif section.settings.image != blank -%}
           {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 50vw, 100vw', widths: '600, 900, 1200, 1600' }}
         {%- else -%}
           {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -37,6 +45,7 @@
   "name": "Image with text",
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_asset", "label": "Theme image filename (advanced)", "info": "When set, this theme asset is shown instead of the image above" },
     {
       "type": "select", "id": "image_position", "label": "Image position", "default": "left",
       "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]

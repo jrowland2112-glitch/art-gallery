@@ -56,7 +56,7 @@ p { margin: 0 0 1em; }
 .section-header h2 { margin: 0; }
 .text-center { text-align: center; }
 .social-cta__feed {
-  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
   text-align: left;
 }
 .social-cta__app-block { width: 100%; }

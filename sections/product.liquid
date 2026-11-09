@@ -138,8 +138,8 @@
                     assign value_lower = value | downcase
                     assign value_caption = ''
                     if option_kind == 'finish'
-                      if value_lower contains 'canvas'
-                        assign value_caption = 'Texture & depth'
+                      if value_lower contains 'canvas' or value_lower contains 'gallery wrap'
+                        assign value_caption = 'Texture & Depth'
                       elsif value_lower contains 'metal' or value_lower contains 'aluminum' or value_lower contains 'aluminium'
                         assign value_caption = 'Clean & luminous'
                       elsif value_lower contains 'frame' or value_lower contains 'matted'

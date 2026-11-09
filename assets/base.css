@@ -261,7 +261,7 @@ textarea { min-height: 9rem; resize: vertical; }
 .shop-results__grid .card--landscape .card__info { margin-top: -15%; }
 .shop-results__grid .card--portrait .card__info {
   width: 57%;
-  margin: -7.5% auto 0;
+  margin: -7.5% auto 0 18%;
   text-align: left;
 }
 @media (min-width: 750px) {

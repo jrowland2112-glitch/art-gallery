@@ -2,7 +2,9 @@
   "sections": {
     "main": {
       "type": "blog",
-      "settings": {}
+      "settings": {
+        "heading": "Behind the Lens"
+      }
     }
   },
   "order": [

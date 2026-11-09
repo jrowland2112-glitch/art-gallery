@@ -1,9 +1,11 @@
 {%- liquid
   assign source_collection = section.settings.collection
   assign current_product_id = blank
+  assign show_framed_cards = false
 
   if request.page_type == 'product'
     assign current_product_id = product.id
+    assign show_framed_cards = true
     if source_collection == blank
       assign source_collection = collections['all']
     endif
@@ -27,7 +29,7 @@
           {%- if current_product_id != blank and candidate.id == current_product_id -%}
             {%- continue -%}
           {%- endif -%}
-          {% render 'product-card', product: candidate, ratio: section.settings.ratio, contain: section.settings.contain %}
+          {% render 'product-card', product: candidate, ratio: section.settings.ratio, contain: section.settings.contain, framed: show_framed_cards %}
           {%- assign rendered_count = rendered_count | plus: 1 -%}
           {%- if rendered_count >= section.settings.limit -%}
             {%- break -%}

@@ -6,6 +6,7 @@
   @param {boolean} [contain] - Show the whole image instead of cropping it
   @param {number} [index] - Placeholder number when no product is given
   @param {boolean} [placeholder] - Force a placeholder card even when a global product exists
+  @param {boolean} [framed] - Present the artwork with a black frame and double white mat
 {% enddoc %}
 
 {%- if product != blank and placeholder != true -%}
@@ -31,9 +32,11 @@
     endif
   -%}
   <a class="card card--{{ card_orientation }}" href="{{ product.url }}" style="--ratio: {{ card_ratio }}; --natural-ratio: {{ card_image.aspect_ratio | default: 1 }}">
-    <div class="card__media{% if contain %} card__media--contain{% endif %}">
+    <div class="card__media{% if contain and framed != true %} card__media--contain{% endif %}{% if framed %} card__media--framed{% endif %}">
       {%- if card_image -%}
-        {{ card_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: card_image.alt | default: product.title }}
+        {%- if framed -%}<div class="card__frame">{%- endif -%}
+          {{ card_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 33vw, 100vw', widths: '300, 450, 600, 900', alt: card_image.alt | default: product.title }}
+        {%- if framed -%}</div>{%- endif -%}
       {%- else -%}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {%- endif -%}

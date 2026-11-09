@@ -1,18 +1,16 @@
-<article class="section journal-page journal-page--article">
-  <div class="page-width journal-page__sheet">
-    <header class="article-header page-width page-width--narrow">
-      <span class="eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</span>
-      <h1>{{ article.title }}</h1>
-    </header>
-    {%- if article.image -%}
-      <div class="page-width article__image">
-        {{ article.image | image_url: width: 2000 | image_tag: sizes: '100vw', widths: '750, 1100, 1500, 2000', alt: article.image.alt | default: article.title }}
-      </div>
-    {%- endif -%}
-    <div class="page-width page-width--narrow">
-      <div class="rte article__content">{{ article.content }}</div>
-      <p class="journal-page__back-link"><a class="link-arrow" href="{{ blog.url }}">&larr; Back to {{ blog.title }}</a></p>
+<article class="section" style="padding-top: 0">
+  <header class="article-header page-width page-width--narrow">
+    <span class="eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</span>
+    <h1>{{ article.title }}</h1>
+  </header>
+  {%- if article.image -%}
+    <div class="page-width article__image">
+      {{ article.image | image_url: width: 2000 | image_tag: sizes: '100vw', widths: '750, 1100, 1500, 2000', alt: article.image.alt | default: article.title }}
     </div>
+  {%- endif -%}
+  <div class="page-width page-width--narrow">
+    <div class="rte article__content">{{ article.content }}</div>
+    <p style="margin-top: 3rem"><a class="link-arrow" href="{{ blog.url }}">&larr; Back to {{ blog.title }}</a></p>
   </div>
 </article>
 

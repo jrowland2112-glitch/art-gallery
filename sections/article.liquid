@@ -9,7 +9,21 @@
     </div>
   {%- endif -%}
   <div class="page-width page-width--narrow">
-    <div class="rte article__content">{{ article.content }}</div>
+    <div class="rte article__content">
+      {%- assign article_title_lowercase = article.title | downcase -%}
+      {%- if article_title_lowercase contains 'wynn lane' -%}
+        <figure class="article__inline-image article__inline-image--left">
+          <img
+            src="{{ 'gallery-front-black-and-white.jpg' | asset_url }}"
+            alt="Exterior of Joseph Rowland's fine art photography gallery on Wynn Lane"
+            width="3495"
+            height="2621"
+            loading="lazy"
+          >
+        </figure>
+      {%- endif -%}
+      {{ article.content }}
+    </div>
     <p style="margin-top: 3rem"><a class="link-arrow" href="{{ blog.url }}">&larr; Back to {{ blog.title }}</a></p>
   </div>
 </article>

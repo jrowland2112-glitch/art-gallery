@@ -419,6 +419,14 @@ textarea { min-height: 9rem; resize: vertical; }
 .article-header { text-align: center; padding-block: 3.5rem 2rem; }
 .article__image { margin-bottom: 2.5rem; }
 .article__content { font-size: 1.08rem; }
+.article__inline-image { margin: 0.3rem 2rem 1.5rem 0; }
+.article__inline-image--left { float: left; width: min(44%, 32rem); }
+.article__inline-image img { display: block; width: 100%; height: auto; }
+.article__content::after { content: ""; display: table; clear: both; }
+@media (max-width: 749px) {
+  .article__inline-image--left { float: none; width: 100%; }
+  .article__inline-image { margin: 0 0 1.5rem; }
+}
 
 /* ---------- Cart ---------- */
 .cart-table { width: 100%; border-collapse: collapse; }

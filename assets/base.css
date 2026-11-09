@@ -211,8 +211,11 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .card--portrait .card__media--framed .card__frame {
   width: auto;
-  height: 86%;
+  height: 100%;
   aspect-ratio: var(--natural-ratio, 2 / 3);
+}
+.card--portrait .card__media--framed {
+  aspect-ratio: 1.74 / 1;
 }
 .card__media--framed .card__frame img {
   display: block;

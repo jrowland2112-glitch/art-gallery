@@ -195,21 +195,31 @@ textarea { min-height: 9rem; resize: vertical; }
 .card:hover .card__media img { transform: scale(1.03); }
 .search-results__grid .card__media { aspect-ratio: 3 / 2; }
 .search-results__grid .card__media img { object-fit: contain; padding: 0; }
-.shop-results__grid { align-items: start; }
-.shop-results__grid .card { min-width: 0; }
+.shop-results__grid {
+  display: block;
+  columns: var(--cols-mobile, 1);
+  column-gap: 1.5rem;
+}
+.shop-results__grid .card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 2rem;
+  break-inside: avoid;
+}
 .shop-results__grid .card__media {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1 / 1;
+  display: block;
+  aspect-ratio: auto;
   background: transparent;
 }
 .shop-results__grid .card__media img {
-  width: auto;
+  display: block;
+  width: 100%;
   height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
   padding: 0;
+}
+.shop-results__grid .card:hover .card__media img { transform: none; }
+@media (min-width: 750px) {
+  .shop-results__grid { columns: var(--cols, 3); }
 }
 .card__info { padding-top: 0.9rem; }
 .card__title { font-family: var(--font-heading); font-size: 1.1rem; margin: 0 0 0.2rem; font-weight: var(--font-heading-weight); }

@@ -5,9 +5,10 @@
   @param {string} [ratio] - CSS aspect ratio for the image, e.g. "4 / 5"
   @param {boolean} [contain] - Show the whole image instead of cropping it
   @param {number} [index] - Placeholder number when no product is given
+  @param {boolean} [placeholder] - Force a placeholder card even when a global product exists
 {% enddoc %}
 
-{%- if product != blank -%}
+{%- if product != blank and placeholder != true -%}
   {%- liquid
     assign card_image = product.featured_image
     for image in product.images

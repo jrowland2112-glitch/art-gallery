@@ -1,4 +1,14 @@
-{%- assign collection = section.settings.collection -%}
+{%- liquid
+  assign source_collection = section.settings.collection
+  assign current_product_id = blank
+
+  if request.page_type == 'product'
+    assign current_product_id = product.id
+    if source_collection == blank
+      assign source_collection = collections['all']
+    endif
+  endif
+-%}
 <section class="section{% if section.settings.surface %} section--surface{% endif %}">
   <div class="page-width">
     <div class="section-header">
@@ -7,18 +17,26 @@
         <h2>{{ section.settings.heading }}</h2>
       </div>
       {%- if section.settings.show_view_all -%}
-        <a class="link-arrow" href="{{ collection.url | default: routes.all_products_collection_url }}">View all</a>
+        <a class="link-arrow" href="{{ source_collection.url | default: routes.all_products_collection_url }}">View all</a>
       {%- endif -%}
     </div>
     <div class="grid" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_mobile }};">
-      {%- if collection != blank and collection.products_count > 0 -%}
-        {%- for product in collection.products limit: section.settings.limit -%}
-          {% render 'product-card', product: product, ratio: section.settings.ratio, contain: section.settings.contain %}
+      {%- if source_collection != blank and source_collection.products_count > 0 -%}
+        {%- assign rendered_count = 0 -%}
+        {%- for candidate in source_collection.products -%}
+          {%- if current_product_id != blank and candidate.id == current_product_id -%}
+            {%- continue -%}
+          {%- endif -%}
+          {% render 'product-card', product: candidate, ratio: section.settings.ratio, contain: section.settings.contain %}
+          {%- assign rendered_count = rendered_count | plus: 1 -%}
+          {%- if rendered_count >= section.settings.limit -%}
+            {%- break -%}
+          {%- endif -%}
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..section.settings.limit) -%}
           {%- assign n = i | modulo: 6 | plus: 1 -%}
-          {% render 'product-card', index: n, ratio: section.settings.ratio %}
+          {% render 'product-card', placeholder: true, index: n, ratio: section.settings.ratio %}
         {%- endfor -%}
       {%- endif -%}
     </div>

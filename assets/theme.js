@@ -208,7 +208,7 @@
         matColor = null;
       } else if (isFramedFinish) {
         if (!hasFrameOption) frameColor = '#252522';
-        if (!hasMatOption) matColor = '#f7f5ef';
+        if (!hasMatOption) matColor = '#ffffff';
       }
       frame.classList.toggle('is-canvas', isCanvas);
       frame.classList.toggle('is-metal', isMetal);

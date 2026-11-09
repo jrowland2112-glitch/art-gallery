@@ -167,6 +167,7 @@ h1, h2, h3 { font-weight: 400; }
 .site-footer__project-inquiry p { margin-bottom: 0.85rem; }
 .site-footer__project-inquiry a { color: inherit; text-underline-offset: 0.18em; }
 .site-footer { border-top: 1px solid var(--color-border); margin-top: 0; padding-block: 2.5rem 2rem; }
+.site-footer h2 { font-weight: 700; }
 .site-footer__grid { padding-bottom: 2.5rem; }
 .site-footer__bottom {
   margin-top: 0; padding-top: 1.4rem; border-top: 1px solid var(--color-border);

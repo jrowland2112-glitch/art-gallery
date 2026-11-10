@@ -9,12 +9,29 @@
           </thead>
           <tbody>
             {%- for item in cart.items -%}
+              {%- liquid
+                assign cart_image = item.variant.featured_image | default: item.image
+                assign cart_image_alt = item.product.title | append: ' — ' | append: item.variant.title
+                assign finish_value = item.variant.title | downcase
+                assign finish_classes = ''
+                unless item.variant.featured_image
+                  if finish_value contains 'gallery wrap' or finish_value contains 'canvas'
+                    assign finish_classes = ' frame-preview is-canvas'
+                  elsif finish_value contains 'metal' or finish_value contains 'aluminum' or finish_value contains 'aluminium'
+                    assign finish_classes = ' frame-preview is-metal'
+                  elsif finish_value contains 'frame' or finish_value contains 'matted'
+                    assign finish_classes = ' frame-preview is-framed has-mat'
+                  endif
+                endunless
+              -%}
               <tr>
                 <td>
                   <div class="cart-item">
-                    <a href="{{ item.url }}">
-                      {%- if item.image -%}
-                        {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: item.product.title }}
+                    <a class="cart-item__image-link" href="{{ item.url }}" aria-label="View {{ cart_image_alt | escape }}">
+                      {%- if cart_image -%}
+                        <span class="cart-finish-preview{% if item.variant.featured_image %} cart-finish-preview--actual{% endif %}{{ finish_classes }}">
+                          {{ cart_image | image_url: width: 320 | image_tag: loading: 'lazy', alt: cart_image_alt }}
+                        </span>
                       {%- endif -%}
                     </a>
                     <div>
@@ -29,7 +46,7 @@
                 </td>
                 <td>
                   <label class="visually-hidden" for="qty-{{ item.key }}">Quantity</label>
-                  <input class="cart-qty" id="qty-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+                  <input class="cart-qty" id="qty-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0" step="1" inputmode="numeric">
                 </td>
                 <td>{{ item.final_line_price | money }}</td>
               </tr>

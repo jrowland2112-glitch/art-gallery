@@ -399,6 +399,14 @@ textarea { min-height: 9rem; resize: vertical; }
 .accordion summary::after { content: "+"; font-size: 1.1rem; }
 .accordion[open] summary::after { content: "\2013"; }
 .accordion .rte { padding-bottom: 1.2rem; color: var(--color-muted); }
+.product-details__extra { margin-top: 1.5rem; }
+.product-details__extra h3 { margin: 0 0 0.65rem; color: var(--color-foreground); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.product-details__table-wrap { margin-bottom: 1rem; overflow-x: auto; }
+.product-details__table { width: 100%; border-collapse: collapse; color: var(--color-foreground); font-size: 0.92rem; }
+.product-details__table th, .product-details__table td { padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; }
+.product-details__table th { font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
+.product-details__table th:first-child, .product-details__table td:first-child { width: 38%; padding-left: 0; }
+.product-details__table th:last-child, .product-details__table td:last-child { padding-right: 0; }
 @media (max-width: 749px) {
   .product-section { --section-pad: 1rem 4rem; }
   .product-breadcrumb { margin-bottom: 1.25rem; }
@@ -407,6 +415,8 @@ textarea { min-height: 9rem; resize: vertical; }
   .product__buy { grid-template-columns: 1fr; }
   .product__buy .qty { width: 100%; justify-content: space-between; }
   .product__buy .shopify-payment-button, .product__buy-note { grid-column: auto; }
+  .product-details__table { font-size: 0.82rem; }
+  .product-details__table th, .product-details__table td { padding-block: 0.6rem; }
 }
 
 /* ---------- Collection / blog ---------- */

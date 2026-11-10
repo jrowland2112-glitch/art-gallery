@@ -6,8 +6,12 @@ compatibility_date = "2026-11-08"
 SHOPIFY_STORE = "rowland-photography-0v8ydig1.myshopify.com"
 PUBLIC_BASE_URL = "https://replace-with-the-deployed-worker.example"
 CONNECTOR_ENABLED = "false"
-WHCC_SANDBOX_SUBMIT_ENABLED = "false"
-WHCC_MAX_ORDER_TOTAL = "500"
+SHOPIFY_FULFILLMENT_SYNC_ENABLED = "false"
+WHCC_ENVIRONMENT = "test"
+WHCC_TEST_SUBMIT_ENABLED = "false"
+WHCC_TEST_MAX_ORDER_TOTAL = "500"
+WHCC_MAX_LINE_ITEMS = "20"
+WHCC_MAX_ITEM_QUANTITY = "10"
 ASSET_URL_TTL_SECONDS = "604800"
 
 [[r2_buckets]]
@@ -26,6 +30,6 @@ crons = ["*/5 * * * *"]
 # Set these with `wrangler secret put`; never add their values to this file:
 # SHOPIFY_CLIENT_ID
 # SHOPIFY_CLIENT_SECRET
-# WHCC_SANDBOX_API_KEY
+# WHCC_TEST_API_KEY
 # IMAGE_URL_SIGNING_SECRET
 # WHCC_EVENT_SIGNING_SECRET

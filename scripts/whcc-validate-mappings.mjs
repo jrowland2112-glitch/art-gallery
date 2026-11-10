@@ -35,7 +35,7 @@ export async function validateMappings({
   output = console,
 } = {}) {
   const mappings = await readPriceSheet(prices);
-  const client = createWhccSandboxClient({ apiKey: env.WHCC_SANDBOX_API_KEY, fetchImpl });
+  const client = createWhccSandboxClient({ apiKey: env.WHCC_TEST_API_KEY || env.WHCC_SANDBOX_API_KEY, fetchImpl });
   const results = [];
 
   for (const mapping of mappings) {

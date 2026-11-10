@@ -1,9 +1,9 @@
-import { enabled } from './constants.mjs';
+import { enabled, submissionAuthorization, whccRuntime } from './constants.mjs';
 import { all, first, run, updateJob } from './database.mjs';
 import { signAsset } from './crypto.mjs';
 import { orderLines, parseWhccMapping, submissionBody, whccShipping } from './order.mjs';
 import { createShopifyAdminClient } from './shopify.mjs';
-import { createWhccSandboxClient } from './whcc.mjs';
+import { createWhccClient } from './whcc.mjs';
 
 function publicBaseUrl(env) {
   const parsed = new URL(env.PUBLIC_BASE_URL || '');
@@ -22,13 +22,15 @@ async function signedAssetUrl(key, env) {
 }
 
 function clients(env) {
+  const runtime = whccRuntime(env);
   return {
     shopify: createShopifyAdminClient({
       store: env.SHOPIFY_STORE,
       clientId: env.SHOPIFY_CLIENT_ID,
       clientSecret: env.SHOPIFY_CLIENT_SECRET,
     }),
-    whcc: createWhccSandboxClient({ apiKey: env.WHCC_SANDBOX_API_KEY }),
+    whcc: createWhccClient({ apiKey: runtime.apiKey, environment: runtime.environment }),
+    runtime,
   };
 }
 
@@ -40,6 +42,12 @@ async function failJob(env, orderId, error) {
 export async function createJob(env, webhookId, order) {
   const lines = orderLines(order);
   if (lines.length === 0) throw new Error('The paid order has no fulfillable product variants.');
+  const maximumLines = Number(env.WHCC_MAX_LINE_ITEMS || 20);
+  const maximumQuantity = Number(env.WHCC_MAX_ITEM_QUANTITY || 10);
+  if (lines.length > maximumLines) throw new Error(`The order exceeds the ${maximumLines}-line WHCC safety limit.`);
+  if (lines.some((line) => line.quantity > maximumQuantity)) {
+    throw new Error(`The order exceeds the ${maximumQuantity}-unit per-line WHCC safety limit.`);
+  }
   await run(
     env.STATE,
     `INSERT OR IGNORE INTO fulfillment_jobs
@@ -68,7 +76,7 @@ async function buildJob(env, job) {
     if (!original) throw new Error(`Private original not found for ${variant.product?.title || line.title}.`);
     const contentType = original.httpMetadata?.contentType?.toLowerCase();
     if (contentType && !['image/jpeg', 'image/png', 'image/heic', 'image/heif'].includes(contentType)) {
-      throw new Error(`${variant.product?.title || line.title} is ${contentType}; WHCC Test requires JPEG, PNG, or HEIC.`);
+      throw new Error(`${variant.product?.title || line.title} is ${contentType}; WHCC requires JPEG, PNG, or HEIC.`);
     }
     if (Number(original.size) > 40 * 1024 * 1024) {
       throw new Error(`${variant.product?.title || line.title} exceeds WHCC's supported 40 MB image limit.`);
@@ -138,11 +146,15 @@ async function pollJob(env, job) {
   const calculation = await whcc.calculate(submission);
   if (calculation?.validation?.isValidForSubmit !== true) throw new Error('WHCC calculation is not valid for submission.');
   const total = Number(calculation?.totalPrice?.value);
-  const maximum = Number(env.WHCC_MAX_ORDER_TOTAL || 500);
+  const runtime = whccRuntime(env);
+  const maximum = Number(runtime.environment === 'live'
+    ? env.WHCC_LIVE_MAX_ORDER_TOTAL || 500
+    : env.WHCC_TEST_MAX_ORDER_TOTAL || env.WHCC_MAX_ORDER_TOTAL || 500);
   if (!Number.isFinite(total) || calculation?.totalPrice?.code !== 'USD') throw new Error('WHCC returned an invalid or non-USD total.');
-  if (total > maximum) throw new Error(`WHCC sandbox total $${total.toFixed(2)} exceeds the $${maximum.toFixed(2)} safety limit.`);
+  if (total > maximum) throw new Error(`WHCC ${runtime.environment} total $${total.toFixed(2)} exceeds the $${maximum.toFixed(2)} safety limit.`);
 
-  if (!enabled(env.WHCC_SANDBOX_SUBMIT_ENABLED)) {
+  const authorization = submissionAuthorization(env, job.order_id);
+  if (!authorization.allowed) {
     await updateJob(env.STATE, job.order_id, 'calculated', { calculation_json: JSON.stringify(calculation) });
     return;
   }
@@ -158,7 +170,7 @@ export async function processJob(env, orderId) {
   if (!job) throw new Error(`Fulfillment job ${orderId} was not found.`);
   try {
     if (job.status === 'pending') await buildJob(env, job);
-    else if (job.status === 'awaiting_poll') await pollJob(env, job);
+    else if (job.status === 'awaiting_poll' || job.status === 'calculated') await pollJob(env, job);
   } catch (error) {
     await failJob(env, job.order_id, error);
   }
@@ -167,14 +179,90 @@ export async function processJob(env, orderId) {
 export async function processPendingJobs(env, limit = 10) {
   const jobs = await all(
     env.STATE,
-    "SELECT order_id FROM fulfillment_jobs WHERE status IN ('pending', 'awaiting_poll') ORDER BY created_at LIMIT ?",
+    "SELECT order_id FROM fulfillment_jobs WHERE status IN ('pending', 'awaiting_poll', 'calculated') ORDER BY created_at LIMIT ?",
     limit,
   );
   for (const job of jobs) {
+    const current = await first(env.STATE, 'SELECT status FROM fulfillment_jobs WHERE order_id = ?', job.order_id);
+    if (current?.status === 'calculated' && !submissionAuthorization(env, job.order_id).allowed) continue;
     try {
       await processJob(env, job.order_id);
     } catch (error) {
-      console.error(`WHCC sandbox job ${job.order_id} failed:`, error?.message || error);
+      console.error(`WHCC job ${job.order_id} failed:`, error?.message || error);
     }
   }
+}
+
+function trackingFromSubmission(submission) {
+  const shipments = (submission?.orders || []).flatMap((order) => order.shippingInfo || []);
+  const numbers = shipments.map((item) => String(item.trackingNumber || item.TrackingNumber || '')).filter(Boolean);
+  const urls = shipments.map((item) => item.trackingUrl || item.TrackingUrl).filter(Boolean);
+  if (!numbers.length) throw new Error('WHCC reports the submission shipped without tracking numbers.');
+  const tracking = {
+    company: shipments[0]?.carrier || shipments[0]?.Carrier || 'WHCC',
+    numbers,
+  };
+  if (urls.length === numbers.length) tracking.urls = urls;
+  return tracking;
+}
+
+export async function reconcileSubmittedJobs(env, limit = 10) {
+  const jobs = await all(
+    env.STATE,
+    "SELECT * FROM fulfillment_jobs WHERE status IN ('submitted', 'accepted', 'shipped_pending_shopify') ORDER BY updated_at LIMIT ?",
+    limit,
+  );
+  if (!jobs.length) return;
+  const { shopify, whcc } = clients(env);
+  for (const job of jobs) {
+    try {
+      const submission = await whcc.submission(job.whcc_submission_id);
+      const status = submission?.status;
+      if (status === 'failed' || status === 'partially_failed') {
+        await updateJob(env.STATE, job.order_id, 'failed', {
+          error: `WHCC submission ${job.whcc_submission_id} is ${status}; inspect each WHCC order before retrying anything.`,
+        });
+        continue;
+      }
+      if (status === 'canceled') {
+        await updateJob(env.STATE, job.order_id, 'cancelled', { error: null });
+        continue;
+      }
+      if (status !== 'shipped') {
+        if (status === 'placed') await updateJob(env.STATE, job.order_id, 'accepted', { error: null });
+        continue;
+      }
+      if (!enabled(env.SHOPIFY_FULFILLMENT_SYNC_ENABLED)) {
+        await updateJob(env.STATE, job.order_id, 'shipped_pending_shopify', { error: null });
+        continue;
+      }
+      const items = await all(
+        env.STATE,
+        'SELECT line_item_id, quantity FROM configured_items WHERE order_id = ? ORDER BY line_item_id',
+        job.order_id,
+      );
+      const fulfillment = await shopify.fulfillMappedLineItems(job.order_id, items, trackingFromSubmission(submission));
+      await updateJob(env.STATE, job.order_id, 'shipped', {
+        shopify_fulfillment_id: fulfillment.id,
+        error: null,
+      });
+    } catch (error) {
+      await updateJob(env.STATE, job.order_id, 'reconciliation_failed', {
+        error: String(error?.message || error).slice(0, 2000),
+      });
+    }
+  }
+}
+
+export async function cancelJob(env, orderId) {
+  const job = await first(env.STATE, 'SELECT status FROM fulfillment_jobs WHERE order_id = ?', String(orderId));
+  if (!job) return { found: false, stopped: false };
+  if (['submitted', 'accepted', 'shipped_pending_shopify', 'reconciliation_failed', 'shipped'].includes(job.status)) {
+    await updateJob(env.STATE, orderId, 'cancellation_requested', {
+      error: 'Shopify was cancelled after WHCC submission; cancel immediately in WHCC if still eligible.',
+    });
+    return { found: true, stopped: false, requiresWhccCancellation: true };
+  }
+  await updateJob(env.STATE, orderId, 'cancelled', { error: 'Shopify order cancelled before WHCC submission.' });
+  return { found: true, stopped: true };
 }

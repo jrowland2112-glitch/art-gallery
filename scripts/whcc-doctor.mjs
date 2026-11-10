@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { createWhccSandboxClient } from '../connector/src/whcc.mjs';
 
 export async function inspectWhccSandbox({ env = process.env, fetchImpl = fetch, output = console } = {}) {
-  const client = createWhccSandboxClient({ apiKey: env.WHCC_SANDBOX_API_KEY, fetchImpl });
+  const client = createWhccSandboxClient({ apiKey: env.WHCC_TEST_API_KEY || env.WHCC_SANDBOX_API_KEY, fetchImpl });
   const discovery = await client.discovery();
   const catalogProducts = [];
   let cursor;

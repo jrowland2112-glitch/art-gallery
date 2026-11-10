@@ -199,6 +199,9 @@
             <summary>{{ block.settings.heading }}</summary>
             <div class="rte">
               {{ block.settings.text }}
+              {%- if block.settings.custom_liquid != blank -%}
+                <div class="product-details__extra">{{ block.settings.custom_liquid }}</div>
+              {%- endif -%}
               {%- if block.settings.page != blank -%}{{ block.settings.page.content }}{%- endif -%}
             </div>
           </details>
@@ -231,6 +234,7 @@
       "settings": [
         { "type": "text", "id": "heading", "label": "Heading", "default": "Shipping & returns" },
         { "type": "richtext", "id": "text", "label": "Text" },
+        { "type": "liquid", "id": "custom_liquid", "label": "Additional formatted details", "info": "Optional formatted content, such as the framed-art dimensions table." },
         { "type": "page", "id": "page", "label": "Or show content from a page" }
       ]
     }

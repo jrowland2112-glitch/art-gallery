@@ -3,7 +3,7 @@
     "main": {
       "type": "product",
       "blocks": {
-        "details": { "type": "collapsible", "settings": { "heading": "Print details", "text": "<p>Archival pigment print on museum-grade fine art paper. Signed certificate of authenticity included.</p>" } },
+        "details": { "type": "collapsible", "settings": { "heading": "Print details", "text": "<p>Each image is printed on premium rag matte paper, offering a beautiful, soft finish that complements the photograph.</p>", "custom_liquid": "<h3>Framed Art Dimensions</h3><div class=\"product-details__table-wrap\"><table class=\"product-details__table\"><thead><tr><th scope=\"col\">Print Size</th><th scope=\"col\">Finished Framed Size</th></tr></thead><tbody><tr><td>12\" × 18\"</td><td>13 1/8\" × 19 1/8\"</td></tr><tr><td>16\" × 24\"</td><td>17 1/8\" × 25 1/8\"</td></tr><tr><td>24\" × 36\"</td><td>25 1/8\" × 37 1/8\"</td></tr></tbody></table></div><p>Finished dimensions include the frame and represent the overall size of the piece.</p>" } },
         "shipping": { "type": "collapsible", "settings": { "heading": "Shipping & returns", "text": "<p>Each print is made to order and typically ships within 3–5 business days. Damaged in transit? We'll replace it free.</p>" } }
       },
       "block_order": ["details", "shipping"],

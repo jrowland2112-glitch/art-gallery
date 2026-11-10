@@ -1,4 +1,4 @@
-import { assertSandboxOnly, WHCC_API_VERSION, WHCC_SANDBOX_API_BASE } from './constants.mjs';
+import { assertWhccOrigin, WHCC_API_VERSION, WHCC_ORIGINS, whccEnvironment } from './constants.mjs';
 
 function problemMessage(payload, status) {
   const detail = payload?.detail || payload?.title || payload?.message;
@@ -6,12 +6,14 @@ function problemMessage(payload, status) {
   return [detail || `WHCC request failed (${status})`, invalid].filter(Boolean).join(' — ');
 }
 
-export function createWhccSandboxClient({ apiKey, fetchImpl = fetch }) {
-  if (!apiKey) throw new Error('WHCC_SANDBOX_API_KEY is not configured in the secret manager.');
+export function createWhccClient({ apiKey, environment = 'test', fetchImpl = fetch }) {
+  const selected = whccEnvironment(environment);
+  if (!apiKey) throw new Error(`The WHCC ${selected} API key is not configured in the secret manager.`);
+  const apiBase = `${WHCC_ORIGINS[selected]}/api`;
 
   async function request(pathOrUrl, { method = 'GET', body, idempotencyKey } = {}) {
-    const url = pathOrUrl.startsWith('http') ? pathOrUrl : `${WHCC_SANDBOX_API_BASE}${pathOrUrl}`;
-    assertSandboxOnly(url);
+    const url = pathOrUrl.startsWith('http') ? pathOrUrl : `${apiBase}${pathOrUrl}`;
+    assertWhccOrigin(url, selected);
     const headers = {
       authorization: `Bearer ${apiKey}`,
       'whcc-api-version': WHCC_API_VERSION,
@@ -36,5 +38,10 @@ export function createWhccSandboxClient({ apiKey, fetchImpl = fetch }) {
     poll: (configuredProductIds) => request(`/v1/commerce/configured-products?ids=${configuredProductIds.map(encodeURIComponent).join(',')}`),
     calculate: (submission) => request('/v1/commerce/submissions/calculate', { method: 'POST', body: submission }),
     submit: (submission, idempotencyKey) => request('/v1/commerce/submissions', { method: 'POST', body: submission, idempotencyKey }),
+    submission: (id) => request(`/v1/commerce/submissions/${encodeURIComponent(id)}`),
   };
+}
+
+export function createWhccSandboxClient(options) {
+  return createWhccClient({ ...options, environment: 'test' });
 }

@@ -1,0 +1,39 @@
+name = "rowland-whcc-live-connector"
+main = "src/worker.mjs"
+compatibility_date = "2026-11-08"
+
+# This template is deliberately inert. Copy it to an ignored deployment file only
+# after WHCC grants Live access and the reviewed connector PR is merged.
+[vars]
+SHOPIFY_STORE = "rowland-photography-0v8ydig1.myshopify.com"
+PUBLIC_BASE_URL = "https://replace-with-the-live-worker.example"
+CONNECTOR_ENABLED = "false"
+SHOPIFY_FULFILLMENT_SYNC_ENABLED = "false"
+WHCC_ENVIRONMENT = "live"
+WHCC_LIVE_SUBMIT_ENABLED = "false"
+WHCC_LIVE_FULL_ROLLOUT_ENABLED = "false"
+WHCC_LIVE_ORDER_IDS = ""
+WHCC_LIVE_MAX_ORDER_TOTAL = "500"
+WHCC_MAX_LINE_ITEMS = "20"
+WHCC_MAX_ITEM_QUANTITY = "10"
+ASSET_URL_TTL_SECONDS = "604800"
+
+[[r2_buckets]]
+binding = "ORIGINALS"
+bucket_name = "rowland-photo-originals"
+
+[[d1_databases]]
+binding = "STATE"
+database_name = "rowland-whcc-live-state"
+database_id = "replace-after-creating-live-d1"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Set these only with `wrangler secret put`; never add their values here:
+# SHOPIFY_CLIENT_ID
+# SHOPIFY_CLIENT_SECRET
+# WHCC_LIVE_API_KEY
+# IMAGE_URL_SIGNING_SECRET
+# WHCC_EVENT_SIGNING_SECRET

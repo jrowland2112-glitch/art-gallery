@@ -54,5 +54,57 @@ export function createShopifyAdminClient({ store, clientId, clientSecret, fetchI
     return data?.variant;
   }
 
-  return { shop, graphql, variantFulfillmentData };
+  async function fulfillMappedLineItems(orderId, configuredItems, tracking) {
+    const data = await graphql(`
+      query FulfillmentOrdersForWhcc($id: ID!) {
+        order(id: $id) {
+          fulfillmentOrders(first: 50) {
+            nodes {
+              id status
+              lineItems(first: 250) {
+                nodes { id remainingQuantity lineItem { legacyResourceId } }
+              }
+            }
+          }
+        }
+      }
+    `, { id: `gid://shopify/Order/${orderId}` });
+    if (!data?.order) throw new Error(`Shopify order ${orderId} was not found while recording shipment.`);
+    const wanted = new Map(configuredItems.map((item) => [String(item.line_item_id), Number(item.quantity)]));
+    const lineItemsByFulfillmentOrder = [];
+    for (const fulfillmentOrder of data.order.fulfillmentOrders?.nodes || []) {
+      const fulfillmentOrderLineItems = [];
+      for (const item of fulfillmentOrder.lineItems?.nodes || []) {
+        const requested = wanted.get(String(item.lineItem?.legacyResourceId));
+        const quantity = Math.min(requested || 0, Number(item.remainingQuantity || 0));
+        if (quantity > 0) fulfillmentOrderLineItems.push({ id: item.id, quantity });
+      }
+      if (fulfillmentOrderLineItems.length) {
+        lineItemsByFulfillmentOrder.push({ fulfillmentOrderId: fulfillmentOrder.id, fulfillmentOrderLineItems });
+      }
+    }
+    if (!lineItemsByFulfillmentOrder.length) throw new Error('No remaining Shopify fulfillment-order lines matched the WHCC shipment.');
+
+    const fulfilled = await graphql(`
+      mutation CreateWhccFulfillment($fulfillment: FulfillmentInput!) {
+        fulfillmentCreate(fulfillment: $fulfillment) {
+          fulfillment { id status }
+          userErrors { field message }
+        }
+      }
+    `, {
+      fulfillment: {
+        lineItemsByFulfillmentOrder,
+        notifyCustomer: true,
+        trackingInfo: tracking,
+      },
+    });
+    const errors = fulfilled.fulfillmentCreate?.userErrors || [];
+    if (errors.length) throw new Error(`Shopify fulfillment failed: ${errors.map((error) => error.message).join('; ')}`);
+    const fulfillment = fulfilled.fulfillmentCreate?.fulfillment;
+    if (!fulfillment?.id) throw new Error('Shopify did not return a fulfillment ID.');
+    return fulfillment;
+  }
+
+  return { shop, graphql, variantFulfillmentData, fulfillMappedLineItems };
 }

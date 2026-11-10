@@ -40,3 +40,12 @@ test('uses fulfillable quantity and builds one WHCC submission line per configur
   assert.deepEqual(body.items, [{ configuredProductId: 'CF_123', quantity: 2 }]);
   assert.equal(body.shipping.priority, 'dropship_lowest_cost');
 });
+
+test('ignores non-fulfillable quantities and preserves distinct line items', () => {
+  const lines = orderLines({ line_items: [
+    { id: 1, variant_id: 11, quantity: 1, fulfillable_quantity: 0 },
+    { id: 2, variant_id: 12, quantity: 2, fulfillable_quantity: 2 },
+    { id: 3, variant_id: 13, quantity: 1 },
+  ] });
+  assert.deepEqual(lines.map((line) => [line.lineItemId, line.quantity]), [['2', 2], ['3', 1]]);
+});

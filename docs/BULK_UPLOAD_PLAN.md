@@ -24,7 +24,7 @@ WHCC now recommends its current **WHCC API** for new integrations. It uses a Tes
 The statement “I have WHCC API access” is not enough to prove which credential was issued. No credential or account record exists in this repository, and checking the actual key requires a local authenticated request. We will identify it safely before implementation:
 
 1. Joseph checks the label under WHCC **Connected Accounts → API access**. A current `Test` key is the expected credential.
-2. A future local `photos:doctor` command reads `WHCC_SANDBOX_API_KEY` from the local environment and calls `GET /v1/discovery` on the Test host.
+2. The local `whcc:doctor` command reads `WHCC_TEST_API_KEY` (or the legacy local name `WHCC_SANDBOX_API_KEY`) from the environment and calls `GET /v1/discovery` on the Test host.
 3. The command prints only the environment, granted scope names, and permitted method/path pairs. It never prints or saves the key.
 4. It confirms access to catalog, configured-product, calculate, submission, fulfillment, and event-subscription routes.
 5. If discovery returns `403`, or the account has only legacy credentials, contact `integrations@whcc.com` for current API access rather than starting a new legacy integration.
@@ -196,7 +196,7 @@ After approval, the connector will:
 9. Store the WHCC submission ID and state without storing credentials or permanent image URLs.
 10. Receive WHCC fulfillment events and update Shopify fulfillment/tracking only after that later behavior is separately reviewed.
 
-The first connector release will have two independent safety controls: the WHCC hostname must equal the Test hostname, and `WHCC_LIVE_SUBMIT_ENABLED` must remain false. Merely adding a production key will not enable Live ordering.
+The connector pins each environment to its exact WHCC hostname and keeps Test and Live keys separate. Live submission requires its own switch plus an exact Shopify order-ID allowlist during controlled rollout; merely adding a production key cannot enable ordering.
 
 ## Accounts, permissions, and secrets Joseph will create
 
@@ -310,7 +310,7 @@ Live remains disabled until Joseph reviews logs, mappings, sample previews, erro
 2. **After Joseph approves this plan:** build the local validator and Draft-only bulk product creator. No connector and no Active products.
 3. **After Draft importer acceptance:** ask Joseph explicitly for permission to change the “no custom backend” rule in `CLAUDE.md`.
 4. **Only after that permission:** build the connector against Shopify test inputs and the WHCC Test host.
-5. **After sandbox acceptance:** prepare a separate Live-readiness plan and pull request. Do not enable Live submission until Joseph explicitly says to go live.
+5. **After Test acceptance:** use the separate Live-readiness pull request and controlled-order checklist. Do not deploy or enable Live submission until WHCC approves access and Joseph explicitly authorizes those actions.
 
 ## Decisions to make before implementation
 

@@ -16,7 +16,7 @@
           "type": "collapsible",
           "settings": {
             "heading": "Print details",
-            "text": "<p>Each image is printed on premium rag matte paper, offering a beautiful, soft finish that complements the photograph.</p>",
+            "text": "<p>Each piece is made to order in your selected finish:</p><ul><li><strong>Framed:</strong> A professional lustre photo print in a black wood frame, finished with a 2-inch double white mat, standard acrylic, and a wire wall hanger.</li><li><strong>Metal:</strong> A white high-gloss metal print with a 3/4-inch float mount.</li><li><strong>Gallery Wrap:</strong> Premium fine-art canvas with a 1 1/2-inch depth, semi-gloss protective laminate, and sawtooth hangers with backing.</li></ul>",
             "custom_liquid": "<h3>Framed Art Dimensions</h3><div class=\"product-details__table-wrap\"><table class=\"product-details__table\"><thead><tr><th scope=\"col\">Print Size</th><th scope=\"col\">Finished Framed Size</th></tr></thead><tbody><tr><td>12\" × 18\"</td><td>13 1/8\" × 19 1/8\"</td></tr><tr><td>16\" × 24\"</td><td>17 1/8\" × 25 1/8\"</td></tr><tr><td>24\" × 36\"</td><td>25 1/8\" × 37 1/8\"</td></tr></tbody></table></div><p>Finished dimensions include the frame and represent the overall size of the piece.</p>",
             "page": ""
           }

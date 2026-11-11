@@ -65,6 +65,7 @@
     var mainImg = root.querySelector('[data-main-image]');
     var lightbox = root.querySelector('[data-product-lightbox]');
     var lightboxImg = root.querySelector('[data-product-lightbox-image]');
+    var lightboxPreview = root.querySelector('[data-product-lightbox-preview]');
     var lightboxOpen = root.querySelector('[data-product-lightbox-open]');
     var lightboxClose = root.querySelector('[data-product-lightbox-close]');
     var finishCaption = root.querySelector('[data-finish-caption]');
@@ -75,9 +76,17 @@
     if (finishCaption) finishCaption.dataset.defaultCaption = finishCaption.textContent;
 
     function syncLightboxImage() {
-      if (!mainImg || !lightboxImg) return;
+      if (!mainImg || !lightboxImg || !lightboxPreview) return;
       lightboxImg.src = mainImg.currentSrc || mainImg.src;
       lightboxImg.alt = mainImg.alt;
+      var stagePreview = mainImg.closest('.frame-preview');
+      lightboxPreview.className = 'frame-preview product-lightbox__preview';
+      lightboxPreview.removeAttribute('style');
+      if (!stagePreview) return;
+      ['is-framed', 'has-mat', 'is-canvas', 'is-metal'].forEach(function (className) {
+        lightboxPreview.classList.toggle(className, stagePreview.classList.contains(className));
+      });
+      lightboxPreview.style.cssText = stagePreview.style.cssText;
     }
 
     if (lightbox && lightboxOpen && lightboxClose) {

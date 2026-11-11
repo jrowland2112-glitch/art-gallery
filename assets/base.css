@@ -371,10 +371,11 @@ textarea { min-height: 9rem; resize: vertical; }
   border: 0;
   background: #141312;
   color: #fff;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .product-lightbox::backdrop { background: rgba(20, 19, 18, 0.72); }
-.product-lightbox[open] { display: grid; place-items: center; }
+.product-lightbox[open] { display: block; }
 .product-lightbox__close {
   position: absolute;
   top: clamp(1rem, 3vw, 2rem);
@@ -396,8 +397,18 @@ textarea { min-height: 9rem; resize: vertical; }
 .product-lightbox__close span[aria-hidden] { font-size: 1.35rem; line-height: 0.7; }
 .product-lightbox__close:hover { background: #fff; color: #141312; }
 .product-lightbox__close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.product-lightbox__image-wrap { display: grid; width: 100%; height: 100%; place-items: center; }
-.product-lightbox__image-wrap img { display: block; width: auto; max-width: 100%; height: auto; max-height: 100%; object-fit: contain; }
+.product-lightbox__image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100dvh - 8rem);
+  padding-block: 1rem;
+}
+.product-lightbox__preview { box-sizing: border-box; flex: 0 1 auto; max-width: 100%; }
+.product-lightbox__preview img { display: block; width: auto; max-width: 100%; height: auto; max-height: none; object-fit: contain; }
 .product__stage-copy { align-self: end; text-align: center; }
 .frame-preview__note { font-size: 0.8rem; color: var(--color-muted); font-style: italic; text-align: center; margin: 0.3rem 0 0; }
 .product__stage-caption {

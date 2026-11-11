@@ -77,13 +77,15 @@
             <span>Close</span>
           </button>
           <div class="product-lightbox__image-wrap">
-            <img
-              data-product-lightbox-image
-              src="{{ main_image | image_url: width: 2000 }}"
-              width="{{ main_image.width }}"
-              height="{{ main_image.height }}"
-              alt="{{ main_image.alt | default: product.title | escape }}"
-            >
+            <div class="frame-preview product-lightbox__preview" data-product-lightbox-preview>
+              <img
+                data-product-lightbox-image
+                src="{{ main_image | image_url: width: 2000 }}"
+                width="{{ main_image.width }}"
+                height="{{ main_image.height }}"
+                alt="{{ main_image.alt | default: product.title | escape }}"
+              >
+            </div>
           </div>
         </dialog>
       {%- endif -%}

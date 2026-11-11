@@ -127,7 +127,28 @@ export function variantsFromShopifyProduct(product) {
       finish = parsed.finish;
       size = parsed.size;
     }
-    return { finish, size, price: Number(variant.price).toFixed(2), whccProductRef: null, whccSelections: null };
+    let mapping;
+    try {
+      mapping = JSON.parse(variant.whccMapping?.value || 'null');
+    } catch {
+      throw new Error(`The source variant ${variant.title} has an invalid WHCC mapping.`);
+    }
+    if (!mapping?.productRef || !mapping?.selections) {
+      throw new Error(`The source variant ${variant.title} is missing its approved WHCC mapping.`);
+    }
+    if (mapping.finish !== finish || mapping.size !== size) {
+      throw new Error(`The source variant ${variant.title} has a mismatched WHCC mapping.`);
+    }
+    if (finish === 'Framed' && mapping.selections.moulding !== 'slim_black') {
+      throw new Error(`The source variant ${variant.title} does not use Gallery Slim Black.`);
+    }
+    return {
+      finish,
+      size,
+      price: Number(variant.price).toFixed(2),
+      whccProductRef: mapping.productRef,
+      whccSelections: mapping.selections,
+    };
   });
   validateVariants(variants);
   return variants;

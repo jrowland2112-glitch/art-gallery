@@ -428,6 +428,10 @@ textarea { min-height: 9rem; resize: vertical; }
   border: 0;
   background: transparent;
 }
+[id$="__reviews"] .jm-review-widget-minimal-header > .jm-cluster > .jm-stack:first-child {
+  flex: 0 0 100%;
+  width: 100%;
+}
 [id$="__reviews"] :is(.jdgm-rev-widg__title, .jm-review-widget-minimal-header__title, .jm-review-widget h2, .jm-review-widget h3) {
   color: var(--color-foreground);
   font-family: var(--font-heading) !important;

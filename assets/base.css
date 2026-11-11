@@ -345,6 +345,9 @@ textarea { min-height: 9rem; resize: vertical; }
 .frame-preview img, .frame-preview svg { max-height: 70vh; width: auto; margin: 0 auto; }
 .frame-preview svg { width: min(100%, 32rem); aspect-ratio: 4 / 3; }
 .product__enlarge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   justify-self: center;
   margin: -1.5rem 0 0;
   padding: 0.35rem 0.15rem;
@@ -358,6 +361,7 @@ textarea { min-height: 9rem; resize: vertical; }
   text-transform: uppercase;
   cursor: pointer;
 }
+.product__enlarge-icon { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 .product__enlarge:hover { color: var(--color-muted); }
 .product__enlarge:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 .product-lightbox {

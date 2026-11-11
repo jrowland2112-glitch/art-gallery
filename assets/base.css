@@ -373,7 +373,7 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0;
   padding: clamp(4.5rem, 8vw, 6.5rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem);
   border: 0;
-  background: #141312;
+  background: #6d6a66;
   color: #fff;
   overflow-x: hidden;
   overflow-y: auto;
@@ -389,7 +389,7 @@ textarea { min-height: 9rem; resize: vertical; }
   gap: 0.5rem;
   padding: 0.55rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.65);
-  background: rgba(20, 19, 18, 0.72);
+  background: rgba(55, 53, 50, 0.72);
   color: #fff;
   font: inherit;
   font-size: 0.74rem;
@@ -399,7 +399,7 @@ textarea { min-height: 9rem; resize: vertical; }
   z-index: 1;
 }
 .product-lightbox__close span[aria-hidden] { font-size: 1.35rem; line-height: 0.7; }
-.product-lightbox__close:hover { background: #fff; color: #141312; }
+.product-lightbox__close:hover { background: #fff; color: #353330; }
 .product-lightbox__close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .product-lightbox__image-wrap {
   display: flex;

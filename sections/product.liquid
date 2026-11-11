@@ -47,6 +47,11 @@
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
+        {%- if main_image -%}
+          <button class="product__enlarge" type="button" data-product-lightbox-open aria-haspopup="dialog">
+            Enlarge
+          </button>
+        {%- endif -%}
         {%- if use_frame_preview -%}
           <div class="product__stage-copy">
             {%- if section.settings.stage_caption != blank -%}
@@ -64,6 +69,23 @@
             </button>
           {%- endfor -%}
         </div>
+      {%- endif -%}
+      {%- if main_image -%}
+        <dialog class="product-lightbox" data-product-lightbox aria-label="Enlarged product image">
+          <button class="product-lightbox__close" type="button" data-product-lightbox-close aria-label="Close enlarged image">
+            <span aria-hidden="true">&times;</span>
+            <span>Close</span>
+          </button>
+          <div class="product-lightbox__image-wrap">
+            <img
+              data-product-lightbox-image
+              src="{{ main_image | image_url: width: 2000 }}"
+              width="{{ main_image.width }}"
+              height="{{ main_image.height }}"
+              alt="{{ main_image.alt | default: product.title | escape }}"
+            >
+          </div>
+        </dialog>
       {%- endif -%}
     </div>
 

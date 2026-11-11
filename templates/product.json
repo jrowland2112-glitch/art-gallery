@@ -83,7 +83,7 @@
   },
   "order": [
     "main",
-    "reviews",
-    "related"
+    "related",
+    "reviews"
   ]
 }

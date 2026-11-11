@@ -407,6 +407,63 @@ textarea { min-height: 9rem; resize: vertical; }
 .product-details__table th { font-size: 0.72rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; }
 .product-details__table th:first-child, .product-details__table td:first-child { width: 38%; padding-left: 0; }
 .product-details__table th:last-child, .product-details__table td:last-child { padding-right: 0; }
+
+/* ---------- Product reviews ---------- */
+[id$="__reviews"] {
+  padding-block: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+[id$="__reviews"] > * {
+  max-width: min(75rem, 100%);
+  margin-inline: auto;
+  padding-inline: var(--page-margin);
+}
+[id$="__reviews"] :is(.jdgm-review-widget, .jm-review-widget, #judgeme_product_reviews) {
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
+[id$="__reviews"] :is(.jdgm-rev-widg, .jm-review-widget) {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+[id$="__reviews"] :is(.jdgm-rev-widg__title, .jm-review-widget h2, .jm-review-widget h3) {
+  color: var(--color-foreground);
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: 0.01em;
+}
+[id$="__reviews"] :is(.jdgm-rev, .jdgm-form-wrapper, .jm-review-item) {
+  border-color: var(--color-border);
+}
+[id$="__reviews"] :is(.jdgm-rev__timestamp, .jdgm-rev-widg__summary-text, .jdgm-rev__buyer-badge-wrapper, .jm-review-widget [class*="secondary"]) {
+  color: var(--color-muted);
+}
+[id$="__reviews"] :is(.jdgm-write-rev-link, .jdgm-submit-rev, .jdgm-btn--solid, button[class*="write-review"], a[class*="write-review"]) {
+  min-height: 3rem;
+  padding: 0.75rem 1.75rem;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+[id$="__reviews"] :is(.jdgm-write-rev-link, .jdgm-submit-rev, .jdgm-btn--solid, button[class*="write-review"], a[class*="write-review"]):hover {
+  opacity: 0.85;
+}
+[id$="__reviews"] :is(input, textarea, select) {
+  border-color: var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
 @media (max-width: 749px) {
   .product-section { --section-pad: 1rem 4rem; }
   .product-breadcrumb { margin-bottom: 1.25rem; }
@@ -417,6 +474,12 @@ textarea { min-height: 9rem; resize: vertical; }
   .product__buy .shopify-payment-button, .product__buy-note { grid-column: auto; }
   .product-details__table { font-size: 0.82rem; }
   .product-details__table th, .product-details__table td { padding-block: 0.6rem; }
+  [id$="__reviews"] { padding-block: 2rem; }
+  [id$="__reviews"] :is(.jdgm-write-rev-link, .jdgm-submit-rev, .jdgm-btn--solid, button[class*="write-review"], a[class*="write-review"]) {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 /* ---------- Collection / blog ---------- */

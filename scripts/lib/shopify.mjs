@@ -53,7 +53,10 @@ export async function getProductByHandle(client, handle) {
         metafield(namespace: "rowland", key: "source_sha256") { value }
         media(first: 10) { nodes { id } }
         variants(first: 250) {
-          nodes { id title price sku selectedOptions { name value } }
+          nodes {
+            id title price sku selectedOptions { name value }
+            whccMapping: metafield(namespace: "rowland", key: "whcc_mapping") { value }
+          }
         }
       }
     }
@@ -87,6 +90,14 @@ export async function stageProductImage(client, filename) {
 }
 
 export function productSetInput(record, image, original, includeFile = true) {
+  for (const variant of record.variants) {
+    if (!variant.whccProductRef || !variant.whccSelections) {
+      throw new Error(`${variant.finish} / ${variant.size} is missing its approved WHCC mapping.`);
+    }
+    if (variant.finish === 'Framed' && variant.whccSelections.moulding !== 'slim_black') {
+      throw new Error(`${variant.finish} / ${variant.size} must use the Gallery Slim Black WHCC moulding.`);
+    }
+  }
   const finishes = [...new Set(record.variants.map((variant) => variant.finish))];
   const sizes = [...new Set(record.variants.map((variant) => variant.size))];
   const input = {

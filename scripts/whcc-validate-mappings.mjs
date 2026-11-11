@@ -15,7 +15,7 @@ function verifySummary(mapping, summary) {
   const builtSize = descriptions.size?.replaceAll('×', 'x').replaceAll(' ', '');
   if (builtSize !== mapping.size) throw new Error(`${mapping.finish} ${mapping.size} built as ${descriptions.size || 'an unknown size'}.`);
   const expected = mapping.finish === 'Framed'
-    ? { moulding: /black/i, mat: /2/, mat_color: /white/i, acrylic: /standard/i }
+    ? { moulding: /gallery slim black/i, mat: /2/, mat_color: /white/i, acrylic: /standard/i }
     : mapping.finish === 'Metal'
       ? { surface: /white high gloss/i, display_options: /float mount/i }
       : { canvas_type: /premium fine art/i, depth: /1 1\/2|1½/i, protection: /semi-gloss/i };

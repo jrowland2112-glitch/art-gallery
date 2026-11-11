@@ -18,7 +18,7 @@ test('approved finish details remain consistent across sizes', async () => {
   const variants = await readPriceSheet(path.resolve('bulk-upload', 'prices.standard.csv'));
   for (const variant of variants) {
     if (variant.finish === 'Framed') {
-      assert.equal(variant.whccSelections.moulding, 'academie_black');
+      assert.equal(variant.whccSelections.moulding, 'slim_black');
       assert.equal(variant.whccSelections.mat, '2_in');
       assert.equal(variant.whccSelections.mat_color, 'double_white');
     } else if (variant.finish === 'Metal') {

@@ -17,8 +17,14 @@ test('parses existing combined WHCC-style variant titles', () => {
 
 test('copies prices from a source product with a Title option', () => {
   const variants = variantsFromShopifyProduct({ variants: { nodes: [
-    { title: 'Framed 12x18 Black', price: '225.00', selectedOptions: [{ name: 'Title', value: 'Framed 12x18 Black' }] },
-    { title: 'Metal 12x18', price: '200.00', selectedOptions: [{ name: 'Title', value: 'Metal 12x18' }] },
+    {
+      title: 'Framed 12x18 Black', price: '225.00', selectedOptions: [{ name: 'Title', value: 'Framed 12x18 Black' }],
+      whccMapping: { value: JSON.stringify({ productRef: 'framed-print', selections: { moulding: 'slim_black' }, finish: 'Framed', size: '12x18' }) },
+    },
+    {
+      title: 'Metal 12x18', price: '200.00', selectedOptions: [{ name: 'Title', value: 'Metal 12x18' }],
+      whccMapping: { value: JSON.stringify({ productRef: 'metal-print', selections: { surface: 'white_high_gloss' }, finish: 'Metal', size: '12x18' }) },
+    },
   ] } });
   assert.deepEqual(variants.map(({ finish, size, price }) => ({ finish, size, price })), [
     { finish: 'Framed', size: '12x18', price: '225.00' },
@@ -49,8 +55,8 @@ test('Shopify input is always Draft with Finish and Size options', () => {
     tags: ['Photography', 'Print'],
     descriptionHtml: '',
     variants: [
-      { finish: 'Framed', size: '12x18', price: '225.00', whccProductRef: null, whccSelections: null },
-      { finish: 'Metal', size: '12x18', price: '200.00', whccProductRef: null, whccSelections: null },
+      { finish: 'Framed', size: '12x18', price: '225.00', whccProductRef: 'framed-print', whccSelections: { moulding: 'slim_black' } },
+      { finish: 'Metal', size: '12x18', price: '200.00', whccProductRef: 'metal-print', whccSelections: { surface: 'white_high_gloss' } },
     ],
   };
   const image = {
@@ -63,4 +69,13 @@ test('Shopify input is always Draft with Finish and Size options', () => {
   assert.deepEqual(input.productOptions.map((option) => option.name), ['Finish', 'Size']);
   assert.deepEqual(input.variants.map((variant) => variant.price), ['225.00', '200.00']);
   assert.equal(input.files[0].alt, 'Mountain Light');
+});
+
+test('rejects a future framed product that is not Gallery Slim Black', () => {
+  const record = {
+    filename: 'Mountain Light.jpg', title: 'Mountain Light', handle: 'mountain-light', altText: 'Mountain Light', tags: [], descriptionHtml: '',
+    variants: [{ finish: 'Framed', size: '12x18', price: '225.00', whccProductRef: 'framed-print', whccSelections: { moulding: 'academie_black' } }],
+  };
+  const image = { checksum: 'abc123', source: { width: 5504, height: 8256, format: 'jpeg' }, resourceUrl: 'https://shopify.example/staged.jpg' };
+  assert.throws(() => productSetInput(record, image, null, true), /Gallery Slim Black/);
 });

@@ -49,11 +49,6 @@
     var dataEl = root.querySelector('[data-product-json]');
     if (!dataEl) return;
     var variants = JSON.parse(dataEl.textContent);
-    var madeToOrderEl = root.querySelector('[data-made-to-order-variant-ids]');
-    var madeToOrderVariantIds = madeToOrderEl ? JSON.parse(madeToOrderEl.textContent).map(String) : [];
-    variants.forEach(function (variant) {
-      if (madeToOrderVariantIds.indexOf(String(variant.id)) !== -1) variant.available = true;
-    });
     var form = root.querySelector('form[action*="/cart/add"]');
     if (!form) return;
     root.dataset.productReady = '1';

@@ -1,9 +1,5 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
-  assign current_variant_sellable = current_variant.available
-  if current_variant.inventory_policy == 'continue' or current_variant.inventory_management == nil
-    assign current_variant_sellable = true
-  endif
   assign main_image = current_variant.featured_image | default: product.featured_image
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
@@ -179,8 +175,8 @@
             <input id="{{ form_id }}-qty" type="number" name="quantity" value="1" min="1">
             <button type="button" data-qty-step="1" aria-label="Increase quantity">+</button>
           </div>
-          <button class="button button--full" type="submit" data-add-to-cart {% unless current_variant_sellable %}disabled{% endunless %}>
-            {%- if current_variant_sellable -%}Add to cart{%- else -%}Sold out{%- endif -%}
+          <button class="button button--full" type="submit" data-add-to-cart {% unless current_variant.available %}disabled{% endunless %}>
+            {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
           </button>
           {%- if section.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
           {%- if section.settings.buy_note != blank -%}<p class="product__buy-note">{{ section.settings.buy_note }}</p>{%- endif -%}
@@ -215,18 +211,6 @@
     </div>
   </div>
   <script type="application/json" data-product-json>{{ product.variants | json }}</script>
-  <script type="application/json" data-made-to-order-variant-ids>
-    [
-      {%- assign first_made_to_order_variant = true -%}
-      {%- for variant in product.variants -%}
-        {%- if variant.inventory_policy == 'continue' or variant.inventory_management == nil -%}
-          {%- unless first_made_to_order_variant -%},{%- endunless -%}
-          {{- variant.id | json -}}
-          {%- assign first_made_to_order_variant = false -%}
-        {%- endif -%}
-      {%- endfor -%}
-    ]
-  </script>
 </section>
 
 {% schema %}

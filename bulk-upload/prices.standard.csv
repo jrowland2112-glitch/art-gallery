@@ -1,10 +1,10 @@
 finish,size,retail_price,whcc_product_ref,whcc_selections_file,enabled
-Framed,12x18,225.00,framed-print,whcc/framed-12x18.json,true
-Metal,12x18,225.00,metal-print,whcc/metal-12x18.json,true
-Gallery Wrap,12x18,195.00,gallery-wrap,whcc/gallery-wrap-12x18.json,true
-Framed,16x24,275.00,framed-print,whcc/framed-16x24.json,true
-Metal,16x24,250.00,metal-print,whcc/metal-16x24.json,true
-Gallery Wrap,16x24,225.00,gallery-wrap,whcc/gallery-wrap-16x24.json,true
-Framed,24x36,600.00,framed-print,whcc/framed-24x36.json,true
-Metal,24x36,650.00,metal-print,whcc/metal-24x36.json,true
-Gallery Wrap,24x36,350.00,gallery-wrap,whcc/gallery-wrap-24x36.json,true
+Framed,12x18,245.00,framed-print,whcc/framed-12x18.json,true
+Metal,12x18,275.00,metal-print,whcc/metal-12x18.json,true
+Gallery Wrap,12x18,225.00,gallery-wrap,whcc/gallery-wrap-12x18.json,true
+Framed,16x24,395.00,framed-print,whcc/framed-16x24.json,true
+Metal,16x24,400.00,metal-print,whcc/metal-16x24.json,true
+Gallery Wrap,16x24,355.00,gallery-wrap,whcc/gallery-wrap-16x24.json,true
+Framed,24x36,700.00,framed-print,whcc/framed-24x36.json,true
+Metal,24x36,725.00,metal-print,whcc/metal-24x36.json,true
+Gallery Wrap,24x36,595.00,gallery-wrap,whcc/gallery-wrap-24x36.json,true

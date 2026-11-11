@@ -428,13 +428,14 @@ textarea { min-height: 9rem; resize: vertical; }
   border: 0;
   background: transparent;
 }
-[id$="__reviews"] :is(.jdgm-rev-widg__title, .jm-review-widget h2, .jm-review-widget h3) {
+[id$="__reviews"] :is(.jdgm-rev-widg__title, .jm-review-widget-minimal-header__title, .jm-review-widget h2, .jm-review-widget h3) {
   color: var(--color-foreground);
   font-family: var(--font-heading) !important;
   font-style: var(--font-heading-style);
   font-weight: var(--font-heading-weight) !important;
   line-height: 1.15;
   letter-spacing: 0.01em;
+  width: 100%;
   text-align: center !important;
 }
 [id$="__reviews"] :is(.jdgm-rev, .jdgm-form-wrapper, .jm-review-item) {

@@ -410,7 +410,7 @@ textarea { min-height: 9rem; resize: vertical; }
 
 /* ---------- Product reviews ---------- */
 [id$="__reviews"] {
-  padding-block: clamp(2rem, 4vw, 3rem);
+  padding-block: clamp(1rem, 2vw, 1.5rem) clamp(2rem, 4vw, 3rem);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 }
@@ -482,7 +482,7 @@ textarea { min-height: 9rem; resize: vertical; }
   .product__buy .shopify-payment-button, .product__buy-note { grid-column: auto; }
   .product-details__table { font-size: 0.82rem; }
   .product-details__table th, .product-details__table td { padding-block: 0.6rem; }
-  [id$="__reviews"] { padding-block: 2rem; }
+  [id$="__reviews"] { padding-block: 1rem 2rem; }
   [id$="__reviews"] :is(.jdgm-write-rev-link, .jdgm-submit-rev, .jdgm-btn--solid, button[class*="write-review"], a[class*="write-review"]) {
     width: 100%;
     justify-content: center;

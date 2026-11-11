@@ -373,7 +373,7 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0;
   padding: clamp(4.5rem, 8vw, 6.5rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem);
   border: 0;
-  background: #6d6a66;
+  background: #817d78;
   color: #fff;
   overflow-x: hidden;
   overflow-y: auto;

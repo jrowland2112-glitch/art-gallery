@@ -10,7 +10,7 @@ export function createFinerworksClient({ webApiKey, appKey, fetchImpl = fetch } 
   if (!webApiKey) throw new Error('FINERWORKS_WEB_API_KEY is not configured.');
   if (!appKey) throw new Error('FINERWORKS_APP_KEY is not configured.');
 
-  async function request(path, { method = 'POST', body } = {}) {
+  async function request(path, { method = 'POST', body, acceptPayload } = {}) {
     const url = new URL(path, FINERWORKS_ORIGIN);
     if (url.origin !== FINERWORKS_ORIGIN || !url.pathname.startsWith('/v3/')) {
       throw new Error('Safety stop: FinerWorks requests may only use the pinned v2 API origin.');
@@ -25,7 +25,7 @@ export function createFinerworksClient({ webApiKey, appKey, fetchImpl = fetch } 
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     const payload = await response.json().catch(() => null);
-    if (!response.ok || payload?.status?.success === false) {
+    if ((!response.ok || payload?.status?.success === false) && !acceptPayload?.(payload, response)) {
       throw new Error(`${path}: ${apiMessage(payload, response.status)}`);
     }
     return payload;
@@ -53,6 +53,14 @@ export function createFinerworksClient({ webApiKey, appKey, fetchImpl = fetch } 
     buildProductCode: (build) => request('/v3/build_product_code', { body: { build } }),
     prices: (productCodes) => request('/v3/get_prices', {
       body: { products: productCodes.map((product_sku) => ({ product_qty: 1, product_sku })) },
+    }),
+    validateProducts: (productCodes) => request('/v3/validate_product', {
+      body: { skus_or_codes: productCodes },
+      // FinerWorks currently returns HTTP 404/status false while still supplying
+      // authoritative per-code `valid: true` results for generated product codes.
+      acceptPayload: (payload) => Array.isArray(payload?.product_validations)
+        && payload.product_validations.length === productCodes.length
+        && payload.product_validations.every((item) => item.valid === true),
     }),
     shippingOptions: (orders) => request('/v3/list_shipping_options_multiple', {
       body: { orders: testOrders(orders) },

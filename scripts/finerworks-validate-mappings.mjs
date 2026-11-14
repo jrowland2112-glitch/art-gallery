@@ -26,14 +26,14 @@ export function proposedBuilds() {
         SheetW: width,
         SheetH: height,
         FrameID: 96,
-        FrameW: width + 3,
-        FrameH: height + 3,
+        FrameW: width + 5,
+        FrameH: height + 5,
         MatID: 1,
         Mat1WindowW: width,
         Mat1WindowH: height,
         MatID2: 1,
-        Mat2WindowW: width + 1.5,
-        Mat2WindowH: height + 1.5,
+        Mat2WindowW: width + 2.5,
+        Mat2WindowH: height + 2.5,
         GlassID: 1,
         ColorCorrect: false,
       },
@@ -90,7 +90,18 @@ export async function validateFinerworksMappings({ env = process.env, fetchImpl 
     output.log(`  Valid product code: ${productCode}`);
   }
 
-  const pricingResponse = await client.prices(results.map((item) => item.productCode));
+  const productCodes = results.map((item) => item.productCode);
+  const validationResponse = await client.validateProducts(productCodes);
+  for (const result of results) {
+    const validation = (validationResponse?.product_validations || [])
+      .find((item) => String(item.product_code).toLowerCase() === result.productCode.toLowerCase());
+    if (validation?.valid !== true) {
+      throw new Error(`${result.finish} ${result.size} failed product validation: ${validation?.validation_message || 'missing validation result'}`);
+    }
+    result.validation = validation;
+  }
+
+  const pricingResponse = await client.prices(productCodes);
   for (const result of results) {
     const price = priceFor(pricingResponse?.prices, result.productCode);
     if (!price || !(Number(price.total_price) > 0) || price.info) {

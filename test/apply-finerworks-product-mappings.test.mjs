@@ -15,7 +15,7 @@ test('plans all nine independent FinerWorks mappings without touching WHCC field
   assert.ok(fields.every((field) => field.key === 'finerworks_mapping'));
   assert.ok(fields.every((field) => JSON.parse(field.value).productCode));
   const framed = JSON.parse(fields.find((field) => field.label === 'Framed / 12x18').value);
-  assert.equal(framed.productCode, '5M7M8S12X18F96S15X21J1S12X18K1S13DD5X19DD5G1');
+  assert.equal(framed.productCode, '5M7M8S12X18F96S17X23J1S12X18K1S14DD5X20DD5G1');
 });
 
 test('refuses products without the exact approved nine variants', () => {

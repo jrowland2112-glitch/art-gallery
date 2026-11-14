@@ -1,6 +1,6 @@
 # FinerWorks Test connector
 
-This is an isolated Cloudflare Worker for validating the FinerWorks order flow. It is not deployed by this pull request and it does not register Shopify webhooks or change the storefront.
+This is an isolated Cloudflare Worker for validating the FinerWorks order flow. The reviewed Worker was deployed in a fully disabled state on November 14, 2026. It has no registered Shopify webhooks and does not change the storefront.
 
 ## Safety state
 

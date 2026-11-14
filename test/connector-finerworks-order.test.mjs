@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { assertFinerworksTestEnvironment, finerworksTestAuthorization } from '../connector/src/finerworks-constants.mjs';
 import { FINERWORKS_APPROVED_PRODUCT_CODES, finerworksOrder, parseFinerworksMapping, parseSourceDimensions } from '../connector/src/finerworks-order.mjs';
 
-const FRAMED_12X18 = '5M7M8S12X18F96S15X21J1S12X18K1S13DD5X19DD5G1';
+const FRAMED_12X18 = '5M7M8S12X18F96S17X23J1S12X18K1S14DD5X20DD5G1';
 
 test('accepts only the explicitly validated FinerWorks product codes', () => {
   assert.equal(FINERWORKS_APPROVED_PRODUCT_CODES.size, 9);

@@ -43,9 +43,11 @@ export function createShopifyAdminClient({ store, clientId, clientSecret, fetchI
           ... on ProductVariant {
             id title
             mapping: metafield(namespace: "rowland", key: "whcc_mapping") { value }
+            finerworksMapping: metafield(namespace: "rowland", key: "finerworks_mapping") { value }
             product {
               id title
               source: metafield(namespace: "rowland", key: "source_object_key") { value }
+              sourceDimensions: metafield(namespace: "rowland", key: "source_dimensions") { value }
             }
           }
         }

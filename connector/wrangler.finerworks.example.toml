@@ -1,0 +1,36 @@
+name = "rowland-finerworks-test-connector"
+main = "src/finerworks-worker.mjs"
+compatibility_date = "2026-11-14"
+
+[vars]
+SHOPIFY_STORE = "rowland-photography-0v8ydig1.myshopify.com"
+PUBLIC_BASE_URL = "https://replace-with-the-deployed-test-worker.example"
+CONNECTOR_ENABLED = "false"
+FINERWORKS_ENVIRONMENT = "test"
+FINERWORKS_TEST_SUBMIT_ENABLED = "false"
+FINERWORKS_TEST_STATUS_POLL_ENABLED = "false"
+FINERWORKS_TEST_MAX_PRODUCT_TOTAL = "500"
+FINERWORKS_MAX_LINE_ITEMS = "20"
+FINERWORKS_MAX_ITEM_QUANTITY = "10"
+ASSET_URL_TTL_SECONDS = "1209600"
+
+[[r2_buckets]]
+binding = "ORIGINALS"
+bucket_name = "rowland-photo-originals"
+
+[[d1_databases]]
+binding = "STATE"
+database_name = "rowland-finerworks-test-state"
+database_id = "replace-after-creating-d1"
+migrations_dir = "migrations-finerworks"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Set with `wrangler secret put`; never commit values:
+# SHOPIFY_CLIENT_ID
+# SHOPIFY_CLIENT_SECRET
+# FINERWORKS_WEB_API_KEY
+# FINERWORKS_APP_KEY (Test key only)
+# IMAGE_URL_SIGNING_SECRET
+# FINERWORKS_STATUS_WEBHOOK_TOKEN

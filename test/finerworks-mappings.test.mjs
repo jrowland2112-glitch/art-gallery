@@ -20,8 +20,10 @@ test('keeps exact FinerWorks finish selections consistent across sizes', () => {
       assert.equal(item.build.MatID, 1);
       assert.equal(item.build.MatID2, 1);
       assert.equal(item.build.GlassID, 1);
-      assert.equal(item.build.FrameW - item.build.PrintW, 3);
-      assert.equal(item.build.FrameH - item.build.PrintH, 3);
+      assert.equal(item.build.Mat2WindowW - item.build.PrintW, 2.5);
+      assert.equal(item.build.Mat2WindowH - item.build.PrintH, 2.5);
+      assert.equal(item.build.FrameW - item.build.PrintW, 5);
+      assert.equal(item.build.FrameH - item.build.PrintH, 5);
     } else if (item.finish === 'Metal') {
       assert.deepEqual([item.build.PrintProductTypeID, item.build.MediaID, item.build.MountingID], [14, 130, 68]);
     } else {

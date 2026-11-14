@@ -48,19 +48,19 @@ All nine codes in `bulk-upload/finerworks/mappings.json` were accepted and price
 
 | Finish | 12x18 | 16x24 | 24x36 |
 | --- | ---: | ---: | ---: |
-| Framed | $136 | $205 | $379 |
+| Framed | $154 | $227 | $409 |
 | Metal | $88 | $141 | $289 |
 | Gallery Wrap | $78 | $116 | $211 |
 
 Prices are discovery evidence, not permanent pricing. The connector must retrieve current pricing and shipping before any submission and enforce a configurable maximum.
 
-The framed configuration shown in FinerWorks produces these finished outer frame sizes:
+The approved wider framed configuration uses Snow White (mat ID `1`) for both layers. Each layer adds a 1.25-inch step per side, for 2.5 inches of visible mat per side. FinerWorks accepted these configured frame sizes:
 
-| Print | Finished frame |
+| Print | Configured frame size |
 | --- | --- |
-| 12x18 | 15x21 |
-| 16x24 | 19x27 |
-| 24x36 | 27x39 |
+| 12x18 | 17x23 |
+| 16x24 | 21x29 |
+| 24x36 | 29x41 |
 
 These differ from the current WHCC storefront dimensions. Shopify copy must not change until Joseph approves FinerWorks after reviewing a physical sample.
 

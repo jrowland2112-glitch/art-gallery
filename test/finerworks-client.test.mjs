@@ -88,3 +88,22 @@ test('limits test-order updates to hold and cancel', async () => {
   });
   assert.throws(() => client.updateTestOrder('123', 'pending'), /held or cancelled/);
 });
+
+test('accepts explicit valid product results despite the FinerWorks 404 response quirk', async () => {
+  const fetchImpl = async () => new Response(JSON.stringify({
+    status: { success: false, message: '' },
+    product_validations: [{ product_code: 'CODE-1', valid: true, validation_message: 'Product appears to be valid.' }],
+  }), { status: 404, headers: { 'content-type': 'application/json' } });
+  const client = createFinerworksClient({ webApiKey: 'web', appKey: 'test-app', fetchImpl });
+  const response = await client.validateProducts(['CODE-1']);
+  assert.equal(response.product_validations[0].valid, true);
+});
+
+test('rejects an invalid FinerWorks product validation result', async () => {
+  const fetchImpl = async () => new Response(JSON.stringify({
+    status: { success: false, message: 'Invalid product' },
+    product_validations: [{ product_code: 'BAD', valid: false, validation_message: 'Invalid' }],
+  }), { status: 404, headers: { 'content-type': 'application/json' } });
+  const client = createFinerworksClient({ webApiKey: 'web', appKey: 'test-app', fetchImpl });
+  await assert.rejects(client.validateProducts(['BAD']), /Invalid product/);
+});

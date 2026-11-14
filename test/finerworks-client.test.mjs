@@ -49,3 +49,42 @@ test('builds and prices product codes without order endpoints', async () => {
   assert.equal(calls[1].url, `${FINERWORKS_ORIGIN}/v3/get_prices`);
   assert.deepEqual(calls[1].body.products, [{ product_qty: 1, product_sku: '5M6M9S12X18' }]);
 });
+
+test('forces test mode and the test payment token on validation and submission', async () => {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url: String(url), body: JSON.parse(options.body) });
+    return new Response(JSON.stringify({ status: { success: true }, orders: [{ order_id: 123 }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+  const client = createFinerworksClient({ webApiKey: 'web', appKey: 'test-app', fetchImpl });
+  const unsafeInput = [{ order_po: 'shopify-1', test_mode: false }];
+  await client.validateTestOrders(unsafeInput);
+  await client.submitTestOrders(unsafeInput);
+  for (const call of calls) {
+    assert.equal(call.url, `${FINERWORKS_ORIGIN}/v3/submit_orders_v2`);
+    assert.equal(call.body.orders[0].test_mode, true);
+    assert.equal(call.body.payment_token, 'xxxx');
+  }
+  assert.equal(calls[0].body.validate_only, true);
+  assert.equal(calls[1].body.validate_only, false);
+  assert.equal(unsafeInput[0].test_mode, false);
+});
+
+test('limits test-order updates to hold and cancel', async () => {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url: String(url), method: options.method, body: JSON.parse(options.body) });
+    return new Response(JSON.stringify({ status: { success: true } }), { status: 200 });
+  };
+  const client = createFinerworksClient({ webApiKey: 'web', appKey: 'test-app', fetchImpl });
+  await client.updateTestOrder('123', 'cancel');
+  assert.deepEqual(calls[0], {
+    url: `${FINERWORKS_ORIGIN}/v3/update_order`,
+    method: 'PUT',
+    body: { order_id: 123, update_command: 'cancel' },
+  });
+  assert.throws(() => client.updateTestOrder('123', 'pending'), /held or cancelled/);
+});

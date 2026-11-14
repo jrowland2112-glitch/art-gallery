@@ -1,0 +1,36 @@
+{
+  "provider": "FinerWorks",
+  "status": "test-validated-not-active",
+  "validatedOn": "2026-11-14",
+  "finishes": {
+    "Framed": {
+      "description": "Moab Exhibition Luster 300, borderless, Alto Black - Thin solid-wood-with-veneer frame, double Snow White mat, Premium Clear acrylic, no color correction",
+      "variants": {
+        "12x18": "5M7M8S12X18F96S15X21J1S12X18K1S13DD5X19DD5G1",
+        "16x24": "5M7M8S16X24F96S19X27J1S16X24K1S17DD5X25DD5G1",
+        "24x36": "5M7M8S24X36F96S27X39J1S24X36K1S25DD5X37DD5G1"
+      },
+      "finishedFrameSizes": {
+        "12x18": "15x21",
+        "16x24": "19x27",
+        "24x36": "27x39"
+      }
+    },
+    "Metal": {
+      "description": "ChromaLuxe White Gloss with Inset Metallic Float Hanger, no color correction",
+      "variants": {
+        "12x18": "14M130M68S12X18",
+        "16x24": "14M130M68S16X24",
+        "24x36": "14M130M68S24X36"
+      }
+    },
+    "Gallery Wrap": {
+      "description": "Artisan Archival Canvas with satin low-gloss appearance, 1.5-inch image wrap and Basic Finishing, no color correction",
+      "variants": {
+        "12x18": "1M46M29S12X18Q11",
+        "16x24": "1M46M29S16X24Q11",
+        "24x36": "1M46M29S24X36Q11"
+      }
+    }
+  }
+}

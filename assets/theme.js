@@ -221,7 +221,14 @@
       return fmt.replace(/\{\{\s*amount[a-z_]*\s*\}\}/, amount.replace(/\.00$/, ''));
     }
 
-    function updateFrame(values) {
+    function hasRenderedFinerWorksFrame(variant) {
+      var image = variant && variant.featured_image;
+      if (!image) return false;
+      var identity = [image.alt, image.src, image.url].filter(Boolean).join(' ');
+      return /FinerWorks Alto Black Thin frame|finerworks-framed/i.test(identity);
+    }
+
+    function updateFrame(values, variant) {
       if (!frame) return;
       var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
       groups.forEach(function (g, i) {
@@ -234,7 +241,11 @@
       var isCanvas = /canvas/.test(finishValue);
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
+      var usesRenderedFinerWorksFrame = isFramedFinish && hasRenderedFinerWorksFrame(variant);
       if (isCanvas || isMetal) {
+        frameColor = null;
+        matColor = null;
+      } else if (usesRenderedFinerWorksFrame) {
         frameColor = null;
         matColor = null;
       } else if (isFramedFinish) {
@@ -278,9 +289,9 @@
         var label = g.querySelector('[data-selected-value]');
         if (label) label.textContent = values[i] || '';
       });
-      updateFrame(values);
-      updateAvailability(values);
       var variant = findVariant(values);
+      updateFrame(values, variant);
+      updateAvailability(values);
       if (!variant) {
         addBtn.disabled = true;
         addBtn.textContent = 'Unavailable';

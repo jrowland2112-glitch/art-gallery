@@ -7,6 +7,8 @@
     "photos:upload": "node scripts/bulk-products.mjs --apply",
     "whcc:doctor": "node scripts/whcc-doctor.mjs",
     "whcc:validate-mappings": "node scripts/whcc-validate-mappings.mjs",
+    "finerworks:doctor": "node scripts/finerworks-doctor.mjs",
+    "finerworks:validate-mappings": "node scripts/finerworks-validate-mappings.mjs",
     "connector:audit": "node scripts/connector-readiness.mjs",
     "products:map-whcc": "node scripts/apply-whcc-product-mappings.mjs",
     "connector:test": "node --test test/connector-*.test.mjs",

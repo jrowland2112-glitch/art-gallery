@@ -14,6 +14,10 @@ function matchingFrames(collections) {
 }
 
 export async function inspectFinerworksTest({ env = process.env, fetchImpl = fetch, output = console } = {}) {
+  const credentialEnvironment = String(env.FINERWORKS_CREDENTIAL_ENVIRONMENT || 'test').trim().toLowerCase();
+  if (!['test', 'live'].includes(credentialEnvironment)) {
+    throw new Error('FINERWORKS_CREDENTIAL_ENVIRONMENT must be test or live.');
+  }
   const client = createFinerworksClient({
     webApiKey: env.FINERWORKS_WEB_API_KEY,
     appKey: env.FINERWORKS_APP_KEY,
@@ -22,6 +26,14 @@ export async function inspectFinerworksTest({ env = process.env, fetchImpl = fet
 
   const credentials = await client.testCredentials();
   if (credentials?.status?.success !== true) throw new Error('FinerWorks did not accept the supplied credentials.');
+  const appLiveMode = credentials?.user_account?.app_details?.app_live_mode
+    ?? credentials?.app_details?.app_live_mode
+    ?? null;
+  const profileComplete = credentials?.user_account?.user_profile_complete ?? null;
+  const fulfillmentChecklist = credentials?.user_account?.order_fulfillment_checklist ?? null;
+  if (credentialEnvironment === 'live' && appLiveMode !== true) {
+    throw new Error(`FinerWorks accepted the credentials, but the app key is not marked as Live (fulfillment profile complete: ${profileComplete ?? 'not reported'}).`);
+  }
   const [collectionsResponse, matsResponse, glazingResponse, productTypesResponse] = await Promise.all([
     client.frameCollections(),
     client.mats(),
@@ -50,16 +62,22 @@ export async function inspectFinerworksTest({ env = process.env, fetchImpl = fet
 
   const snapshot = {
     fetchedAt: new Date().toISOString(),
-    environment: 'FinerWorks test credentials; discovery calls only',
+    environment: `FinerWorks ${credentialEnvironment} credentials; discovery calls only`,
     credentialsAccepted: true,
+    appLiveMode,
+    profileComplete,
+    fulfillmentChecklist,
     catalog: { collections, mats, glazing, productTypes, mediaTypes, styleTypes },
     requestedConfigurationMatches: { frames: frameMatches, mats: matMatches, glazing: glazingMatches },
   };
-  const destination = path.resolve('.bulk-upload', 'finerworks-test-catalog.json');
+  const destination = path.resolve('.bulk-upload', `finerworks-${credentialEnvironment}-catalog.json`);
   await mkdir(path.dirname(destination), { recursive: true });
   await writeFile(destination, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
 
   output.log('FinerWorks credentials accepted.');
+  output.log(`Credential set: ${credentialEnvironment.toUpperCase()}.`);
+  output.log(`App Live mode: ${appLiveMode === null ? 'not reported' : appLiveMode}.`);
+  output.log(`Fulfillment profile complete: ${profileComplete === null ? 'not reported' : profileComplete}.`);
   output.log('Only read-only catalog endpoints were called; no product or order was created.');
   output.log(`Frame collections: ${collections.length}; matching Alto Black - Thin frames: ${frameMatches.length}`);
   for (const frame of frameMatches) output.log(`  Frame ${frame.id}: ${frame.name} (${frame.collectionName})`);

@@ -70,6 +70,20 @@ These differ from the current WHCC storefront dimensions. Shopify copy must not 
 2. Add a separate disabled Test connector and durable state; do not reuse the enabled path or database of another provider.
 3. Validate current production and shipping prices against store margins.
 4. Exercise only FinerWorks Test submissions first.
+
 5. Order one explicitly approved, billable framed sample.
 6. Inspect the physical print, frame, mats, acrylic, crop, packaging, and color.
 7. Only after approval, update Shopify mappings, finish previews, dimensions, and fulfillment routing in separate reviewed changes.
+
+## Live credential verification
+
+After FinerWorks issues a Live app key, verify it with read-only catalog calls:
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File scripts\run-finerworks-live-doctor.ps1
+```
+
+The Live app key is saved separately from the Test app key using Windows DPAPI under
+`%LOCALAPPDATA%\RowlandPhotography\Secrets`. The check cannot submit an order and does
+not copy the key into the repository. A successful run writes only a non-secret catalog
+snapshot to `.bulk-upload/finerworks-live-catalog.json`.

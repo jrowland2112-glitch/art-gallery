@@ -319,16 +319,6 @@
     groups.forEach(function (g) { g.addEventListener('change', update); });
     initWhccPicker();
 
-    root.querySelectorAll('[data-thumb]').forEach(function (thumb) {
-      thumb.addEventListener('click', function () {
-        if (!mainImg) return;
-        mainImg.src = thumb.dataset.thumb;
-        mainImg.removeAttribute('srcset');
-        root.querySelectorAll('[data-thumb]').forEach(function (t) { t.setAttribute('aria-current', 'false'); });
-        thumb.setAttribute('aria-current', 'true');
-      });
-    });
-
     update();
   }
 

@@ -3,12 +3,10 @@
   assign main_image = current_variant.featured_image | default: product.featured_image
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
-  assign hide_product_thumbnails = false
   for product_option_name in product.options
     assign product_option_name_lower = product_option_name | downcase
     if product_option_name_lower == 'title'
       assign use_frame_preview = false
-      assign hide_product_thumbnails = true
     endif
   endfor
 -%}
@@ -65,15 +63,6 @@
           </div>
         {%- endif -%}
       </div>
-      {%- if product.images.size > 1 and hide_product_thumbnails == false -%}
-        <div class="product__thumbs">
-          {%- for image in product.images -%}
-            <button type="button" data-thumb="{{ image | image_url: width: 1600 }}" aria-current="{% if image == main_image %}true{% else %}false{% endif %}" aria-label="Show image {{ forloop.index }}">
-              {{ image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
-            </button>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
       {%- if main_image -%}
         <dialog class="product-lightbox" data-product-lightbox aria-label="Enlarged product image">
           <button class="product-lightbox__close" type="button" data-product-lightbox-close aria-label="Close enlarged image">

@@ -73,6 +73,25 @@ test('forces test mode and the test payment token on validation and submission',
   assert.equal(unsafeInput[0].test_mode, false);
 });
 
+test('Live validation and submission force test mode off and use the saved account default', async () => {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url: String(url), body: JSON.parse(options.body) });
+    return new Response(JSON.stringify({ status: { success: true }, orders: [{ order_id: 456 }] }), { status: 200 });
+  };
+  const client = createFinerworksClient({ webApiKey: 'web', appKey: 'live-app', fetchImpl });
+  const unsafeInput = [{ order_po: 'shopify-2', test_mode: true }];
+  await client.validateLiveOrders(unsafeInput);
+  await client.submitLiveOrdersWithAccountDefault(unsafeInput);
+  for (const call of calls) {
+    assert.equal(call.body.orders[0].test_mode, false);
+    assert.equal(call.body.payment_token, '');
+  }
+  assert.equal(calls[0].body.validate_only, true);
+  assert.equal(calls[1].body.validate_only, false);
+  assert.equal(unsafeInput[0].test_mode, true);
+});
+
 test('limits test-order updates to hold and cancel', async () => {
   const calls = [];
   const fetchImpl = async (url, options) => {

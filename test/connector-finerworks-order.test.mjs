@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assertFinerworksTestEnvironment, finerworksTestAuthorization } from '../connector/src/finerworks-constants.mjs';
+import { assertFinerworksTestEnvironment, finerworksEnvironment, finerworksSubmissionAuthorization, finerworksTestAuthorization } from '../connector/src/finerworks-constants.mjs';
 import { FINERWORKS_APPROVED_PRODUCT_CODES, finerworksOrder, parseFinerworksMapping, parseSourceDimensions } from '../connector/src/finerworks-order.mjs';
 
 const FRAMED_12X18 = '5M7M8S12X18F96S17X23J1S12X18K1S14DD5X20DD5G1';
@@ -37,9 +37,33 @@ test('builds an image-backed order that is always marked as test', () => {
   });
 });
 
+test('builds a Live order only when explicitly requested', () => {
+  const order = finerworksOrder({
+    orderId: '43', orderName: '#1043', environment: 'live', shippingCode: 'SD', webhookUrl: 'https://example.com/status',
+    recipient: { first_name: 'Joseph', last_name: 'Rowland', address_1: '1 Main St', city: 'Albany', state_code: 'NY', zip_postal_code: '12207', country_code: 'us' },
+    items: [{ lineItemId: '8', quantity: 1, productCode: FRAMED_12X18, width: 6000, height: 4000, assetUrl: 'https://example.com/asset', title: 'Grist Mill' }],
+  });
+  assert.equal(order.test_mode, false);
+  assert.equal(order.shipping_code, 'SD');
+  assert.equal(order.source, 'Rowland Shopify Live');
+});
+
 test('rejects any attempt to configure the isolated Worker as Live', () => {
   assert.equal(assertFinerworksTestEnvironment({ FINERWORKS_ENVIRONMENT: 'test' }), 'test');
   assert.throws(() => assertFinerworksTestEnvironment({ FINERWORKS_ENVIRONMENT: 'live' }), /Test only/);
   assert.equal(finerworksTestAuthorization({ FINERWORKS_TEST_SUBMIT_ENABLED: 'false' }).allowed, false);
   assert.equal(finerworksTestAuthorization({ FINERWORKS_TEST_SUBMIT_ENABLED: 'true' }).allowed, true);
+});
+
+test('Live submission requires the gate, account-default billing, and an exact order allowlist', () => {
+  const base = {
+    FINERWORKS_ENVIRONMENT: 'live', FINERWORKS_LIVE_SUBMIT_ENABLED: 'true',
+    FINERWORKS_LIVE_PAYMENT_METHOD: 'account_default', FINERWORKS_LIVE_ORDER_IDS: '1001,1002',
+  };
+  assert.equal(finerworksEnvironment(base), 'live');
+  assert.equal(finerworksSubmissionAuthorization(base, '1002').allowed, true);
+  assert.equal(finerworksSubmissionAuthorization(base, '9999').allowed, false);
+  assert.equal(finerworksSubmissionAuthorization({ ...base, FINERWORKS_LIVE_SUBMIT_ENABLED: 'false' }, '1002').allowed, false);
+  assert.equal(finerworksSubmissionAuthorization({ ...base, FINERWORKS_LIVE_PAYMENT_METHOD: '' }, '1002').allowed, false);
+  assert.throws(() => finerworksEnvironment({ FINERWORKS_ENVIRONMENT: 'production' }), /test or live/);
 });

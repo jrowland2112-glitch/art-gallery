@@ -1,5 +1,5 @@
 import { enabled } from './constants.mjs';
-import { finerworksTestAuthorization } from './finerworks-constants.mjs';
+import { finerworksEnvironment, finerworksSubmissionAuthorization } from './finerworks-constants.mjs';
 import { all, first, run, updateJob } from './database.mjs';
 import { signAsset } from './crypto.mjs';
 import { createFinerworksClient } from './finerworks.mjs';
@@ -77,6 +77,7 @@ export async function createFinerworksJob(env, webhookId, order) {
 
 async function prepareJob(env, job) {
   const { shopify, finerworks } = clients(env);
+  const environment = finerworksEnvironment(env);
   const lines = JSON.parse(job.line_items_json);
   const items = [];
   await updateJob(env.STATE, job.order_id, 'preparing', { error: null });
@@ -121,20 +122,24 @@ async function prepareJob(env, job) {
     recipient: JSON.parse(job.recipient_json),
     items,
     webhookUrl: webhook.href,
+    environment,
+    shippingCode: String(env.FINERWORKS_SHIPPING_CODE || (environment === 'live' ? 'SD' : 'EC')).trim().toUpperCase(),
   });
   const quantities = new Map();
   for (const item of items) {
     const code = item.productCode.toLowerCase();
     quantities.set(code, (quantities.get(code) || 0) + item.quantity);
   }
+  const shippingRequest = environment === 'live' ? finerworks.liveShippingOptions.bind(finerworks) : finerworks.shippingOptions.bind(finerworks);
+  const validationRequest = environment === 'live' ? finerworks.validateLiveOrders.bind(finerworks) : finerworks.validateTestOrders.bind(finerworks);
   const [prices, shipping, validation] = await Promise.all([
     finerworks.prices([...new Set(items.map((item) => item.productCode))]),
-    finerworks.shippingOptions([orderPayload]),
-    finerworks.validateTestOrders([orderPayload]),
+    shippingRequest([orderPayload]),
+    validationRequest([orderPayload]),
   ]);
   const total = productTotal(prices, quantities);
-  const maximum = Number(env.FINERWORKS_TEST_MAX_PRODUCT_TOTAL || 500);
-  if (total > maximum) throw new Error(`FinerWorks Test product total $${total.toFixed(2)} exceeds the $${maximum.toFixed(2)} safety limit.`);
+  const maximum = Number(environment === 'live' ? env.FINERWORKS_LIVE_MAX_PRODUCT_TOTAL || 500 : env.FINERWORKS_TEST_MAX_PRODUCT_TOTAL || 500);
+  if (total > maximum) throw new Error(`FinerWorks ${environment} product total $${total.toFixed(2)} exceeds the $${maximum.toFixed(2)} safety limit.`);
   await updateJob(env.STATE, job.order_id, 'validated', {
     request_json: JSON.stringify(orderPayload),
     validation_json: JSON.stringify({ prices, shipping, validation, productTotal: total }),
@@ -142,7 +147,8 @@ async function prepareJob(env, job) {
 }
 
 async function submitValidatedJob(env, job) {
-  if (!finerworksTestAuthorization(env).allowed) return;
+  const authorization = finerworksSubmissionAuthorization(env, job.order_id);
+  if (!authorization.allowed) return;
   const claimed = await run(
     env.STATE,
     "UPDATE fulfillment_jobs SET status = 'submitting', updated_at = datetime('now') WHERE order_id = ? AND status = 'validated'",
@@ -151,10 +157,12 @@ async function submitValidatedJob(env, job) {
   if (Number(claimed.meta?.changes || 0) !== 1) return;
   const finerworks = createFinerworksClient({ webApiKey: env.FINERWORKS_WEB_API_KEY, appKey: env.FINERWORKS_APP_KEY });
   try {
-    const submitted = await finerworks.submitTestOrders([JSON.parse(job.request_json)]);
+    const submitted = authorization.environment === 'live'
+      ? await finerworks.submitLiveOrdersWithAccountDefault([JSON.parse(job.request_json)])
+      : await finerworks.submitTestOrders([JSON.parse(job.request_json)]);
     const id = responseOrderId(submitted);
-    if (!id) throw new Error('FinerWorks accepted the test request without returning an order ID.');
-    await updateJob(env.STATE, job.order_id, 'test_submitted', { finerworks_order_id: id, error: null });
+    if (!id) throw new Error(`FinerWorks accepted the ${authorization.environment} request without returning an order ID.`);
+    await updateJob(env.STATE, job.order_id, authorization.environment === 'live' ? 'live_submitted' : 'test_submitted', { finerworks_order_id: id, error: null });
   } catch (error) {
     await updateJob(env.STATE, job.order_id, 'submission_unknown', {
       error: `Do not retry automatically; reconcile the stable order PO first. ${String(error?.message || error).slice(0, 1800)}`,
@@ -185,23 +193,28 @@ export async function processPendingFinerworksJobs(env, limit = 10) {
   const jobs = await all(env.STATE,
     "SELECT order_id, status FROM fulfillment_jobs WHERE status IN ('pending', 'validated') ORDER BY created_at LIMIT ?", limit);
   for (const job of jobs) {
-    if (job.status === 'validated' && !finerworksTestAuthorization(env).allowed) continue;
+    if (job.status === 'validated' && !finerworksSubmissionAuthorization(env, job.order_id).allowed) continue;
     try { await processFinerworksJob(env, job.order_id); } catch (error) {
-      console.error(`FinerWorks Test job ${job.order_id} failed:`, error?.message || error);
+      console.error(`FinerWorks job ${job.order_id} failed:`, error?.message || error);
     }
   }
 }
 
 export async function reconcileFinerworksTestJobs(env, limit = 10) {
-  if (!enabled(env.FINERWORKS_TEST_STATUS_POLL_ENABLED)) return;
+  const environment = finerworksEnvironment(env);
+  const pollingEnabled = environment === 'live'
+    ? enabled(env.FINERWORKS_LIVE_STATUS_POLL_ENABLED)
+    : enabled(env.FINERWORKS_TEST_STATUS_POLL_ENABLED);
+  if (!pollingEnabled) return;
+  const submittedStatus = environment === 'live' ? 'live_submitted' : 'test_submitted';
   const jobs = await all(env.STATE,
-    "SELECT * FROM fulfillment_jobs WHERE status = 'test_submitted' ORDER BY updated_at LIMIT ?", limit);
+    'SELECT * FROM fulfillment_jobs WHERE status = ? ORDER BY updated_at LIMIT ?', submittedStatus, limit);
   if (!jobs.length) return;
   const client = createFinerworksClient({ webApiKey: env.FINERWORKS_WEB_API_KEY, appKey: env.FINERWORKS_APP_KEY });
   for (const job of jobs) {
     try {
       const status = await client.orderStatus({ orderIds: [Number(job.finerworks_order_id)] });
-      await updateJob(env.STATE, job.order_id, 'test_submitted', { status_json: JSON.stringify(status), error: null });
+      await updateJob(env.STATE, job.order_id, submittedStatus, { status_json: JSON.stringify(status), error: null });
     } catch (error) {
       await updateJob(env.STATE, job.order_id, 'reconciliation_failed', { error: String(error?.message || error).slice(0, 2000) });
     }
@@ -211,16 +224,16 @@ export async function reconcileFinerworksTestJobs(env, limit = 10) {
 export async function cancelFinerworksJob(env, orderId) {
   const job = await first(env.STATE, 'SELECT * FROM fulfillment_jobs WHERE order_id = ?', String(orderId));
   if (!job) return { found: false, stopped: false };
-  if (job.status === 'test_submitted' && job.finerworks_order_id) {
+  if (['test_submitted', 'live_submitted'].includes(job.status) && job.finerworks_order_id) {
     const client = createFinerworksClient({ webApiKey: env.FINERWORKS_WEB_API_KEY, appKey: env.FINERWORKS_APP_KEY });
-    await client.updateTestOrder(job.finerworks_order_id, 'cancel');
-    await updateJob(env.STATE, orderId, 'test_cancelled', { error: null });
+    await client.updateOrder(job.finerworks_order_id, 'cancel');
+    await updateJob(env.STATE, orderId, job.status === 'live_submitted' ? 'live_cancelled' : 'test_cancelled', { error: null });
     return { found: true, stopped: true, providerCancellationSent: true };
   }
   if (['submitting', 'submission_unknown'].includes(job.status)) {
     await updateJob(env.STATE, orderId, 'cancellation_requested', { error: 'Reconcile the stable FinerWorks order PO before retrying or cancelling.' });
     return { found: true, stopped: false, manualReconciliationRequired: true };
   }
-  await updateJob(env.STATE, orderId, 'cancelled', { error: 'Shopify order cancelled before FinerWorks Test submission.' });
+  await updateJob(env.STATE, orderId, 'cancelled', { error: 'Shopify order cancelled before FinerWorks submission.' });
   return { found: true, stopped: true };
 }

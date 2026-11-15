@@ -68,7 +68,7 @@ export function finerworksRecipient(order) {
   return recipient;
 }
 
-export function finerworksOrder({ orderId, orderName, recipient, items, webhookUrl }) {
+export function finerworksOrder({ orderId, orderName, recipient, items, webhookUrl, environment = 'test', shippingCode = 'EC' }) {
   const po = `shopify-${String(orderId)}`.slice(0, 50);
   return {
     order_po: po,
@@ -88,11 +88,11 @@ export function finerworksOrder({ orderId, orderName, recipient, items, webhookU
       custom_data_2: `shopify-line-${item.lineItemId}`.slice(0, 255),
       custom_data_3: null,
     })),
-    shipping_code: 'EC',
+    shipping_code: shippingCode,
     site_id: 2,
-    test_mode: true,
+    test_mode: environment !== 'live',
     webhook_order_status_url: webhookUrl,
-    source: 'Rowland Shopify Test',
+    source: environment === 'live' ? 'Rowland Shopify Live' : 'Rowland Shopify Test',
     custom_data_1: String(orderName || '').slice(0, 255),
   };
 }

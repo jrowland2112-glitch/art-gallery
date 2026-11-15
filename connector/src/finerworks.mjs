@@ -36,6 +36,11 @@ export function createFinerworksClient({ webApiKey, appKey, fetchImpl = fetch } 
     return orders.map((order) => ({ ...order, test_mode: true }));
   }
 
+  function liveOrders(orders) {
+    if (!Array.isArray(orders) || orders.length === 0) throw new Error('At least one FinerWorks order is required.');
+    return orders.map((order) => ({ ...order, test_mode: false }));
+  }
+
   return Object.freeze({
     testCredentials: () => request('/v3/test_my_credentials', { method: 'GET' }),
     frameCollections: ({ id, productCode } = {}) => request('/v3/list_collections', {
@@ -65,15 +70,31 @@ export function createFinerworksClient({ webApiKey, appKey, fetchImpl = fetch } 
     shippingOptions: (orders) => request('/v3/list_shipping_options_multiple', {
       body: { orders: testOrders(orders) },
     }),
+    liveShippingOptions: (orders) => request('/v3/list_shipping_options_multiple', {
+      body: { orders: liveOrders(orders) },
+    }),
     validateTestOrders: (orders) => request('/v3/submit_orders_v2', {
       body: { orders: testOrders(orders), validate_only: true, payment_token: 'xxxx' },
     }),
     submitTestOrders: (orders) => request('/v3/submit_orders_v2', {
       body: { orders: testOrders(orders), validate_only: false, payment_token: 'xxxx' },
     }),
+    validateLiveOrders: (orders) => request('/v3/submit_orders_v2', {
+      body: { orders: liveOrders(orders), validate_only: true, payment_token: '' },
+    }),
+    submitLiveOrdersWithAccountDefault: (orders) => request('/v3/submit_orders_v2', {
+      body: { orders: liveOrders(orders), validate_only: false, payment_token: '' },
+    }),
     orderStatus: ({ orderIds = [], orderPos = [] } = {}) => request('/v3/fetch_order_status', {
       body: { order_ids: orderIds, order_pos: orderPos },
     }),
+    updateOrder: (orderId, updateCommand) => {
+      if (!['hold', 'cancel'].includes(updateCommand)) throw new Error('FinerWorks orders may only be held or cancelled.');
+      return request('/v3/update_order', {
+        method: 'PUT',
+        body: { order_id: Number(orderId), update_command: updateCommand },
+      });
+    },
     updateTestOrder: (orderId, updateCommand) => {
       if (!['hold', 'cancel'].includes(updateCommand)) throw new Error('FinerWorks test orders may only be held or cancelled.');
       return request('/v3/update_order', {

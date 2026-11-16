@@ -24,8 +24,9 @@ The production shipping code is `SD` (Standard). FinerWorks shipping charges var
 3. Copy `wrangler.finerworks.live.example.toml` to an ignored local deployment config and insert the D1 ID and Worker URL.
 4. Install the Shopify credentials, FinerWorks web API key, Live app key, asset signing secret, and status-webhook token as Cloudflare secrets.
 5. Deploy with every switch off and verify `/health` reports Live, disabled, and no unlisted-order authorization.
-6. Do not register Shopify webhooks until the exact controlled Live order is approved.
-7. For the first order, set only its numeric Shopify order ID in `FINERWORKS_LIVE_ORDER_IDS`, acknowledge `account_default`, then explicitly enable the connector and Live submit gate.
-8. Confirm FinerWorks acceptance and status before considering wider rollout.
+6. Register the Shopify paid/cancelled webhooks, enable only `CONNECTOR_ENABLED`, and leave Live submission, billing acknowledgement, and status polling off.
+7. Place the expressly approved Shopify order. Capture-only mode stores it, validates the product/image, and obtains FinerWorks pricing and shipping without submitting a billable order.
+8. Review the saved validation and shipping quote. Set only that order's numeric Shopify ID in `FINERWORKS_LIVE_ORDER_IDS`, acknowledge `account_default`, and explicitly enable the Live submit gate.
+9. Confirm FinerWorks acceptance and status before considering wider rollout.
 
 No API payment card data is stored or handled. With `account_default`, FinerWorks bills the default payment method already maintained in the account.

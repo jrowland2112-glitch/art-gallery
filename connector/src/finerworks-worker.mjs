@@ -36,9 +36,6 @@ async function paidWebhook(request, env, ctx) {
   const { topic, shop, webhookId, order } = verified;
   if (topic !== 'orders/paid') return json({ error: 'unexpected topic' }, 400);
   const authorization = finerworksSubmissionAuthorization(env, order.id);
-  if (authorization.environment === 'live' && !authorization.allowed) {
-    return json({ accepted: false, reason: authorization.reason });
-  }
   if (!await recordWebhook(env.STATE, { id: webhookId, topic, shop, orderId: order.id })) {
     return json({ accepted: true, duplicate: true });
   }
@@ -47,7 +44,12 @@ async function paidWebhook(request, env, ctx) {
     return json({ error: 'order could not be queued' }, 422);
   }
   ctx.waitUntil(processFinerworksJob(env, order.id).catch((error) => console.error('FinerWorks job failed:', error?.message || error)));
-  return json({ accepted: true, environment: authorization.environment }, 202);
+  return json({
+    accepted: true,
+    environment: authorization.environment,
+    submissionAuthorized: authorization.allowed,
+    submissionReason: authorization.reason,
+  }, 202);
 }
 
 async function cancelledWebhook(request, env) {

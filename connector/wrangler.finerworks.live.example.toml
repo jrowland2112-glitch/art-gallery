@@ -1,0 +1,42 @@
+name = "rowland-finerworks-live-connector"
+main = "src/finerworks-worker.mjs"
+compatibility_date = "2026-11-15"
+
+# Deliberately inert. Copy to an ignored local deployment file only after this
+# production-readiness change is reviewed and approved.
+[vars]
+SHOPIFY_STORE = "rowland-photography-0v8ydig1.myshopify.com"
+PUBLIC_BASE_URL = "https://replace-with-the-live-worker.example"
+CONNECTOR_ENABLED = "false"
+FINERWORKS_ENVIRONMENT = "live"
+FINERWORKS_LIVE_SUBMIT_ENABLED = "false"
+FINERWORKS_LIVE_FULL_ROLLOUT_ENABLED = "false"
+FINERWORKS_LIVE_ORDER_IDS = ""
+FINERWORKS_LIVE_PAYMENT_METHOD = ""
+FINERWORKS_LIVE_STATUS_POLL_ENABLED = "false"
+FINERWORKS_LIVE_MAX_PRODUCT_TOTAL = "500"
+FINERWORKS_SHIPPING_CODE = "SD"
+FINERWORKS_MAX_LINE_ITEMS = "20"
+FINERWORKS_MAX_ITEM_QUANTITY = "10"
+ASSET_URL_TTL_SECONDS = "1209600"
+
+[[r2_buckets]]
+binding = "ORIGINALS"
+bucket_name = "rowland-photo-originals"
+
+[[d1_databases]]
+binding = "STATE"
+database_name = "rowland-finerworks-live-state"
+database_id = "replace-after-creating-live-d1"
+migrations_dir = "migrations-finerworks"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Install only with `wrangler secret put`; never commit values:
+# SHOPIFY_CLIENT_ID
+# SHOPIFY_CLIENT_SECRET
+# FINERWORKS_WEB_API_KEY
+# FINERWORKS_APP_KEY (Live key only)
+# IMAGE_URL_SIGNING_SECRET
+# FINERWORKS_STATUS_WEBHOOK_TOKEN

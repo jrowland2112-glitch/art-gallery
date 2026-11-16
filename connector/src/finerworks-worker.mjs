@@ -1,5 +1,5 @@
 import { enabled } from './constants.mjs';
-import { assertFinerworksTestEnvironment, finerworksTestAuthorization } from './finerworks-constants.mjs';
+import { finerworksEnvironment, finerworksSubmissionAuthorization } from './finerworks-constants.mjs';
 import { first, recordWebhook, run } from './database.mjs';
 import { verifyAssetSignature, verifyShopifyHmac } from './crypto.mjs';
 import { cancelFinerworksJob, createFinerworksJob, processFinerworksJob, processPendingFinerworksJobs, reconcileFinerworksTestJobs } from './finerworks-jobs.mjs';
@@ -14,7 +14,7 @@ function expectedShop(value) {
 
 async function verifiedShopifyWebhook(request, env) {
   if (!enabled(env.CONNECTOR_ENABLED)) return json({ accepted: false, reason: 'connector disabled' });
-  assertFinerworksTestEnvironment(env);
+  finerworksEnvironment(env);
   const rawBody = await request.text();
   if (!await verifyShopifyHmac(rawBody, request.headers.get('x-shopify-hmac-sha256'), env.SHOPIFY_CLIENT_SECRET)) {
     return json({ error: 'invalid signature' }, 401);
@@ -35,6 +35,10 @@ async function paidWebhook(request, env, ctx) {
   if (verified instanceof Response) return verified;
   const { topic, shop, webhookId, order } = verified;
   if (topic !== 'orders/paid') return json({ error: 'unexpected topic' }, 400);
+  const authorization = finerworksSubmissionAuthorization(env, order.id);
+  if (authorization.environment === 'live' && !authorization.allowed) {
+    return json({ accepted: false, reason: authorization.reason });
+  }
   if (!await recordWebhook(env.STATE, { id: webhookId, topic, shop, orderId: order.id })) {
     return json({ accepted: true, duplicate: true });
   }
@@ -42,8 +46,8 @@ async function paidWebhook(request, env, ctx) {
     await run(env.STATE, "UPDATE webhook_events SET status = 'failed', error = ? WHERE id = ?", String(error.message).slice(0, 2000), webhookId);
     return json({ error: 'order could not be queued' }, 422);
   }
-  ctx.waitUntil(processFinerworksJob(env, order.id).catch((error) => console.error('FinerWorks Test job failed:', error?.message || error)));
-  return json({ accepted: true, environment: 'test' }, 202);
+  ctx.waitUntil(processFinerworksJob(env, order.id).catch((error) => console.error('FinerWorks job failed:', error?.message || error)));
+  return json({ accepted: true, environment: authorization.environment }, 202);
 }
 
 async function cancelledWebhook(request, env) {
@@ -89,13 +93,21 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method === 'GET' && url.pathname === '/health') {
-      let environment = 'test';
-      try { environment = assertFinerworksTestEnvironment(env); } catch { environment = 'invalid'; }
+      let environment = 'invalid';
+      try { environment = finerworksEnvironment(env); } catch {}
+      const authorization = environment === 'invalid'
+        ? { allowed: false }
+        : finerworksSubmissionAuthorization(env, '__healthcheck__');
       return json({
-        ok: environment === 'test', provider: 'FinerWorks', environment,
+        ok: environment !== 'invalid', provider: 'FinerWorks', environment,
         connectorEnabled: enabled(env.CONNECTOR_ENABLED),
-        testSubmissionEnabled: finerworksTestAuthorization(env).allowed,
+        testSubmissionEnabled: environment === 'test' && authorization.allowed,
         testStatusPollEnabled: enabled(env.FINERWORKS_TEST_STATUS_POLL_ENABLED),
+        liveSubmitGateEnabled: enabled(env.FINERWORKS_LIVE_SUBMIT_ENABLED),
+        liveFullRolloutEnabled: enabled(env.FINERWORKS_LIVE_FULL_ROLLOUT_ENABLED),
+        livePaymentMethodConfigured: String(env.FINERWORKS_LIVE_PAYMENT_METHOD || '').trim().toLowerCase() === 'account_default',
+        liveSubmissionEnabledForUnlistedOrder: environment === 'live' && authorization.allowed,
+        liveStatusPollEnabled: enabled(env.FINERWORKS_LIVE_STATUS_POLL_ENABLED),
         shopifyFulfillmentSyncEnabled: false,
       });
     }
@@ -107,7 +119,7 @@ export default {
   },
   async scheduled(_controller, env, ctx) {
     if (enabled(env.CONNECTOR_ENABLED)) ctx.waitUntil((async () => {
-      assertFinerworksTestEnvironment(env);
+      finerworksEnvironment(env);
       await processPendingFinerworksJobs(env);
       await reconcileFinerworksTestJobs(env);
     })());

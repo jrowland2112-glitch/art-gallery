@@ -14,6 +14,11 @@ test('health reports a disabled Test-only connector by default', async () => {
     connectorEnabled: false,
     testSubmissionEnabled: false,
     testStatusPollEnabled: false,
+    liveSubmitGateEnabled: false,
+    liveFullRolloutEnabled: false,
+    livePaymentMethodConfigured: false,
+    liveSubmissionEnabledForUnlistedOrder: false,
+    liveStatusPollEnabled: false,
     shopifyFulfillmentSyncEnabled: false,
   });
 });
@@ -24,9 +29,12 @@ test('disabled connector accepts no Shopify job', async () => {
   assert.deepEqual(await response.json(), { accepted: false, reason: 'connector disabled' });
 });
 
-test('health fails closed if environment is changed to live', async () => {
+test('health recognizes Live while every production gate remains off', async () => {
   const response = await worker.fetch(new Request('https://example.com/health'), { FINERWORKS_ENVIRONMENT: 'live' }, context);
   const body = await response.json();
-  assert.equal(body.ok, false);
-  assert.equal(body.environment, 'invalid');
+  assert.equal(body.ok, true);
+  assert.equal(body.environment, 'live');
+  assert.equal(body.connectorEnabled, false);
+  assert.equal(body.liveSubmitGateEnabled, false);
+  assert.equal(body.liveSubmissionEnabledForUnlistedOrder, false);
 });

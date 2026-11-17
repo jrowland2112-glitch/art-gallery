@@ -13,8 +13,8 @@ test('creates a tracked Shopify fulfillment only for mapped WHCC line items', as
     if (request.query.includes('FulfillmentOrdersForWhcc')) {
       return new Response(JSON.stringify({ data: { order: { fulfillmentOrders: { nodes: [{
         id: 'gid://shopify/FulfillmentOrder/1', status: 'OPEN', lineItems: { nodes: [
-          { id: 'gid://shopify/FulfillmentOrderLineItem/10', remainingQuantity: 1, lineItem: { legacyResourceId: '500' } },
-          { id: 'gid://shopify/FulfillmentOrderLineItem/11', remainingQuantity: 1, lineItem: { legacyResourceId: '999' } },
+          { id: 'gid://shopify/FulfillmentOrderLineItem/10', remainingQuantity: 1, lineItem: { id: 'gid://shopify/LineItem/500' } },
+          { id: 'gid://shopify/FulfillmentOrderLineItem/11', remainingQuantity: 1, lineItem: { id: 'gid://shopify/LineItem/999' } },
         ] },
       }] } } } }), { status: 200 });
     }
@@ -29,6 +29,8 @@ test('creates a tracked Shopify fulfillment only for mapped WHCC line items', as
     company: 'FedEx', numbers: ['TRACK1'], urls: ['https://example.test/TRACK1'],
   });
   assert.equal(fulfillment.id, 'gid://shopify/Fulfillment/2');
+  assert.equal(requests[0].query.includes('legacyResourceId'), false);
+  assert.equal(requests[0].query.includes('lineItem { id }'), true);
   const input = requests[1].variables.fulfillment;
   assert.equal(input.notifyCustomer, true);
   assert.deepEqual(input.lineItemsByFulfillmentOrder, [{

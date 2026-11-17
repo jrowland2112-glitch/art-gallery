@@ -64,7 +64,7 @@ export function createShopifyAdminClient({ store, clientId, clientSecret, fetchI
             nodes {
               id status
               lineItems(first: 250) {
-                nodes { id remainingQuantity lineItem { legacyResourceId } }
+                nodes { id remainingQuantity lineItem { id } }
               }
             }
           }
@@ -77,7 +77,8 @@ export function createShopifyAdminClient({ store, clientId, clientSecret, fetchI
     for (const fulfillmentOrder of data.order.fulfillmentOrders?.nodes || []) {
       const fulfillmentOrderLineItems = [];
       for (const item of fulfillmentOrder.lineItems?.nodes || []) {
-        const requested = wanted.get(String(item.lineItem?.legacyResourceId));
+        const shopifyLineItemId = String(item.lineItem?.id || '').match(/^gid:\/\/shopify\/LineItem\/(\d+)$/)?.[1];
+        const requested = wanted.get(shopifyLineItemId);
         const quantity = Math.min(requested || 0, Number(item.remainingQuantity || 0));
         if (quantity > 0) fulfillmentOrderLineItems.push({ id: item.id, quantity });
       }

@@ -221,11 +221,11 @@
       return fmt.replace(/\{\{\s*amount[a-z_]*\s*\}\}/, amount.replace(/\.00$/, ''));
     }
 
-    function hasRenderedFinerWorksFrame(variant) {
+    function hasRenderedFrame(variant) {
       var image = variant && variant.featured_image;
       if (!image) return false;
       var identity = [image.alt, image.src, image.url].filter(Boolean).join(' ');
-      return /FinerWorks Alto Black Thin frame|finerworks-framed/i.test(identity);
+      return /FinerWorks Alto Black Thin frame|finerworks-framed|WHCC Gallery Slim black frame|whcc-gallery-slim-double-white-1-5/i.test(identity);
     }
 
     function updateFrame(values, variant) {
@@ -241,11 +241,11 @@
       var isCanvas = /canvas/.test(finishValue);
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
-      var usesRenderedFinerWorksFrame = isFramedFinish && hasRenderedFinerWorksFrame(variant);
+      var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
       if (isCanvas || isMetal) {
         frameColor = null;
         matColor = null;
-      } else if (usesRenderedFinerWorksFrame) {
+      } else if (usesRenderedFrame) {
         frameColor = null;
         matColor = null;
       } else if (isFramedFinish) {

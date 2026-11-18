@@ -468,8 +468,8 @@ textarea { min-height: 9rem; resize: vertical; }
 .accordion summary::after { content: "+"; font-size: 1.1rem; }
 .accordion[open] summary::after { content: "\2013"; }
 .accordion .rte { padding-bottom: 1.2rem; color: var(--color-muted); }
-.product-story__journal-link { margin: 1.35rem 0 0; padding-top: 1rem; border-top: 1px solid var(--color-border); }
-.product-story__journal-link a { color: var(--color-foreground); font-family: var(--font-heading-family); text-underline-offset: 0.25em; }
+.product-story__journal-link { margin: 1.35rem 0 0; }
+.product-story__journal-link a { color: var(--color-foreground); font-family: var(--font-heading-family); font-style: italic; text-underline-offset: 0.25em; }
 .product-details__extra { margin-top: 1.5rem; }
 .product-details__extra h3 { margin: 0 0 0.65rem; color: var(--color-foreground); font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .product-details__table-wrap { margin-bottom: 1rem; overflow-x: auto; }

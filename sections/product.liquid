@@ -209,6 +209,11 @@
             {%- else -%}
               <p>The story behind this photograph is coming soon.</p>
             {%- endif -%}
+            {%- if product.handle == 'abstract-aspens' -%}
+              <p class="product-story__journal-link">
+                <a href="/blogs/behind-the-lense/aspens-in-motion-at-oxbow-bend">Read More in My Field Journal about this image</a>
+              </p>
+            {%- endif -%}
           </div>
         </details>
         {%- for block in section.blocks -%}

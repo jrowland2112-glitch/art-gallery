@@ -535,17 +535,17 @@ textarea { min-height: 9rem; resize: vertical; }
   left: 49.5%;
   bottom: 44.5%;
   width: var(--framed-room-art-width, 21.82%);
-  aspect-ratio: 1.4;
+  aspect-ratio: var(--framed-room-aspect, 1.375);
   transform: translateX(-50%);
-  padding: 2.4%;
+  box-sizing: border-box;
   background: #171717;
   box-shadow: 0 0.35rem 0.7rem rgba(35, 31, 27, 0.18);
 }
-.metal-lifestyle--portrait .framed-room__frame { aspect-ratio: 0.714; }
 .framed-room__mat {
-  width: 100%;
-  height: 100%;
-  padding: 9%;
+  position: absolute;
+  inset: 2.3%;
+  box-sizing: border-box;
+  padding: 6.8%;
   background: #fff;
 }
 .framed-room__mat .metal-lifestyle__art { object-fit: cover; }

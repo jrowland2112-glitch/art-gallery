@@ -238,6 +238,26 @@
       if (!panel) return;
       var isPortrait = visual.dataset.framedOrientation === 'portrait';
       var isEdge = visual.dataset.framedLayout === 'edge';
+      if (!isPortrait && !isEdge) {
+        panel.style.left = '20.5%';
+        panel.style.top = '21.8%';
+        panel.style.width = '56.7%';
+        panel.style.height = '46.3%';
+        panel.style.aspectRatio = 'auto';
+        panel.style.transform = 'none';
+        panel.style.clipPath = 'polygon(0% 10.4%, 99.8% 0%, 100% 100%, 0.4% 95.9%)';
+        return;
+      }
+      if (!isPortrait && isEdge) {
+        panel.style.left = '12.5%';
+        panel.style.top = '23.1%';
+        panel.style.width = '75.2%';
+        panel.style.height = '49.8%';
+        panel.style.aspectRatio = 'auto';
+        panel.style.transform = 'none';
+        panel.style.clipPath = 'polygon(5.7% 0.6%, 94.4% 0.4%, 100% 100%, 0.1% 99.4%)';
+        return;
+      }
       var points;
       if (isEdge && isPortrait) points = [[0.291, 0.160], [0.710, 0.160], [0.801, 0.735], [0.198, 0.735]];
       else if (isEdge) points = [[0.168, 0.234], [0.828, 0.233], [0.857, 0.730], [0.127, 0.727]];
@@ -276,8 +296,11 @@
       var second = parseFloat(match[2]);
       var isPortrait = framedRoomVisual.dataset.framedOrientation === 'portrait';
       var printWidth = isPortrait ? Math.min(first, second) : Math.max(first, second);
+      var printHeight = isPortrait ? Math.max(first, second) : Math.min(first, second);
       var finishedWidth = printWidth + 4;
+      var finishedHeight = printHeight + 4;
       framedRoomVisual.style.setProperty('--framed-room-art-width', ((finishedWidth / 72) * 71.4).toFixed(3) + '%');
+      framedRoomVisual.style.setProperty('--framed-room-aspect', (finishedWidth / finishedHeight).toFixed(4));
     }
 
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {

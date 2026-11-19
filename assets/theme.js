@@ -296,8 +296,11 @@
       var second = parseFloat(match[2]);
       var isPortrait = framedRoomVisual.dataset.framedOrientation === 'portrait';
       var printWidth = isPortrait ? Math.min(first, second) : Math.max(first, second);
+      var printHeight = isPortrait ? Math.max(first, second) : Math.min(first, second);
       var finishedWidth = printWidth + 4;
+      var finishedHeight = printHeight + 4;
       framedRoomVisual.style.setProperty('--framed-room-art-width', ((finishedWidth / 72) * 71.4).toFixed(3) + '%');
+      framedRoomVisual.style.setProperty('--framed-room-aspect', (finishedWidth / finishedHeight).toFixed(4));
     }
 
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {

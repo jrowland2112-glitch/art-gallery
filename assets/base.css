@@ -419,6 +419,66 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0; color: var(--color-muted); font-size: 0.7rem;
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
+.metal-lifestyle {
+  width: 100%;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+}
+.metal-lifestyle[hidden] { display: none; }
+.metal-lifestyle__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  background: #d9cabb;
+}
+.metal-lifestyle__scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.metal-lifestyle__panel {
+  position: absolute;
+  overflow: hidden;
+  background: #b8b9ba;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 1px 2px rgba(35, 31, 27, 0.14);
+}
+.metal-lifestyle--landscape .metal-lifestyle__panel {
+  left: 15.45%;
+  top: 16.55%;
+  width: 69.1%;
+  aspect-ratio: 3 / 2;
+}
+.metal-lifestyle--portrait .metal-lifestyle__panel {
+  left: 30.55%;
+  top: 7.25%;
+  width: 38.9%;
+  aspect-ratio: 2 / 3;
+}
+.metal-lifestyle__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #b8b9ba;
+}
+.metal-lifestyle__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.13), transparent 29%, transparent 69%, rgba(255, 255, 255, 0.08));
+  box-shadow: inset 0 0 0 1px rgba(225, 230, 232, 0.7);
+}
+.metal-lifestyle figcaption {
+  margin-top: 0.6rem;
+  color: var(--color-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-transform: uppercase;
+}
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }
 .product__thumbs button { border: 1px solid transparent; padding: 0; background: none; cursor: pointer; width: 4.5rem; flex: 0 0 auto; }
 .product__thumbs button[aria-current="true"] { border-color: var(--color-foreground); }

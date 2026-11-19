@@ -69,6 +69,7 @@
     var lightboxOpen = root.querySelector('[data-product-lightbox-open]');
     var lightboxClose = root.querySelector('[data-product-lightbox-close]');
     var finishCaption = root.querySelector('[data-finish-caption]');
+    var metalLifestyle = root.querySelector('[data-metal-lifestyle]');
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -229,7 +230,6 @@
     }
 
     function updateFrame(values, variant) {
-      if (!frame) return;
       var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
       groups.forEach(function (g, i) {
         var name = (g.dataset.optionName || '').toLowerCase();
@@ -242,6 +242,11 @@
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
       var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
+      if (metalLifestyle) {
+        metalLifestyle.hidden = !isMetal;
+        metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');
+      }
+      if (!frame) return;
       if (isCanvas || isMetal) {
         frameColor = null;
         matColor = null;

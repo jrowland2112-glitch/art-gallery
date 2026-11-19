@@ -1,6 +1,13 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign main_image = current_variant.featured_image | default: product.featured_image
+  assign reference_image = product.featured_image | default: main_image
+  assign metal_mockup_orientation = 'landscape'
+  assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
+  if reference_image and reference_image.aspect_ratio < 1
+    assign metal_mockup_orientation = 'portrait'
+    assign metal_mockup_asset = 'metal-lifestyle-portrait.jpg'
+  endif
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
   for product_option_name in product.options
@@ -61,6 +68,34 @@
             {%- endif -%}
             <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
           </div>
+        {%- endif -%}
+        {%- if reference_image -%}
+          <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}" data-metal-lifestyle hidden>
+            <div class="metal-lifestyle__visual">
+              <img
+                class="metal-lifestyle__scene"
+                src="{{ metal_mockup_asset | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+              >
+              <div class="metal-lifestyle__panel">
+                <img
+                  class="metal-lifestyle__art"
+                  src="{{ reference_image | image_url: width: 1600 }}"
+                  srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 990px) 38vw, 82vw"
+                  width="{{ reference_image.width }}"
+                  height="{{ reference_image.height }}"
+                  loading="lazy"
+                  alt="{{ product.title | escape }} shown as a metal print being hung on a wall"
+                >
+                <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+            <figcaption>Metal print &middot; Lifestyle preview</figcaption>
+          </figure>
         {%- endif -%}
       </div>
       {%- if main_image -%}

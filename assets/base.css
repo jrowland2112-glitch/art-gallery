@@ -424,7 +424,7 @@ textarea { min-height: 9rem; resize: vertical; }
   grid-template-columns: repeat(2, minmax(0, 20rem));
   gap: clamp(0.75rem, 2vw, 1.25rem);
   width: min(70%, 41.25rem);
-  margin: clamp(1.5rem, 3vw, 2.25rem) auto 0 0;
+  margin: 0.75rem auto 0 0;
 }
 .metal-lifestyle-grid[hidden] { display: none; }
 .metal-lifestyle { width: 100%; margin: 0; }

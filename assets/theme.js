@@ -227,6 +227,15 @@
         return parts.length === 2 ? (parseFloat(parts[0]) || 0) * (parseFloat(parts[1]) || 0) : 0;
       }
 
+      function finishCaption(value) {
+        var lower = (value || '').toLowerCase();
+        if (/gallery\s*wrap|canvas/.test(lower)) return 'Texture & depth';
+        if (/metal|aluminum|aluminium/.test(lower)) return 'Clean & luminous';
+        if (/frame|matted/.test(lower)) return 'A timeless finish';
+        if (/paper|print/.test(lower)) return 'Archival & classic';
+        return '';
+      }
+
       function renderChoices(container, values, selectedValue, name, onChange) {
         container.innerHTML = '';
         values.forEach(function (value, index) {
@@ -245,6 +254,14 @@
           var strong = document.createElement('strong');
           strong.textContent = value;
           content.appendChild(strong);
+          if (name === 'finish') {
+            var caption = finishCaption(value);
+            if (caption) {
+              var small = document.createElement('small');
+              small.textContent = caption;
+              content.appendChild(small);
+            }
+          }
           label.appendChild(content);
           container.appendChild(input);
           container.appendChild(label);

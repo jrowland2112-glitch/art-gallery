@@ -699,9 +699,43 @@
     start();
   }
 
+  function initJournalCarousel(root) {
+    if (root.dataset.journalReady) return;
+    root.dataset.journalReady = '1';
+    var track = root.querySelector('[data-journal-track]');
+    var prev = root.querySelector('[data-journal-prev]');
+    var next = root.querySelector('[data-journal-next]');
+    if (!track || !prev || !next) return;
+    var cards = Array.prototype.slice.call(track.querySelectorAll('.journal-card'));
+
+    if (cards.length < 2) {
+      prev.hidden = true;
+      next.hidden = true;
+      return;
+    }
+
+    function stepWidth() {
+      var styles = window.getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      return cards[0].getBoundingClientRect().width + gap;
+    }
+
+    prev.addEventListener('click', function () {
+      var max = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (track.scrollLeft <= 2) track.scrollTo({ left: max, behavior: 'smooth' });
+      else track.scrollBy({ left: -stepWidth(), behavior: 'smooth' });
+    });
+    next.addEventListener('click', function () {
+      var max = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (track.scrollLeft >= max - 2) track.scrollTo({ left: 0, behavior: 'smooth' });
+      else track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
+    });
+  }
+
   function initAll() {
     document.querySelectorAll('[data-product]').forEach(initProduct);
     document.querySelectorAll('[data-slideshow]').forEach(initSlideshow);
+    document.querySelectorAll('[data-journal-carousel]').forEach(initJournalCarousel);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);

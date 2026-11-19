@@ -12,10 +12,6 @@
       </div>
 
       <div class="journal-feature__carousel" data-journal-carousel>
-        <div class="journal-feature__controls" aria-label="Field Journal carousel controls">
-          <button type="button" class="journal-feature__control" data-journal-prev aria-label="Show previous Field Journal post">Previous</button>
-          <button type="button" class="journal-feature__control" data-journal-next aria-label="Show next Field Journal post">Next</button>
-        </div>
         <div class="journal-feature__posts" data-journal-track tabindex="0" aria-label="Latest Field Journal posts">
         {%- if blog != blank and blog.articles_count > 0 -%}
           {%- for article in blog.articles limit: 5 -%}
@@ -64,6 +60,12 @@
           {%- endfor -%}
         {%- endif -%}
         </div>
+        <button type="button" class="journal-feature__arrow journal-feature__arrow--prev" data-journal-prev aria-label="Show previous Field Journal post">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+        </button>
+        <button type="button" class="journal-feature__arrow journal-feature__arrow--next" data-journal-next aria-label="Show next Field Journal post">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
   </div>

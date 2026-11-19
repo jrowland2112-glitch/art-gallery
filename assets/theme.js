@@ -707,10 +707,10 @@
     var next = root.querySelector('[data-journal-next]');
     if (!track || !prev || !next) return;
     var cards = Array.prototype.slice.call(track.querySelectorAll('.journal-card'));
-    var controls = root.querySelector('.journal-feature__controls');
 
     if (cards.length < 2) {
-      if (controls) controls.hidden = true;
+      prev.hidden = true;
+      next.hidden = true;
       return;
     }
 
@@ -720,21 +720,16 @@
       return cards[0].getBoundingClientRect().width + gap;
     }
 
-    function updateControls() {
-      var max = Math.max(0, track.scrollWidth - track.clientWidth);
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= max - 2;
-    }
-
     prev.addEventListener('click', function () {
-      track.scrollBy({ left: -stepWidth(), behavior: 'smooth' });
+      var max = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (track.scrollLeft <= 2) track.scrollTo({ left: max, behavior: 'smooth' });
+      else track.scrollBy({ left: -stepWidth(), behavior: 'smooth' });
     });
     next.addEventListener('click', function () {
-      track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
+      var max = Math.max(0, track.scrollWidth - track.clientWidth);
+      if (track.scrollLeft >= max - 2) track.scrollTo({ left: 0, behavior: 'smooth' });
+      else track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
     });
-    track.addEventListener('scroll', updateControls, { passive: true });
-    window.addEventListener('resize', updateControls);
-    updateControls();
   }
 
   function initAll() {

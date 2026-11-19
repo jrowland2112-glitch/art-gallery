@@ -5,10 +5,14 @@
   assign metal_mockup_orientation = 'landscape'
   assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
   assign metal_edge_asset = 'metal-edge-landscape.jpg'
+  assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-landscape.jpg'
+  assign gallery_wrap_edge_asset = 'gallery-wrap-edge-landscape.jpg'
   if reference_image and reference_image.aspect_ratio < 1
     assign metal_mockup_orientation = 'portrait'
     assign metal_mockup_asset = 'metal-lifestyle-portrait.jpg'
     assign metal_edge_asset = 'metal-edge-portrait.jpg'
+    assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-portrait.jpg'
+    assign gallery_wrap_edge_asset = 'gallery-wrap-edge-portrait.jpg'
   endif
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
@@ -69,6 +73,48 @@
               <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
             {%- endif -%}
             <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
+          </div>
+          <div class="metal-lifestyle-grid gallery-wrap-preview-grid" data-gallery-wrap-preview hidden>
+            <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-gallery-wrap-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} gallery wrap lifestyle preview">
+                <div class="metal-lifestyle__visual" data-gallery-wrap-visual data-gallery-wrap-layout="wall" data-gallery-wrap-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ gallery_wrap_mockup_asset | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="gallery-wrap__panel">
+                    <img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w" sizes="(min-width: 990px) 38vw, 82vw" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown as a black-sided gallery wrap being hung on a wall">
+                    <span class="gallery-wrap__texture" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </button>
+              <figcaption>Gallery wrap &middot; Lifestyle preview &middot; Click to enlarge</figcaption>
+            </figure>
+            <figure class="metal-lifestyle metal-lifestyle--edge metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-gallery-wrap-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} gallery wrap edge detail">
+                <div class="metal-lifestyle__visual" data-gallery-wrap-visual data-gallery-wrap-layout="edge" data-gallery-wrap-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ gallery_wrap_edge_asset | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="gallery-wrap__panel">
+                    <img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w" sizes="(min-width: 990px) 24vw, 48vw" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown from the edge as a black-sided gallery wrap">
+                    <span class="gallery-wrap__texture" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </button>
+              <figcaption>Gallery wrap &middot; Black edge detail &middot; Click to enlarge</figcaption>
+            </figure>
+            <figure class="metal-lifestyle metal-lifestyle--room metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-gallery-wrap-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} gallery wrap room-scale preview">
+                <div class="metal-lifestyle__visual" data-gallery-wrap-visual data-gallery-wrap-layout="room" data-gallery-wrap-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ 'metal-room-couch.jpg' | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="gallery-room__panel">
+                    <img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w" sizes="(min-width: 990px) 18vw, 32vw" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown to scale as a black-sided gallery wrap above a six-foot sofa">
+                    <span class="gallery-wrap__texture" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </button>
+              <figcaption>Gallery wrap &middot; Room scale above a 6-foot sofa &middot; Click to enlarge</figcaption>
+            </figure>
+            <dialog class="metal-lifestyle-lightbox" data-gallery-wrap-lightbox aria-label="Enlarged {{ product.title | escape }} gallery wrap preview">
+              <button class="metal-lifestyle-lightbox__close" type="button" data-gallery-wrap-close aria-label="Close enlarged gallery wrap preview"><span aria-hidden="true">&times;</span><span>Close</span></button>
+              <div class="metal-lifestyle-lightbox__content" data-gallery-wrap-lightbox-content></div>
+            </dialog>
           </div>
         {%- endif -%}
         {%- if reference_image -%}

@@ -127,7 +127,7 @@
       if (isEdge && isPortrait) points = [[0.238, 0.086], [0.762, 0.086], [0.946, 0.878], [0.055, 0.878]];
       else if (isEdge) points = [[0.108, 0.155], [0.895, 0.153], [0.964, 0.850], [0.036, 0.850]];
       else if (isPortrait) points = [[0.2886, 0.0893], [0.7036, 0.0304], [0.7036, 0.8625], [0.2886, 0.8170]];
-      else points = [[0.1464, 0.1857], [0.8457, 0.1089], [0.8350, 0.7955], [0.1464, 0.7384]];
+      else points = [[0.1437, 0.1848], [0.8415, 0.1095], [0.8336, 0.7946], [0.1437, 0.7384]];
       var visualWidth = visual.clientWidth;
       var visualHeight = visual.clientHeight;
       var sourceWidth = panel.offsetWidth;

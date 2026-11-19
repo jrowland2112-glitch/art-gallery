@@ -510,7 +510,7 @@ textarea { min-height: 9rem; resize: vertical; }
   overflow: hidden;
   background: #111;
   border: 3px solid #111;
-  box-shadow: 0.35rem 0.35rem 0 #111, 0 0.65rem 1rem rgba(29, 25, 21, 0.28);
+  box-shadow: none;
 }
 .metal-lifestyle--landscape .gallery-room__panel { aspect-ratio: 3 / 2; }
 .metal-lifestyle--portrait .gallery-room__panel { aspect-ratio: 2 / 3; }
@@ -563,6 +563,11 @@ textarea { min-height: 9rem; resize: vertical; }
   overflow: auto;
 }
 .metal-lifestyle-lightbox::backdrop { background: rgba(20, 19, 18, 0.72); }
+.metal-lifestyle-lightbox[data-gallery-wrap-lightbox] {
+  background: #fff;
+  color: #292724;
+}
+.metal-lifestyle-lightbox[data-gallery-wrap-lightbox]::backdrop { background: #fff; }
 .metal-lifestyle-lightbox[open] { display: grid; place-items: center; }
 .metal-lifestyle-lightbox__close {
   position: fixed;

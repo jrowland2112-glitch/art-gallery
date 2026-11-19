@@ -248,6 +248,16 @@
         panel.style.clipPath = 'polygon(0% 10.4%, 99.8% 0%, 100% 100%, 0.4% 95.9%)';
         return;
       }
+      if (!isPortrait && isEdge) {
+        panel.style.left = '12.5%';
+        panel.style.top = '23.1%';
+        panel.style.width = '75.2%';
+        panel.style.height = '49.8%';
+        panel.style.aspectRatio = 'auto';
+        panel.style.transform = 'none';
+        panel.style.clipPath = 'polygon(5.7% 0.6%, 94.4% 0.4%, 100% 100%, 0.1% 99.4%)';
+        return;
+      }
       var points;
       if (isEdge && isPortrait) points = [[0.291, 0.160], [0.710, 0.160], [0.801, 0.735], [0.198, 0.735]];
       else if (isEdge) points = [[0.168, 0.234], [0.828, 0.233], [0.857, 0.730], [0.127, 0.727]];

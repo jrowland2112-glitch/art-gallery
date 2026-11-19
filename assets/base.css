@@ -419,12 +419,15 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0; color: var(--color-muted); font-size: 0.7rem;
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
-.metal-lifestyle {
-  width: 34%;
-  max-width: 20rem;
+.metal-lifestyle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 20rem));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  width: min(70%, 41.25rem);
   margin: clamp(1.5rem, 3vw, 2.25rem) auto 0 0;
 }
-.metal-lifestyle[hidden] { display: none; }
+.metal-lifestyle-grid[hidden] { display: none; }
+.metal-lifestyle { width: 100%; margin: 0; }
 .metal-lifestyle__open {
   display: block;
   width: 100%;
@@ -468,6 +471,8 @@ textarea { min-height: 9rem; resize: vertical; }
   width: 42%;
   aspect-ratio: 2 / 3;
 }
+.metal-lifestyle--edge.metal-lifestyle--landscape .metal-lifestyle__panel { width: 70%; }
+.metal-lifestyle--edge.metal-lifestyle--portrait .metal-lifestyle__panel { width: 42%; }
 .metal-lifestyle__art {
   display: block;
   width: 100%;
@@ -533,7 +538,7 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle-lightbox__content .metal-lifestyle__visual { width: 100%; }
 @media (max-width: 749px) {
-  .metal-lifestyle { width: min(72%, 18rem); }
+  .metal-lifestyle-grid { width: 100%; }
 }
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }
 .product__thumbs button { border: 1px solid transparent; padding: 0; background: none; cursor: pointer; width: 4.5rem; flex: 0 0 auto; }

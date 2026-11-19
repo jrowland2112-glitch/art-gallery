@@ -70,11 +70,12 @@
     var lightboxClose = root.querySelector('[data-product-lightbox-close]');
     var finishCaption = root.querySelector('[data-finish-caption]');
     var metalLifestyle = root.querySelector('[data-metal-lifestyle]');
-    var metalVisual = root.querySelector('[data-metal-visual]');
-    var metalOpen = root.querySelector('[data-metal-lifestyle-open]');
+    var metalVisuals = Array.prototype.slice.call(root.querySelectorAll('[data-metal-visual]'));
+    var metalOpeners = Array.prototype.slice.call(root.querySelectorAll('[data-metal-lifestyle-open]'));
     var metalLightbox = root.querySelector('[data-metal-lifestyle-lightbox]');
     var metalLightboxClose = root.querySelector('[data-metal-lifestyle-close]');
     var metalLightboxContent = root.querySelector('[data-metal-lifestyle-lightbox-content]');
+    var metalLastOpener = null;
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -112,9 +113,12 @@
       var panel = visual.querySelector('.metal-lifestyle__panel');
       if (!panel) return;
       var isPortrait = visual.dataset.metalOrientation === 'portrait';
-      var points = isPortrait
-        ? [[0.2886, 0.0893], [0.7036, 0.0304], [0.7036, 0.8625], [0.2886, 0.8170]]
-        : [[0.1464, 0.1857], [0.8457, 0.1089], [0.8350, 0.7955], [0.1464, 0.7384]];
+      var isEdge = visual.dataset.metalLayout === 'edge';
+      var points;
+      if (isEdge && isPortrait) points = [[0.238, 0.086], [0.762, 0.086], [0.946, 0.878], [0.055, 0.878]];
+      else if (isEdge) points = [[0.108, 0.155], [0.895, 0.153], [0.964, 0.850], [0.036, 0.850]];
+      else if (isPortrait) points = [[0.2886, 0.0893], [0.7036, 0.0304], [0.7036, 0.8625], [0.2886, 0.8170]];
+      else points = [[0.1464, 0.1857], [0.8457, 0.1089], [0.8350, 0.7955], [0.1464, 0.7384]];
       var visualWidth = visual.clientWidth;
       var visualHeight = visual.clientHeight;
       var sourceWidth = panel.offsetWidth;
@@ -151,13 +155,17 @@
       ].join(',') + ')';
     }
 
-    if (metalOpen && metalLightbox && metalLightboxClose && metalLightboxContent) {
-      metalOpen.addEventListener('click', function () {
-        metalLightboxContent.replaceChildren();
-        var enlargedVisual = metalVisual.cloneNode(true);
-        metalLightboxContent.appendChild(enlargedVisual);
-        metalLightbox.showModal();
-        requestAnimationFrame(function () { projectMetalVisual(enlargedVisual); });
+    if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {
+      metalOpeners.forEach(function (metalOpen) {
+        metalOpen.addEventListener('click', function () {
+          var sourceVisual = metalOpen.querySelector('[data-metal-visual]');
+          metalLastOpener = metalOpen;
+          metalLightboxContent.replaceChildren();
+          var enlargedVisual = sourceVisual.cloneNode(true);
+          metalLightboxContent.appendChild(enlargedVisual);
+          metalLightbox.showModal();
+          requestAnimationFrame(function () { projectMetalVisual(enlargedVisual); });
+        });
       });
       metalLightboxClose.addEventListener('click', function () { metalLightbox.close(); });
       metalLightbox.addEventListener('click', function (event) {
@@ -165,12 +173,14 @@
       });
       metalLightbox.addEventListener('close', function () {
         metalLightboxContent.replaceChildren();
-        metalOpen.focus();
+        if (metalLastOpener) metalLastOpener.focus();
       });
     }
 
     window.addEventListener('resize', function () {
-      if (metalLifestyle && !metalLifestyle.hidden) requestAnimationFrame(function () { projectMetalVisual(metalVisual); });
+      if (metalLifestyle && !metalLifestyle.hidden) requestAnimationFrame(function () {
+        metalVisuals.forEach(projectMetalVisual);
+      });
       if (metalLightbox && metalLightbox.open) {
         requestAnimationFrame(function () { projectMetalVisual(metalLightboxContent.querySelector('[data-metal-visual]')); });
       }
@@ -319,7 +329,7 @@
       if (metalLifestyle) {
         metalLifestyle.hidden = !isMetal;
         metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');
-        if (isMetal) requestAnimationFrame(function () { projectMetalVisual(metalVisual); });
+        if (isMetal) requestAnimationFrame(function () { metalVisuals.forEach(projectMetalVisual); });
       }
       if (!frame) return;
       if (isCanvas || isMetal) {

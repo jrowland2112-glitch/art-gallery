@@ -28,7 +28,7 @@ test('approved finish details remain consistent across sizes', async () => {
       assert.equal(variant.whccSelections.canvas_type, 'premium_fine_art');
       assert.equal(variant.whccSelections.depth, '1_1_2in');
       assert.equal(variant.whccSelections.protection, 'semi_gloss');
-      assert.equal(variant.whccSelections.gallery_wrap_edge, 'no_edge');
+      assert.equal(variant.whccSelections.gallery_wrap_edge, 'black_edge');
     }
   }
 });

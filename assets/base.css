@@ -514,6 +514,41 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle--landscape .gallery-room__panel { aspect-ratio: 3 / 2; }
 .metal-lifestyle--portrait .gallery-room__panel { aspect-ratio: 2 / 3; }
+.framed-preview__art-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: #b9b9b9;
+}
+.metal-lifestyle--landscape .framed-preview__art-panel {
+  width: 60%;
+  aspect-ratio: 3 / 2;
+}
+.metal-lifestyle--portrait .framed-preview__art-panel {
+  width: 38%;
+  aspect-ratio: 2 / 3;
+}
+.framed-room__frame {
+  position: absolute;
+  left: 49.5%;
+  bottom: 44.5%;
+  width: var(--framed-room-art-width, 21.82%);
+  aspect-ratio: 1.4;
+  transform: translateX(-50%);
+  padding: 2.4%;
+  background: #171717;
+  box-shadow: 0 0.35rem 0.7rem rgba(35, 31, 27, 0.18);
+}
+.metal-lifestyle--portrait .framed-room__frame { aspect-ratio: 0.714; }
+.framed-room__mat {
+  width: 100%;
+  height: 100%;
+  padding: 9%;
+  background: #fff;
+}
+.framed-room__mat .metal-lifestyle__art { object-fit: cover; }
 .metal-room__panel {
   position: absolute;
   left: 49.5%;

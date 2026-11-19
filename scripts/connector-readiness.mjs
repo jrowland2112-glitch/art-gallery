@@ -24,6 +24,7 @@ export async function auditConnectorReadiness({ client, catalogVariants, output 
   const shopify = client || await createShopifyClient({});
   const expected = catalogVariants || await readPriceSheet(path.resolve('bulk-upload', 'prices.standard.csv'));
   const expectedKeys = new Set(expected.map(mappingKey));
+  const expectedByKey = new Map(expected.map((mapping) => [mappingKey(mapping), mapping]));
   const data = await shopify.graphql(`
     query ActiveProductsForConnectorAudit {
       products(first: 250, query: "status:active", sortKey: TITLE) {
@@ -59,6 +60,10 @@ export async function auditConnectorReadiness({ client, catalogVariants, output 
       }
       const key = mappingKey(mapping);
       if (!expectedKeys.has(key)) issues.push(`${variant.title}: unexpected ${mapping.finish} ${mapping.size} mapping`);
+      const approved = expectedByKey.get(key);
+      if (approved && (mapping.productRef !== approved.whccProductRef || JSON.stringify(mapping.selections) !== JSON.stringify(approved.whccSelections))) {
+        issues.push(`${variant.title}: WHCC selections differ from the approved configuration`);
+      }
       if (found.has(key)) issues.push(`${variant.title}: duplicate ${mapping.finish} ${mapping.size} mapping`);
       found.add(key);
     }

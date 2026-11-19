@@ -18,7 +18,7 @@ function verifySummary(mapping, summary) {
     ? { moulding: /gallery slim black/i, mat: /2/, mat_color: /white/i, acrylic: /standard/i }
     : mapping.finish === 'Metal'
       ? { surface: /white high gloss/i, display_options: /float mount/i }
-      : { canvas_type: /premium fine art/i, depth: /1 1\/2|1½/i, protection: /semi-gloss/i };
+      : { canvas_type: /premium fine art/i, depth: /1 1\/2|1½/i, protection: /semi-gloss/i, gallery_wrap_edge: /black/i };
   const combined = Object.values(descriptions).join(' | ');
   for (const [id, pattern] of Object.entries(expected)) {
     const value = descriptions[id] || (id === 'mat_color' ? combined : '');

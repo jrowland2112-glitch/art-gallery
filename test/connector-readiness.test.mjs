@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { auditConnectorReadiness } from '../scripts/connector-readiness.mjs';
 
 const catalog = [
-  { finish: 'Framed', size: '12x18' },
-  { finish: 'Metal', size: '12x18' },
+  { finish: 'Framed', size: '12x18', whccProductRef: 'ref', whccSelections: { size: '12x18' } },
+  { finish: 'Metal', size: '12x18', whccProductRef: 'ref', whccSelections: { size: '12x18' } },
 ];
 
 function client(products) {

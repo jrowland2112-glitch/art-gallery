@@ -11,6 +11,7 @@
     "finerworks:validate-mappings": "node scripts/finerworks-validate-mappings.mjs",
     "connector:audit": "node scripts/connector-readiness.mjs",
     "products:map-whcc": "node scripts/apply-whcc-product-mappings.mjs",
+    "products:sync-active-whcc": "node scripts/sync-active-whcc-mappings.mjs",
     "products:map-finerworks": "node scripts/apply-finerworks-product-mappings.mjs",
     "connector:test": "node --test test/connector-*.test.mjs",
     "connector:dev": "wrangler dev --config connector/wrangler.example.toml",

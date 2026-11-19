@@ -85,6 +85,14 @@
     var galleryWrapLightboxContent = root.querySelector('[data-gallery-wrap-lightbox-content]');
     var galleryWrapLastOpener = null;
     var galleryWrapRoomVisual = root.querySelector('[data-gallery-wrap-layout="room"]');
+    var framedPreview = root.querySelector('[data-framed-preview]');
+    var framedVisuals = Array.prototype.slice.call(root.querySelectorAll('[data-framed-visual]'));
+    var framedOpeners = Array.prototype.slice.call(root.querySelectorAll('[data-framed-preview-open]'));
+    var framedLightbox = root.querySelector('[data-framed-preview-lightbox]');
+    var framedLightboxClose = root.querySelector('[data-framed-preview-close]');
+    var framedLightboxContent = root.querySelector('[data-framed-preview-lightbox-content]');
+    var framedLastOpener = null;
+    var framedRoomVisual = root.querySelector('[data-framed-layout="room"]');
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -224,6 +232,54 @@
       galleryWrapRoomVisual.style.setProperty('--gallery-room-art-width', ((displayedWidthInches / 72) * 71.4).toFixed(3) + '%');
     }
 
+    function projectFramedVisual(visual) {
+      if (!visual) return;
+      var panel = visual.querySelector('.framed-preview__art-panel');
+      if (!panel) return;
+      var isPortrait = visual.dataset.framedOrientation === 'portrait';
+      var isEdge = visual.dataset.framedLayout === 'edge';
+      var points;
+      if (isEdge && isPortrait) points = [[0.291, 0.160], [0.710, 0.160], [0.801, 0.735], [0.198, 0.735]];
+      else if (isEdge) points = [[0.168, 0.234], [0.828, 0.233], [0.857, 0.730], [0.127, 0.727]];
+      else if (isPortrait) points = [[0.334, 0.153], [0.655, 0.120], [0.655, 0.771], [0.335, 0.751]];
+      else points = [[0.205, 0.266], [0.771, 0.218], [0.772, 0.681], [0.207, 0.662]];
+      var visualWidth = visual.clientWidth;
+      var visualHeight = visual.clientHeight;
+      var sourceWidth = panel.offsetWidth;
+      var sourceHeight = panel.offsetHeight;
+      if (!visualWidth || !visualHeight || !sourceWidth || !sourceHeight) return;
+      var x0 = points[0][0] * visualWidth, y0 = points[0][1] * visualHeight;
+      var x1 = points[1][0] * visualWidth, y1 = points[1][1] * visualHeight;
+      var x2 = points[2][0] * visualWidth, y2 = points[2][1] * visualHeight;
+      var x3 = points[3][0] * visualWidth, y3 = points[3][1] * visualHeight;
+      var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+      var dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+      var denominator = dx1 * dy2 - dx2 * dy1;
+      if (!denominator) return;
+      var g = (dx3 * dy2 - dx2 * dy3) / denominator;
+      var h = (dx1 * dy3 - dx3 * dy1) / denominator;
+      var a = x1 - x0 + g * x1, b = x3 - x0 + h * x3;
+      var d = y1 - y0 + g * y1, e = y3 - y0 + h * y3;
+      panel.style.transform = 'matrix3d(' + [
+        a / sourceWidth, d / sourceWidth, 0, g / sourceWidth,
+        b / sourceHeight, e / sourceHeight, 0, h / sourceHeight,
+        0, 0, 1, 0, x0, y0, 0, 1
+      ].join(',') + ')';
+    }
+
+    function updateFramedRoomScale(values, variant) {
+      if (!framedRoomVisual) return;
+      var identity = values.filter(Boolean).join(' ') + ' ' + (variant && variant.title ? variant.title : '');
+      var match = identity.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)/i);
+      if (!match) return;
+      var first = parseFloat(match[1]);
+      var second = parseFloat(match[2]);
+      var isPortrait = framedRoomVisual.dataset.framedOrientation === 'portrait';
+      var printWidth = isPortrait ? Math.min(first, second) : Math.max(first, second);
+      var finishedWidth = printWidth + 4;
+      framedRoomVisual.style.setProperty('--framed-room-art-width', ((finishedWidth / 72) * 71.4).toFixed(3) + '%');
+    }
+
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {
       metalOpeners.forEach(function (metalOpen) {
         metalOpen.addEventListener('click', function () {
@@ -268,6 +324,28 @@
       });
     }
 
+    if (framedOpeners.length && framedLightbox && framedLightboxClose && framedLightboxContent) {
+      framedOpeners.forEach(function (opener) {
+        opener.addEventListener('click', function () {
+          var sourceVisual = opener.querySelector('[data-framed-visual]');
+          framedLastOpener = opener;
+          framedLightboxContent.replaceChildren();
+          var enlargedVisual = sourceVisual.cloneNode(true);
+          framedLightboxContent.appendChild(enlargedVisual);
+          framedLightbox.showModal();
+          requestAnimationFrame(function () { projectFramedVisual(enlargedVisual); });
+        });
+      });
+      framedLightboxClose.addEventListener('click', function () { framedLightbox.close(); });
+      framedLightbox.addEventListener('click', function (event) {
+        if (event.target === framedLightbox || event.target === framedLightboxContent) framedLightbox.close();
+      });
+      framedLightbox.addEventListener('close', function () {
+        framedLightboxContent.replaceChildren();
+        if (framedLastOpener) framedLastOpener.focus();
+      });
+    }
+
     window.addEventListener('resize', function () {
       if (metalLifestyle && !metalLifestyle.hidden) requestAnimationFrame(function () {
         metalVisuals.forEach(projectMetalVisual);
@@ -280,6 +358,12 @@
       });
       if (galleryWrapLightbox && galleryWrapLightbox.open) {
         requestAnimationFrame(function () { projectGalleryWrapVisual(galleryWrapLightboxContent.querySelector('[data-gallery-wrap-visual]')); });
+      }
+      if (framedPreview && !framedPreview.hidden) requestAnimationFrame(function () {
+        framedVisuals.forEach(projectFramedVisual);
+      });
+      if (framedLightbox && framedLightbox.open) {
+        requestAnimationFrame(function () { projectFramedVisual(framedLightboxContent.querySelector('[data-framed-visual]')); });
       }
     });
 
@@ -442,6 +526,7 @@
       var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
       updateMetalRoomScale(values, variant);
       updateGalleryWrapRoomScale(values, variant);
+      updateFramedRoomScale(values, variant);
       if (metalLifestyle) {
         metalLifestyle.hidden = !isMetal;
         metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');
@@ -451,6 +536,11 @@
         galleryWrapPreview.hidden = !isCanvas;
         galleryWrapPreview.setAttribute('aria-hidden', isCanvas ? 'false' : 'true');
         if (isCanvas) requestAnimationFrame(function () { galleryWrapVisuals.forEach(projectGalleryWrapVisual); });
+      }
+      if (framedPreview) {
+        framedPreview.hidden = !isFramedFinish;
+        framedPreview.setAttribute('aria-hidden', isFramedFinish ? 'false' : 'true');
+        if (isFramedFinish) requestAnimationFrame(function () { framedVisuals.forEach(projectFramedVisual); });
       }
       if (!frame) return;
       if (isCanvas || isMetal) {

@@ -7,12 +7,16 @@
   assign metal_edge_asset = 'metal-edge-landscape.jpg'
   assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-landscape.jpg'
   assign gallery_wrap_edge_asset = 'gallery-wrap-edge-landscape.jpg'
+  assign framed_mockup_asset = 'framed-lifestyle-landscape.jpg'
+  assign framed_edge_asset = 'framed-edge-landscape.jpg'
   if reference_image and reference_image.aspect_ratio < 1
     assign metal_mockup_orientation = 'portrait'
     assign metal_mockup_asset = 'metal-lifestyle-portrait.jpg'
     assign metal_edge_asset = 'metal-edge-portrait.jpg'
     assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-portrait.jpg'
     assign gallery_wrap_edge_asset = 'gallery-wrap-edge-portrait.jpg'
+    assign framed_mockup_asset = 'framed-lifestyle-portrait.jpg'
+    assign framed_edge_asset = 'framed-edge-portrait.jpg'
   endif
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
@@ -114,6 +118,39 @@
             <dialog class="metal-lifestyle-lightbox" data-gallery-wrap-lightbox aria-label="Enlarged {{ product.title | escape }} gallery wrap preview">
               <button class="metal-lifestyle-lightbox__close" type="button" data-gallery-wrap-close aria-label="Close enlarged gallery wrap preview"><span aria-hidden="true">&times;</span><span>Close</span></button>
               <div class="metal-lifestyle-lightbox__content" data-gallery-wrap-lightbox-content></div>
+            </dialog>
+          </div>
+          <div class="metal-lifestyle-grid framed-preview-grid" data-framed-preview hidden>
+            <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-framed-preview-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} framed lifestyle preview">
+                <div class="metal-lifestyle__visual" data-framed-visual data-framed-layout="wall" data-framed-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ framed_mockup_asset | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="framed-preview__art-panel"><img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown in a slim black wood frame with a double-white mat"></div>
+                </div>
+              </button>
+              <figcaption>Framed art &middot; Lifestyle preview &middot; Click to enlarge</figcaption>
+            </figure>
+            <figure class="metal-lifestyle metal-lifestyle--edge metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-framed-preview-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} framed edge detail">
+                <div class="metal-lifestyle__visual" data-framed-visual data-framed-layout="edge" data-framed-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ framed_edge_asset | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="framed-preview__art-panel"><img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown in a slim black wood frame from the edge"></div>
+                </div>
+              </button>
+              <figcaption>Framed art &middot; Frame and mat detail &middot; Click to enlarge</figcaption>
+            </figure>
+            <figure class="metal-lifestyle metal-lifestyle--room metal-lifestyle--{{ metal_mockup_orientation }}">
+              <button class="metal-lifestyle__open" type="button" data-framed-preview-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} framed room-scale preview">
+                <div class="metal-lifestyle__visual" data-framed-visual data-framed-layout="room" data-framed-orientation="{{ metal_mockup_orientation }}">
+                  <img class="metal-lifestyle__scene" src="{{ 'metal-room-couch.jpg' | asset_url }}" width="1400" height="1120" loading="lazy" alt="">
+                  <div class="framed-room__frame"><div class="framed-room__mat"><img class="metal-lifestyle__art" src="{{ reference_image | image_url: width: 1600 }}" width="{{ reference_image.width }}" height="{{ reference_image.height }}" loading="lazy" alt="{{ product.title | escape }} shown to scale framed above a six-foot sofa"></div></div>
+                </div>
+              </button>
+              <figcaption>Framed art &middot; Room scale above a 6-foot sofa &middot; Click to enlarge</figcaption>
+            </figure>
+            <dialog class="metal-lifestyle-lightbox" data-framed-preview-lightbox aria-label="Enlarged {{ product.title | escape }} framed preview">
+              <button class="metal-lifestyle-lightbox__close" type="button" data-framed-preview-close aria-label="Close enlarged framed preview"><span aria-hidden="true">&times;</span><span>Close</span></button>
+              <div class="metal-lifestyle-lightbox__content" data-framed-preview-lightbox-content></div>
             </dialog>
           </div>
         {%- endif -%}

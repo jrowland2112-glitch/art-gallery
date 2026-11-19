@@ -238,11 +238,21 @@
       if (!panel) return;
       var isPortrait = visual.dataset.framedOrientation === 'portrait';
       var isEdge = visual.dataset.framedLayout === 'edge';
+      if (!isPortrait && !isEdge) {
+        panel.style.left = '20.5%';
+        panel.style.top = '21.8%';
+        panel.style.width = '56.7%';
+        panel.style.height = '46.3%';
+        panel.style.aspectRatio = 'auto';
+        panel.style.transform = 'none';
+        panel.style.clipPath = 'polygon(0% 10.4%, 99.8% 0%, 100% 100%, 0.4% 95.9%)';
+        return;
+      }
       var points;
       if (isEdge && isPortrait) points = [[0.291, 0.160], [0.710, 0.160], [0.801, 0.735], [0.198, 0.735]];
       else if (isEdge) points = [[0.168, 0.234], [0.828, 0.233], [0.857, 0.730], [0.127, 0.727]];
       else if (isPortrait) points = [[0.334, 0.153], [0.655, 0.120], [0.655, 0.771], [0.335, 0.751]];
-      else points = [[0.205, 0.266], [0.797, 0.218], [0.802, 0.681], [0.207, 0.662]];
+      else points = [[0.205, 0.266], [0.771, 0.218], [0.772, 0.681], [0.207, 0.662]];
       var visualWidth = visual.clientWidth;
       var visualHeight = visual.clientHeight;
       var sourceWidth = panel.offsetWidth;

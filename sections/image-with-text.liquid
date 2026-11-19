@@ -2,6 +2,9 @@
   <div class="page-width">
     <div class="split split--image-{{ section.settings.image_position }} split--align-{{ section.settings.vertical_alignment }}">
       <div class="split__media">
+        {%- if section.settings.image_link != blank -%}
+          <a class="split__media-link" href="{{ section.settings.image_link }}" aria-label="View {{ section.settings.image_overlay_text | default: section.settings.heading | escape }}">
+        {%- endif -%}
         {%- if section.settings.image_asset != blank -%}
           <img
             src="{{ section.settings.image_asset | asset_url }}"
@@ -14,6 +17,12 @@
           {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 50vw, 100vw', widths: '600, 900, 1200, 1600' }}
         {%- else -%}
           {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        {%- if section.settings.image_overlay_text != blank -%}
+          <span class="split__media-overlay">{{ section.settings.image_overlay_text }}</span>
+        {%- endif -%}
+        {%- if section.settings.image_link != blank -%}
+          </a>
         {%- endif -%}
       </div>
       <div class="split__text">
@@ -46,6 +55,8 @@
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Image" },
     { "type": "text", "id": "image_asset", "label": "Theme image filename (advanced)", "info": "When set, this theme asset is shown instead of the image above" },
+    { "type": "text", "id": "image_overlay_text", "label": "Image overlay text" },
+    { "type": "url", "id": "image_link", "label": "Image link" },
     {
       "type": "select", "id": "image_position", "label": "Image position", "default": "left",
       "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ]

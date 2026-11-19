@@ -31,6 +31,8 @@
       "settings": {
         "image": "shopify://shop_images/IMG_1900.jpg",
         "image_asset": "about-joseph-framed-print.jpg",
+        "image_overlay_text": "Holding Sunset Reflections, West Meadow Beach",
+        "image_link": "/products/wst-meadow-sunset-reflection-12-3-25",
         "image_position": "left",
         "vertical_alignment": "top",
         "eyebrow": "My story",

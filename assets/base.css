@@ -419,6 +419,146 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0; color: var(--color-muted); font-size: 0.7rem;
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
+.metal-lifestyle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 20rem));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  width: 100%;
+  max-width: 61.75rem;
+  margin: 0.75rem auto 0 0;
+}
+.metal-lifestyle-grid[hidden] { display: none; }
+.metal-lifestyle { width: 100%; margin: 0; }
+.metal-lifestyle__open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: zoom-in;
+}
+.metal-lifestyle__open:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.metal-lifestyle__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  background: #d9cabb;
+}
+.metal-lifestyle__scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.metal-lifestyle__panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  background: #b8b9ba;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 1px 2px rgba(35, 31, 27, 0.14);
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.metal-lifestyle--landscape .metal-lifestyle__panel {
+  width: 70%;
+  aspect-ratio: 3 / 2;
+}
+.metal-lifestyle--portrait .metal-lifestyle__panel {
+  width: 42%;
+  aspect-ratio: 2 / 3;
+}
+.metal-lifestyle--edge.metal-lifestyle--landscape .metal-lifestyle__panel { width: 70%; }
+.metal-lifestyle--edge.metal-lifestyle--portrait .metal-lifestyle__panel { width: 42%; }
+.metal-room__panel {
+  position: absolute;
+  left: 49.5%;
+  bottom: 44.5%;
+  width: var(--metal-room-art-width, 17.85%);
+  overflow: hidden;
+  background: #b8b9ba;
+  border: 1px solid rgba(160, 164, 166, 0.8);
+  box-shadow: 0 0.35rem 0.65rem rgba(35, 31, 27, 0.22);
+  transform: translateX(-50%);
+}
+.metal-lifestyle--landscape .metal-room__panel { aspect-ratio: 3 / 2; }
+.metal-lifestyle--portrait .metal-room__panel { aspect-ratio: 2 / 3; }
+.metal-lifestyle__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #b8b9ba;
+}
+.metal-lifestyle__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.13), transparent 29%, transparent 69%, rgba(255, 255, 255, 0.08));
+  box-shadow: inset -3px -2px 0 rgba(90, 98, 101, 0.28), inset 0 0 0 1px rgba(225, 230, 232, 0.7);
+}
+.metal-lifestyle figcaption {
+  margin-top: 0.6rem;
+  color: var(--color-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.metal-lifestyle-lightbox {
+  box-sizing: border-box;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(4.5rem, 8vw, 6.5rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem);
+  border: 0;
+  background: #817d78;
+  color: #fff;
+  overflow: auto;
+}
+.metal-lifestyle-lightbox::backdrop { background: rgba(20, 19, 18, 0.72); }
+.metal-lifestyle-lightbox[open] { display: grid; place-items: center; }
+.metal-lifestyle-lightbox__close {
+  position: fixed;
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(55, 53, 50, 0.72);
+  color: #fff;
+  font: inherit;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.metal-lifestyle-lightbox__close span[aria-hidden] { font-size: 1.35rem; line-height: 0.7; }
+.metal-lifestyle-lightbox__close:hover { background: #fff; color: #353330; }
+.metal-lifestyle-lightbox__close:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.metal-lifestyle-lightbox__content {
+  width: min(92vw, 72rem);
+  margin: auto;
+  cursor: zoom-out;
+}
+.metal-lifestyle-lightbox__content .metal-lifestyle__visual { width: 100%; }
+@media (max-width: 749px) {
+  .metal-lifestyle-grid {
+    grid-template-columns: repeat(3, minmax(13rem, 1fr));
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+}
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }
 .product__thumbs button { border: 1px solid transparent; padding: 0; background: none; cursor: pointer; width: 4.5rem; flex: 0 0 auto; }
 .product__thumbs button[aria-current="true"] { border-color: var(--color-foreground); }

@@ -1,6 +1,15 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign main_image = current_variant.featured_image | default: product.featured_image
+  assign reference_image = product.featured_image | default: main_image
+  assign metal_mockup_orientation = 'landscape'
+  assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
+  assign metal_edge_asset = 'metal-edge-landscape.jpg'
+  if reference_image and reference_image.aspect_ratio < 1
+    assign metal_mockup_orientation = 'portrait'
+    assign metal_mockup_asset = 'metal-lifestyle-portrait.jpg'
+    assign metal_edge_asset = 'metal-edge-portrait.jpg'
+  endif
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
   for product_option_name in product.options
@@ -54,12 +63,134 @@
             Enlarge
           </button>
         {%- endif -%}
-        {%- if use_frame_preview -%}
+        {%- if reference_image -%}
           <div class="product__stage-copy">
             {%- if section.settings.stage_caption != blank -%}
               <p class="product__stage-caption" data-finish-caption>{{ section.settings.stage_caption }}</p>
             {%- endif -%}
             <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
+          </div>
+        {%- endif -%}
+        {%- if reference_image -%}
+          <div class="metal-lifestyle-grid" data-metal-lifestyle hidden>
+          <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
+            <button
+              class="metal-lifestyle__open"
+              type="button"
+              data-metal-lifestyle-open
+              aria-haspopup="dialog"
+              aria-label="Enlarge {{ product.title | escape }} metal print lifestyle preview"
+            >
+            <div class="metal-lifestyle__visual" data-metal-visual data-metal-layout="wall" data-metal-orientation="{{ metal_mockup_orientation }}">
+              <img
+                class="metal-lifestyle__scene"
+                src="{{ metal_mockup_asset | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+              >
+              <div class="metal-lifestyle__panel">
+                <img
+                  class="metal-lifestyle__art"
+                  src="{{ reference_image | image_url: width: 1600 }}"
+                  srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 990px) 38vw, 82vw"
+                  width="{{ reference_image.width }}"
+                  height="{{ reference_image.height }}"
+                  loading="lazy"
+                  alt="{{ product.title | escape }} shown as a metal print being hung on a wall"
+                >
+                <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+            </button>
+            <figcaption>Metal print &middot; Lifestyle preview &middot; Click to enlarge</figcaption>
+          </figure>
+          <figure class="metal-lifestyle metal-lifestyle--edge metal-lifestyle--{{ metal_mockup_orientation }}">
+            <button
+              class="metal-lifestyle__open"
+              type="button"
+              data-metal-lifestyle-open
+              aria-haspopup="dialog"
+              aria-label="Enlarge {{ product.title | escape }} metal print edge detail"
+            >
+            <div class="metal-lifestyle__visual" data-metal-visual data-metal-layout="edge" data-metal-orientation="{{ metal_mockup_orientation }}">
+              <img
+                class="metal-lifestyle__scene"
+                src="{{ metal_edge_asset | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+              >
+              <div class="metal-lifestyle__panel">
+                <img
+                  class="metal-lifestyle__art"
+                  src="{{ reference_image | image_url: width: 1600 }}"
+                  srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 990px) 24vw, 48vw"
+                  width="{{ reference_image.width }}"
+                  height="{{ reference_image.height }}"
+                  loading="lazy"
+                  alt="{{ product.title | escape }} shown from the edge as a thin metal print"
+                >
+                <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+            </button>
+            <figcaption>Metal print &middot; Edge detail &middot; Click to enlarge</figcaption>
+          </figure>
+          <figure class="metal-lifestyle metal-lifestyle--room metal-lifestyle--{{ metal_mockup_orientation }}">
+            <button
+              class="metal-lifestyle__open"
+              type="button"
+              data-metal-lifestyle-open
+              aria-haspopup="dialog"
+              aria-label="Enlarge {{ product.title | escape }} metal print room-scale preview"
+            >
+            <div class="metal-lifestyle__visual" data-metal-visual data-metal-layout="room" data-metal-orientation="{{ metal_mockup_orientation }}">
+              <img
+                class="metal-lifestyle__scene"
+                src="{{ 'metal-room-couch.jpg' | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+              >
+              <div class="metal-room__panel">
+                <img
+                  class="metal-lifestyle__art"
+                  src="{{ reference_image | image_url: width: 1600 }}"
+                  srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 990px) 18vw, 32vw"
+                  width="{{ reference_image.width }}"
+                  height="{{ reference_image.height }}"
+                  loading="lazy"
+                  alt="{{ product.title | escape }} shown to scale as a metal print above a six-foot sofa"
+                >
+                <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+            </button>
+            <figcaption>Metal print &middot; Room scale above a 6-foot sofa &middot; Click to enlarge</figcaption>
+          </figure>
+            <dialog
+              class="metal-lifestyle-lightbox"
+              data-metal-lifestyle-lightbox
+              aria-label="Enlarged {{ product.title | escape }} metal print lifestyle preview"
+            >
+              <button
+                class="metal-lifestyle-lightbox__close"
+                type="button"
+                data-metal-lifestyle-close
+                aria-label="Close enlarged metal print lifestyle preview"
+              >
+                <span aria-hidden="true">&times;</span>
+                <span>Close</span>
+              </button>
+              <div class="metal-lifestyle-lightbox__content" data-metal-lifestyle-lightbox-content></div>
+            </dialog>
           </div>
         {%- endif -%}
       </div>

@@ -71,7 +71,14 @@
         {%- endif -%}
         {%- if reference_image -%}
           <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}" data-metal-lifestyle hidden>
-            <div class="metal-lifestyle__visual">
+            <button
+              class="metal-lifestyle__open"
+              type="button"
+              data-metal-lifestyle-open
+              aria-haspopup="dialog"
+              aria-label="Enlarge {{ product.title | escape }} metal print lifestyle preview"
+            >
+            <div class="metal-lifestyle__visual" data-metal-visual data-metal-orientation="{{ metal_mockup_orientation }}">
               <img
                 class="metal-lifestyle__scene"
                 src="{{ metal_mockup_asset | asset_url }}"
@@ -94,7 +101,24 @@
                 <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
               </div>
             </div>
-            <figcaption>Metal print &middot; Lifestyle preview</figcaption>
+            </button>
+            <figcaption>Metal print &middot; Lifestyle preview &middot; Click to enlarge</figcaption>
+            <dialog
+              class="metal-lifestyle-lightbox"
+              data-metal-lifestyle-lightbox
+              aria-label="Enlarged {{ product.title | escape }} metal print lifestyle preview"
+            >
+              <button
+                class="metal-lifestyle-lightbox__close"
+                type="button"
+                data-metal-lifestyle-close
+                aria-label="Close enlarged metal print lifestyle preview"
+              >
+                <span aria-hidden="true">&times;</span>
+                <span>Close</span>
+              </button>
+              <div class="metal-lifestyle-lightbox__content" data-metal-lifestyle-lightbox-content></div>
+            </dialog>
           </figure>
         {%- endif -%}
       </div>

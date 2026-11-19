@@ -70,6 +70,11 @@
     var lightboxClose = root.querySelector('[data-product-lightbox-close]');
     var finishCaption = root.querySelector('[data-finish-caption]');
     var metalLifestyle = root.querySelector('[data-metal-lifestyle]');
+    var metalVisual = root.querySelector('[data-metal-visual]');
+    var metalOpen = root.querySelector('[data-metal-lifestyle-open]');
+    var metalLightbox = root.querySelector('[data-metal-lifestyle-lightbox]');
+    var metalLightboxClose = root.querySelector('[data-metal-lifestyle-close]');
+    var metalLightboxContent = root.querySelector('[data-metal-lifestyle-lightbox-content]');
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -101,6 +106,75 @@
       });
       lightbox.addEventListener('close', function () { lightboxOpen.focus(); });
     }
+
+    function projectMetalVisual(visual) {
+      if (!visual) return;
+      var panel = visual.querySelector('.metal-lifestyle__panel');
+      if (!panel) return;
+      var isPortrait = visual.dataset.metalOrientation === 'portrait';
+      var points = isPortrait
+        ? [[0.2886, 0.0893], [0.7036, 0.0304], [0.7036, 0.8625], [0.2886, 0.8170]]
+        : [[0.1464, 0.1857], [0.8457, 0.1089], [0.8350, 0.7955], [0.1464, 0.7384]];
+      var visualWidth = visual.clientWidth;
+      var visualHeight = visual.clientHeight;
+      var sourceWidth = panel.offsetWidth;
+      var sourceHeight = panel.offsetHeight;
+      if (!visualWidth || !visualHeight || !sourceWidth || !sourceHeight) return;
+
+      var x0 = points[0][0] * visualWidth;
+      var y0 = points[0][1] * visualHeight;
+      var x1 = points[1][0] * visualWidth;
+      var y1 = points[1][1] * visualHeight;
+      var x2 = points[2][0] * visualWidth;
+      var y2 = points[2][1] * visualHeight;
+      var x3 = points[3][0] * visualWidth;
+      var y3 = points[3][1] * visualHeight;
+      var dx1 = x1 - x2;
+      var dx2 = x3 - x2;
+      var dx3 = x0 - x1 + x2 - x3;
+      var dy1 = y1 - y2;
+      var dy2 = y3 - y2;
+      var dy3 = y0 - y1 + y2 - y3;
+      var denominator = dx1 * dy2 - dx2 * dy1;
+      if (!denominator) return;
+      var g = (dx3 * dy2 - dx2 * dy3) / denominator;
+      var h = (dx1 * dy3 - dx3 * dy1) / denominator;
+      var a = x1 - x0 + g * x1;
+      var b = x3 - x0 + h * x3;
+      var d = y1 - y0 + g * y1;
+      var e = y3 - y0 + h * y3;
+      panel.style.transform = 'matrix3d(' + [
+        a / sourceWidth, d / sourceWidth, 0, g / sourceWidth,
+        b / sourceHeight, e / sourceHeight, 0, h / sourceHeight,
+        0, 0, 1, 0,
+        x0, y0, 0, 1
+      ].join(',') + ')';
+    }
+
+    if (metalOpen && metalLightbox && metalLightboxClose && metalLightboxContent) {
+      metalOpen.addEventListener('click', function () {
+        metalLightboxContent.replaceChildren();
+        var enlargedVisual = metalVisual.cloneNode(true);
+        metalLightboxContent.appendChild(enlargedVisual);
+        metalLightbox.showModal();
+        requestAnimationFrame(function () { projectMetalVisual(enlargedVisual); });
+      });
+      metalLightboxClose.addEventListener('click', function () { metalLightbox.close(); });
+      metalLightbox.addEventListener('click', function (event) {
+        if (event.target === metalLightbox || event.target === metalLightboxContent) metalLightbox.close();
+      });
+      metalLightbox.addEventListener('close', function () {
+        metalLightboxContent.replaceChildren();
+        metalOpen.focus();
+      });
+    }
+
+    window.addEventListener('resize', function () {
+      if (metalLifestyle && !metalLifestyle.hidden) requestAnimationFrame(function () { projectMetalVisual(metalVisual); });
+      if (metalLightbox && metalLightbox.open) {
+        requestAnimationFrame(function () { projectMetalVisual(metalLightboxContent.querySelector('[data-metal-visual]')); });
+      }
+    });
 
     function whccDetails(value) {
       var title = (value || '').trim();
@@ -245,6 +319,7 @@
       if (metalLifestyle) {
         metalLifestyle.hidden = !isMetal;
         metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');
+        if (isMetal) requestAnimationFrame(function () { projectMetalVisual(metalVisual); });
       }
       if (!frame) return;
       if (isCanvas || isMetal) {

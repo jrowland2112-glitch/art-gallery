@@ -421,9 +421,10 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 20rem));
+  grid-template-columns: repeat(3, minmax(0, 20rem));
   gap: clamp(0.75rem, 2vw, 1.25rem);
-  width: min(70%, 41.25rem);
+  width: 100%;
+  max-width: 61.75rem;
   margin: 0.75rem auto 0 0;
 }
 .metal-lifestyle-grid[hidden] { display: none; }
@@ -473,6 +474,19 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle--edge.metal-lifestyle--landscape .metal-lifestyle__panel { width: 70%; }
 .metal-lifestyle--edge.metal-lifestyle--portrait .metal-lifestyle__panel { width: 42%; }
+.metal-room__panel {
+  position: absolute;
+  left: 49.5%;
+  bottom: 44.5%;
+  width: var(--metal-room-art-width, 17.85%);
+  overflow: hidden;
+  background: #b8b9ba;
+  border: 1px solid rgba(160, 164, 166, 0.8);
+  box-shadow: 0 0.35rem 0.65rem rgba(35, 31, 27, 0.22);
+  transform: translateX(-50%);
+}
+.metal-lifestyle--landscape .metal-room__panel { aspect-ratio: 3 / 2; }
+.metal-lifestyle--portrait .metal-room__panel { aspect-ratio: 2 / 3; }
 .metal-lifestyle__art {
   display: block;
   width: 100%;
@@ -538,7 +552,12 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle-lightbox__content .metal-lifestyle__visual { width: 100%; }
 @media (max-width: 749px) {
-  .metal-lifestyle-grid { width: 100%; }
+  .metal-lifestyle-grid {
+    grid-template-columns: repeat(3, minmax(13rem, 1fr));
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
 }
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }
 .product__thumbs button { border: 1px solid transparent; padding: 0; background: none; cursor: pointer; width: 4.5rem; flex: 0 0 auto; }

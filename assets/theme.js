@@ -76,6 +76,7 @@
     var metalLightboxClose = root.querySelector('[data-metal-lifestyle-close]');
     var metalLightboxContent = root.querySelector('[data-metal-lifestyle-lightbox-content]');
     var metalLastOpener = null;
+    var metalRoomVisual = root.querySelector('[data-metal-layout="room"]');
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -153,6 +154,19 @@
         0, 0, 1, 0,
         x0, y0, 0, 1
       ].join(',') + ')';
+    }
+
+    function updateMetalRoomScale(values, variant) {
+      if (!metalRoomVisual) return;
+      var identity = values.filter(Boolean).join(' ') + ' ' + (variant && variant.title ? variant.title : '');
+      var match = identity.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)/i);
+      if (!match) return;
+      var first = parseFloat(match[1]);
+      var second = parseFloat(match[2]);
+      var isPortrait = metalRoomVisual.dataset.metalOrientation === 'portrait';
+      var displayedWidthInches = isPortrait ? Math.min(first, second) : Math.max(first, second);
+      var couchWidthPercent = 71.4;
+      metalRoomVisual.style.setProperty('--metal-room-art-width', ((displayedWidthInches / 72) * couchWidthPercent).toFixed(3) + '%');
     }
 
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {
@@ -343,6 +357,7 @@
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
       var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
+      updateMetalRoomScale(values, variant);
       if (metalLifestyle) {
         metalLifestyle.hidden = !isMetal;
         metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');

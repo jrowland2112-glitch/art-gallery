@@ -141,6 +141,40 @@
             </button>
             <figcaption>Metal print &middot; Edge detail &middot; Click to enlarge</figcaption>
           </figure>
+          <figure class="metal-lifestyle metal-lifestyle--room metal-lifestyle--{{ metal_mockup_orientation }}">
+            <button
+              class="metal-lifestyle__open"
+              type="button"
+              data-metal-lifestyle-open
+              aria-haspopup="dialog"
+              aria-label="Enlarge {{ product.title | escape }} metal print room-scale preview"
+            >
+            <div class="metal-lifestyle__visual" data-metal-visual data-metal-layout="room" data-metal-orientation="{{ metal_mockup_orientation }}">
+              <img
+                class="metal-lifestyle__scene"
+                src="{{ 'metal-room-couch.jpg' | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+              >
+              <div class="metal-room__panel">
+                <img
+                  class="metal-lifestyle__art"
+                  src="{{ reference_image | image_url: width: 1600 }}"
+                  srcset="{{ reference_image | image_url: width: 800 }} 800w, {{ reference_image | image_url: width: 1200 }} 1200w, {{ reference_image | image_url: width: 1600 }} 1600w"
+                  sizes="(min-width: 990px) 18vw, 32vw"
+                  width="{{ reference_image.width }}"
+                  height="{{ reference_image.height }}"
+                  loading="lazy"
+                  alt="{{ product.title | escape }} shown to scale as a metal print above a six-foot sofa"
+                >
+                <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+            </button>
+            <figcaption>Metal print &middot; Room scale above a 6-foot sofa &middot; Click to enlarge</figcaption>
+          </figure>
             <dialog
               class="metal-lifestyle-lightbox"
               data-metal-lifestyle-lightbox

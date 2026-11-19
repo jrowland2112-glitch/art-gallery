@@ -420,8 +420,8 @@ textarea { min-height: 9rem; resize: vertical; }
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
 .metal-lifestyle {
-  width: 38%;
-  max-width: 22rem;
+  width: 34%;
+  max-width: 20rem;
   margin: clamp(1.5rem, 3vw, 2.25rem) auto 0;
 }
 .metal-lifestyle[hidden] { display: none; }

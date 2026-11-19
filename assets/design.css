@@ -123,8 +123,27 @@ h1, h2, h3 { font-weight: 400; }
 }
 .journal-feature__intro h2 { margin: 0.4rem 0 1rem; }
 .journal-feature__text { font-size: 1.1rem; margin-bottom: 1.6rem; max-width: 22rem; }
-.journal-feature__posts { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
-@media (min-width: 600px) { .journal-feature__posts { grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); } }
+.journal-feature__carousel { min-width: 0; }
+.journal-feature__controls {
+  display: flex; justify-content: flex-end; align-items: center; gap: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+.journal-feature__control {
+  appearance: none; border: 0; border-bottom: 1px solid currentColor; border-radius: 0;
+  padding: 0 0 0.12rem; background: transparent; color: var(--color-foreground);
+  font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.journal-feature__control:hover { color: var(--color-highlight); }
+.journal-feature__control:disabled { cursor: default; opacity: 0.32; }
+.journal-feature__posts {
+  display: flex; gap: 1.5rem; overflow-x: auto; overscroll-behavior-inline: contain;
+  scroll-snap-type: inline mandatory; scroll-behavior: smooth; scrollbar-width: none;
+}
+.journal-feature__posts::-webkit-scrollbar { display: none; }
+.journal-feature__posts .journal-card { flex: 0 0 100%; scroll-snap-align: start; }
+@media (min-width: 600px) {
+  .journal-feature__posts .journal-card { flex-basis: calc((100% - 1.5rem) / 2); }
+}
 
 /* Art that transcends */
 .art-transcends__header { justify-content: center; margin-bottom: clamp(2rem, 4vw, 3.5rem); }
@@ -156,6 +175,10 @@ h1, h2, h3 { font-weight: 400; }
 .journal-card__media img, .journal-card__media svg { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
 .journal-card:hover .journal-card__media img { transform: scale(1.03); }
 .journal-card__title { font-family: var(--font-heading); font-style: italic; font-size: 1.15rem; margin: 0.6rem 0 0; }
+.journal-card__date {
+  display: block; margin-top: 0.35rem; color: var(--color-muted);
+  font-size: 0.875rem; letter-spacing: 0.08em; text-transform: uppercase;
+}
 
 /* ---------- Instagram call-out ---------- */
 .social-cta__heading { margin-bottom: 0.5rem; }

@@ -699,9 +699,48 @@
     start();
   }
 
+  function initJournalCarousel(root) {
+    if (root.dataset.journalReady) return;
+    root.dataset.journalReady = '1';
+    var track = root.querySelector('[data-journal-track]');
+    var prev = root.querySelector('[data-journal-prev]');
+    var next = root.querySelector('[data-journal-next]');
+    if (!track || !prev || !next) return;
+    var cards = Array.prototype.slice.call(track.querySelectorAll('.journal-card'));
+    var controls = root.querySelector('.journal-feature__controls');
+
+    if (cards.length < 2) {
+      if (controls) controls.hidden = true;
+      return;
+    }
+
+    function stepWidth() {
+      var styles = window.getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      return cards[0].getBoundingClientRect().width + gap;
+    }
+
+    function updateControls() {
+      var max = Math.max(0, track.scrollWidth - track.clientWidth);
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max - 2;
+    }
+
+    prev.addEventListener('click', function () {
+      track.scrollBy({ left: -stepWidth(), behavior: 'smooth' });
+    });
+    next.addEventListener('click', function () {
+      track.scrollBy({ left: stepWidth(), behavior: 'smooth' });
+    });
+    track.addEventListener('scroll', updateControls, { passive: true });
+    window.addEventListener('resize', updateControls);
+    updateControls();
+  }
+
   function initAll() {
     document.querySelectorAll('[data-product]').forEach(initProduct);
     document.querySelectorAll('[data-slideshow]').forEach(initSlideshow);
+    document.querySelectorAll('[data-journal-carousel]').forEach(initJournalCarousel);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);

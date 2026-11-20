@@ -34,6 +34,8 @@
   data-frame-option="{{ section.settings.frame_option_name | escape }}"
   data-mat-option="{{ section.settings.mat_option_name | escape }}"
   data-money-format="{{ shop.money_format | escape }}"
+  data-base-image-src="{{ product.featured_image | image_url: width: 1600 }}"
+  data-base-image-alt="{{ product.featured_image.alt | default: product.title | escape }}"
 >
   <div class="page-width">
     <nav class="product-breadcrumb" aria-label="Breadcrumb">

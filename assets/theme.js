@@ -63,6 +63,8 @@
     var addBtn = form.querySelector('[data-add-to-cart]');
     var frame = root.querySelector('[data-frame-preview]');
     var mainImg = root.querySelector('[data-main-image]');
+    var baseImageSrc = root.dataset.baseImageSrc || '';
+    var baseImageAlt = root.dataset.baseImageAlt || '';
     var lightbox = root.querySelector('[data-product-lightbox]');
     var lightboxImg = root.querySelector('[data-product-lightbox-image]');
     var lightboxPreview = root.querySelector('[data-product-lightbox-preview]');
@@ -631,8 +633,11 @@
       }
       addBtn.disabled = !variant.available;
       addBtn.textContent = variant.available ? 'Add to cart' : 'Sold out';
-      if (variant.featured_image && mainImg) {
-        mainImg.src = variant.featured_image.src;
+      if (mainImg) {
+        var variantImage = variant.featured_image;
+        var nextImageSrc = variantImage ? (variantImage.src || variantImage.url) : baseImageSrc;
+        if (nextImageSrc) mainImg.src = nextImageSrc;
+        mainImg.alt = variantImage && variantImage.alt ? variantImage.alt : baseImageAlt;
         mainImg.removeAttribute('srcset');
       }
       var url = new URL(window.location.href);

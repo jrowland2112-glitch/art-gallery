@@ -1,1 +1,1 @@
-{ "sections": { "main": { "type": "collection", "settings": {} } }, "order": ["main"] }
+{ "sections": { "main": { "type": "collection", "settings": { "location_tags": "Alaska, Arizona, Banff, Florida, Grand Tetons, Long Island, Maine, New York City, Oregon, Ricketts Glen, Vermont, Washington, Washington DC, West Virginia" } } }, "order": ["main"] }

@@ -19,7 +19,7 @@ test('approved finish details remain consistent across sizes', async () => {
   for (const variant of variants) {
     if (variant.finish === 'Framed') {
       assert.equal(variant.whccSelections.moulding, 'slim_black');
-      assert.equal(variant.whccSelections.mat, '2_in');
+      assert.equal(variant.whccSelections.mat, variant.size === '12x18' ? '1_5_in' : '2_in');
       assert.equal(variant.whccSelections.mat_color, 'double_white');
     } else if (variant.finish === 'Metal') {
       assert.equal(variant.whccSelections.surface, 'white_high_gloss');

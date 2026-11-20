@@ -4,7 +4,7 @@
   "surface": "photo_print",
   "photo_print": "lustre_photo_print",
   "lamination": "no",
-  "mat": "2_in",
+  "mat": "1_5_in",
   "mat_color": "double_white",
   "acrylic": "standard",
   "dynamic_layout": "no",

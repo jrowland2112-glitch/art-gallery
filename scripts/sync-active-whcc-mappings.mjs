@@ -45,11 +45,15 @@ async function main() {
     for (const variant of product.variants.nodes) {
       const mapping = approved.get(identity(variant));
       if (!mapping) throw new Error(`${product.title}: no approved mapping for ${variant.title}.`);
-      if (mapping.finish !== 'Gallery Wrap') continue;
       let current;
       try { current = JSON.parse(variant.mapping?.value || 'null'); } catch { current = null; }
       if (!current?.selections) throw new Error(`${product.title}: ${variant.title} has no current WHCC mapping to update safely.`);
-      const value = JSON.stringify({ ...current, selections: { ...current.selections, gallery_wrap_edge: 'black_edge' } });
+      const value = JSON.stringify({
+        productRef: mapping.whccProductRef,
+        selections: mapping.whccSelections,
+        finish: mapping.finish,
+        size: mapping.size,
+      });
       if (variant.mapping?.value !== value) changes.push({ product: product.title, variant: variant.title, ownerId: variant.id, previousValue: variant.mapping?.value || null, value });
     }
   }

@@ -531,7 +531,7 @@
       var image = variant && variant.featured_image;
       if (!image) return false;
       var identity = [image.alt, image.src, image.url].filter(Boolean).join(' ');
-      return /FinerWorks Alto Black Thin frame|finerworks-framed|WHCC Gallery Slim black frame|whcc-gallery-slim-double-white-2/i.test(identity);
+      return /FinerWorks Alto Black Thin frame|finerworks-framed|WHCC Gallery Slim black frame|whcc-gallery-slim-double-white-(?:1-5|2)/i.test(identity);
     }
 
     function updateFrame(values, variant) {

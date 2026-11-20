@@ -8,15 +8,8 @@
     {%- if section.settings.show_location_filter -%}
       {%- liquid
         assign location_tags = section.settings.location_tags | split: ','
-        assign available_location_count = 0
-        for location_tag in location_tags
-          assign clean_location_tag = location_tag | strip
-          if collection.all_tags contains clean_location_tag
-            assign available_location_count = available_location_count | plus: 1
-          endif
-        endfor
       -%}
-      {%- if available_location_count > 0 -%}
+      {%- if location_tags.size > 0 -%}
         <nav class="gallery-locations" aria-label="Browse prints by location">
           <span class="gallery-locations__label">Browse by location</span>
           <div class="gallery-locations__list">
@@ -30,7 +23,7 @@
                   assign location_is_active = true
                 endif
               -%}
-              {%- if collection.all_tags contains clean_location_tag -%}
+              {%- if clean_location_tag != blank -%}
                 <a class="gallery-location{% if location_is_active %} is-active{% endif %}" href="{{ collection.url }}/{{ location_handle }}"{% if location_is_active %} aria-current="page"{% endif %}>{{ clean_location_tag }}</a>
               {%- endif -%}
             {%- endfor -%}
@@ -87,7 +80,7 @@
     { "type": "checkbox", "id": "contain", "label": "Show whole image (no cropping)", "default": false },
     { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true },
     { "type": "checkbox", "id": "show_location_filter", "label": "Show Browse by location", "default": true },
-    { "type": "textarea", "id": "location_tags", "label": "Location tags", "info": "Enter tags separated by commas. Only tags used by products in this collection are shown.", "default": "Alaska, Arizona, Banff, Florida, Grand Tetons, Long Island, Maine, New York City, Oregon, Ricketts Glen, Vermont, Washington, Washington DC, West Virginia" }
+    { "type": "textarea", "id": "location_tags", "label": "Location tags", "info": "Enter tags separated by commas. Each configured location is shown in the gallery navigation.", "default": "Alaska, Arizona, Banff, Florida, Grand Tetons, Long Island, Maine, New York City, Oregon, Ricketts Glen, Vermont, Washington, Washington DC, West Virginia" }
   ]
 }
 {% endschema %}

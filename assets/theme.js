@@ -95,6 +95,7 @@
     var framedLightboxContent = root.querySelector('[data-framed-preview-lightbox-content]');
     var framedLastOpener = null;
     var framedRoomVisual = root.querySelector('[data-framed-layout="room"]');
+    var previewCarouselStates = [metalLifestyle, galleryWrapPreview, framedPreview].filter(Boolean).map(initPreviewCarousel);
     var finishOpt = (root.dataset.finishOption || 'finish').toLowerCase();
     var frameOpt = (root.dataset.frameOption || 'frame').toLowerCase();
     var matOpt = (root.dataset.matOption || 'mat').toLowerCase();
@@ -125,6 +126,59 @@
         if (event.target === lightbox || event.target.classList.contains('product-lightbox__image-wrap')) lightbox.close();
       });
       lightbox.addEventListener('close', function () { lightboxOpen.focus(); });
+    }
+
+    function initPreviewCarousel(grid) {
+      var wrapper = grid.closest('[data-preview-carousel]');
+      if (!wrapper) return null;
+      var items = Array.prototype.slice.call(grid.querySelectorAll(':scope > .metal-lifestyle'));
+      var previous = wrapper.querySelector('[data-preview-previous]');
+      var next = wrapper.querySelector('[data-preview-next]');
+      var position = wrapper.querySelector('[data-preview-position]');
+      var scrollFrame = null;
+
+      function itemLeft(item) {
+        return item.offsetLeft - grid.offsetLeft;
+      }
+
+      function currentIndex() {
+        if (!items.length) return 0;
+        return items.reduce(function (closest, item, index) {
+          return Math.abs(itemLeft(item) - grid.scrollLeft) < Math.abs(itemLeft(items[closest]) - grid.scrollLeft) ? index : closest;
+        }, 0);
+      }
+
+      function sync() {
+        if (wrapper.hidden || grid.hidden || !items.length) return;
+        var index = currentIndex();
+        if (previous) previous.disabled = index === 0;
+        if (next) next.disabled = index === items.length - 1 || grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 4;
+        if (position) position.textContent = (index + 1) + ' of ' + items.length;
+      }
+
+      function move(direction) {
+        var index = Math.max(0, Math.min(items.length - 1, currentIndex() + direction));
+        grid.scrollTo({ left: itemLeft(items[index]), behavior: 'smooth' });
+      }
+
+      if (previous) previous.addEventListener('click', function () { move(-1); });
+      if (next) next.addEventListener('click', function () { move(1); });
+      grid.addEventListener('scroll', function () {
+        if (scrollFrame) cancelAnimationFrame(scrollFrame);
+        scrollFrame = requestAnimationFrame(sync);
+      }, { passive: true });
+      return { grid: grid, wrapper: wrapper, sync: sync };
+    }
+
+    function setPreviewVisibility(grid, visible) {
+      if (!grid) return;
+      grid.hidden = !visible;
+      grid.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      var state = previewCarouselStates.find(function (candidate) { return candidate && candidate.grid === grid; });
+      if (!state) return;
+      state.wrapper.hidden = !visible;
+      state.wrapper.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      if (visible) requestAnimationFrame(state.sync);
     }
 
     function projectMetalVisual(visual) {
@@ -389,6 +443,7 @@
     }
 
     window.addEventListener('resize', function () {
+      previewCarouselStates.forEach(function (state) { if (state) state.sync(); });
       if (metalLifestyle && !metalLifestyle.hidden) requestAnimationFrame(function () {
         metalVisuals.forEach(projectMetalVisual);
       });
@@ -571,18 +626,15 @@
       updateGalleryWrapRoomScale(values, variant);
       updateFramedRoomScale(values, variant);
       if (metalLifestyle) {
-        metalLifestyle.hidden = !isMetal;
-        metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');
+        setPreviewVisibility(metalLifestyle, isMetal);
         if (isMetal) requestAnimationFrame(function () { metalVisuals.forEach(projectMetalVisual); });
       }
       if (galleryWrapPreview) {
-        galleryWrapPreview.hidden = !isCanvas;
-        galleryWrapPreview.setAttribute('aria-hidden', isCanvas ? 'false' : 'true');
+        setPreviewVisibility(galleryWrapPreview, isCanvas);
         if (isCanvas) requestAnimationFrame(function () { galleryWrapVisuals.forEach(projectGalleryWrapVisual); });
       }
       if (framedPreview) {
-        framedPreview.hidden = !isFramedFinish;
-        framedPreview.setAttribute('aria-hidden', isFramedFinish ? 'false' : 'true');
+        setPreviewVisibility(framedPreview, isFramedFinish);
         if (isFramedFinish) requestAnimationFrame(function () { framedVisuals.forEach(projectFramedVisual); });
       }
       if (!frame) return;

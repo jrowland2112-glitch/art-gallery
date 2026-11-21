@@ -104,6 +104,119 @@ textarea { min-height: 9rem; resize: vertical; }
 .form-message { padding: 0.9rem 1rem; border: 1px solid var(--color-border); background: var(--color-surface); margin-bottom: 1.25rem; }
 .form-message--error { border-color: #c0392b; }
 
+/* ---------- Password / Coming Soon ---------- */
+.password-hero {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #14202a;
+  color: #fff;
+  isolation: isolate;
+}
+.password-hero__media,
+.password-hero__media::after {
+  position: absolute;
+  inset: 0;
+}
+.password-hero__media { z-index: -2; }
+.password-hero__media::after {
+  content: '';
+  background: linear-gradient(90deg, rgba(8, 14, 18, var(--password-overlay-strong)), rgba(8, 14, 18, var(--password-overlay-opacity)) 54%, rgba(8, 14, 18, var(--password-overlay-soft)));
+}
+.password-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.password-hero__content {
+  display: flex;
+  align-items: center;
+  width: min(100%, 90rem);
+  margin: 0 auto;
+  padding: clamp(2rem, 7vw, 7rem) var(--page-margin);
+}
+.password-hero__panel {
+  width: min(100%, 37rem);
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  background: rgba(15, 20, 22, 0.48);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+.password-hero__title {
+  margin: 0;
+  color: #fff;
+  font-size: calc(clamp(2.4rem, 5.2vw, 4.75rem) * var(--heading-scale));
+  text-wrap: balance;
+}
+.password-hero__brand {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.22em;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.password-hero__status {
+  margin: 1.2rem 0 2rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.password-hero__form { max-width: 28rem; }
+.password-hero__field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+.password-hero__field input[type='password'] {
+  min-height: 3.1rem;
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  color: #171717;
+}
+.password-hero__field button {
+  min-height: 3.1rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #171717;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.password-hero__field button:hover { background: transparent; color: #fff; }
+.password-hero__field input:focus-visible,
+.password-hero__field button:focus-visible { outline-color: #fff; }
+.password-hero__errors {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(125, 24, 24, 0.72);
+  font-size: 0.9rem;
+}
+.password-hero__errors ul { margin: 0; padding-left: 1.25rem; }
+/* The newsletter popup belongs on the storefront, not over the password gate. */
+.password-page shopify-forms-embed,
+.password-page [data-variant='leadCapture'] { display: none !important; }
+@media (max-width: 749px) {
+  .password-hero__media img { object-position: 48% center; }
+  .password-hero__content { align-items: end; padding-bottom: max(2rem, env(safe-area-inset-bottom)); }
+  .password-hero__panel { background: rgba(15, 20, 22, 0.58); }
+  .password-hero__field { grid-template-columns: 1fr; }
+  .password-hero__field button { width: 100%; }
+}
+
 /* ---------- Announcement ---------- */
 .announcement { background: var(--color-foreground); color: var(--color-background); text-align: center; font-size: 0.78rem; letter-spacing: 0.12em; padding: 0.55rem var(--page-margin); }
 .announcement p { margin: 0; }

@@ -26,8 +26,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Shopify theme check
-        run: npx -y -p @shopify/cli@5.0.1 shopify theme check --fail-level error
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test and validate theme
+        run: npm run check
       - name: Block secret-looking files
         run: |
           if git ls-files | grep -E '(^|/)\.env' ; then

@@ -7,14 +7,14 @@ A custom Shopify theme for selling fine art and photography prints, with a blog,
 - **Guide 2, AI assistant setup and starter prompt:** [`docs/AI_SETUP.md`](docs/AI_SETUP.md)
 - **Guide 3, transferring the store and code to the owner:** [`docs/HANDOFF.md`](docs/HANDOFF.md)
 - **Editing the site without code:** [`docs/EDITING_GUIDE.md`](docs/EDITING_GUIDE.md)
-- **WHCC Test connector (disabled, not deployed):** [`docs/WHCC_SANDBOX_CONNECTOR.md`](docs/WHCC_SANDBOX_CONNECTOR.md)
+- **WHCC fulfillment connector:** [`docs/WHCC_SANDBOX_CONNECTOR.md`](docs/WHCC_SANDBOX_CONNECTOR.md). The Live Worker is deployed separately from the theme and remains protected by explicit environment gates.
 
 ## Developer quick start
 
 1. Install [Shopify CLI](https://shopify.dev/docs/api/shopify-cli): `npm install -g @shopify/cli`
 2. Clone this repo and open it in VS Code.
 3. Live local preview: `shopify theme dev --store <store>.myshopify.com`
-4. Check for errors: `shopify theme check`
+4. Run the complete local checks: `npm run check`
 5. Share a preview: `shopify theme push --unpublished --theme "Preview: <change>"`
 6. Open a pull request. An assistant may merge only after the owner explicitly approves that specific pull request. An assistant may publish only after the owner explicitly approves and identifies the exact unpublished preview theme to publish.
 

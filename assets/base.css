@@ -352,6 +352,7 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .frame-preview.is-framed { --frame-width: clamp(10px, 1.8vw, 18px); --frame-shadow: 0 18px 40px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(0,0,0,0.15); }
 .frame-preview.has-mat { --mat-width: clamp(18px, 4.5vw, 46px); }
+.frame-preview.has-mat.mat-1-5 { --mat-width: clamp(14px, 3.4vw, 35px); }
 .frame-preview.has-mat img {
   border: clamp(5px, 0.7vw, 9px) solid #fff;
   outline: 1px solid rgba(55, 49, 42, 0.24);
@@ -561,7 +562,7 @@ textarea { min-height: 9rem; resize: vertical; }
   position: absolute;
   inset: 2.3%;
   box-sizing: border-box;
-  padding: 6.8%;
+  padding: var(--framed-room-mat-width, 6.8%);
   background: #fff;
 }
 .framed-room__mat .metal-lifestyle__art { object-fit: cover; }

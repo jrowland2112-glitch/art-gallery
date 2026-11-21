@@ -10,12 +10,15 @@ const TEST_IMAGE = 'https://whcc-platform-test-assets.s3.us-east-2.amazonaws.com
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-function verifySummary(mapping, summary) {
+export function verifySummary(mapping, summary) {
   const descriptions = Object.fromEntries((summary || []).map((entry) => [entry.id, String(entry.description || '')]));
   const builtSize = descriptions.size?.replaceAll('×', 'x').replaceAll(' ', '');
   if (builtSize !== mapping.size) throw new Error(`${mapping.finish} ${mapping.size} built as ${descriptions.size || 'an unknown size'}.`);
+  const framedMat = mapping.whccSelections?.mat === '1_5_in'
+    ? /(?:1\s*1\/2|1\.5|1½)/i
+    : /\b2(?:\.0)?(?:\s*(?:in(?:ch(?:es)?)?|"))?\b/i;
   const expected = mapping.finish === 'Framed'
-    ? { moulding: /gallery slim black/i, mat: /2/, mat_color: /white/i, acrylic: /standard/i }
+    ? { moulding: /gallery slim black/i, mat: framedMat, mat_color: /white/i, acrylic: /standard/i }
     : mapping.finish === 'Metal'
       ? { surface: /white high gloss/i, display_options: /float mount/i }
       : { canvas_type: /premium fine art/i, depth: /1 1\/2|1½/i, protection: /semi-gloss/i, gallery_wrap_edge: /black/i };

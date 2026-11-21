@@ -436,9 +436,6 @@ textarea { min-height: 9rem; resize: vertical; }
   margin: 0; color: var(--color-muted); font-size: 0.7rem;
   letter-spacing: 0.13em; text-transform: uppercase; text-align: center;
 }
-.product-preview-carousel { position: relative; width: 100%; }
-.product-preview-carousel[hidden] { display: none; }
-.product-preview-carousel__navigation { display: none; }
 .metal-lifestyle-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 20rem));
@@ -652,52 +649,6 @@ textarea { min-height: 9rem; resize: vertical; }
     width: 100%;
     overflow-x: auto;
     padding-bottom: 0.5rem;
-    scroll-behavior: smooth;
-    scroll-snap-type: inline mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-inline: contain;
-  }
-  .metal-lifestyle-grid::-webkit-scrollbar { display: none; }
-  .metal-lifestyle { scroll-snap-align: start; }
-  .product-preview-carousel__navigation { display: block; }
-  .product-preview-carousel__arrow {
-    position: absolute;
-    z-index: 2;
-    top: 5.2rem;
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.78);
-    border-radius: 50%;
-    background: rgba(35, 32, 29, 0.82);
-    color: #fff;
-    cursor: pointer;
-    transform: translateY(-50%);
-    transition: opacity 160ms ease, background 160ms ease;
-  }
-  .product-preview-carousel__arrow--previous { left: 0.5rem; }
-  .product-preview-carousel__arrow--next { right: 0.5rem; }
-  .product-preview-carousel__arrow svg {
-    width: 1.35rem;
-    height: 1.35rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.7;
-  }
-  .product-preview-carousel__arrow:focus-visible { outline: 2px solid var(--color-foreground); outline-offset: 3px; }
-  .product-preview-carousel__arrow:disabled { opacity: 0; pointer-events: none; }
-  .product-preview-carousel__position {
-    display: block;
-    margin-top: 0.15rem;
-    color: var(--color-muted);
-    font-size: 0.7rem;
-    letter-spacing: 0.13em;
-    text-align: center;
-    text-transform: uppercase;
   }
 }
 .product__thumbs { display: flex; gap: 0.6rem; margin-top: 0.8rem; overflow-x: auto; }

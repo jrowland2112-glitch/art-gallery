@@ -289,20 +289,35 @@
       ].join(',') + ')';
     }
 
-    function updateFramedRoomScale(values, variant) {
-      if (!framedRoomVisual) return;
+    function framedSize(values, variant) {
       var identity = values.filter(Boolean).join(' ') + ' ' + (variant && variant.title ? variant.title : '');
       var match = identity.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)/i);
-      if (!match) return;
-      var first = parseFloat(match[1]);
-      var second = parseFloat(match[2]);
+      if (!match) return null;
+      return { first: parseFloat(match[1]), second: parseFloat(match[2]) };
+    }
+
+    function framedMatInches(values, variant) {
+      var size = framedSize(values, variant);
+      if (!size) return 2;
+      var shortSide = Math.min(size.first, size.second);
+      var longSide = Math.max(size.first, size.second);
+      return shortSide === 12 && longSide === 18 ? 1.5 : 2;
+    }
+
+    function updateFramedRoomScale(values, variant) {
+      if (!framedRoomVisual) return;
+      var size = framedSize(values, variant);
+      if (!size) return;
       var isPortrait = framedRoomVisual.dataset.framedOrientation === 'portrait';
-      var printWidth = isPortrait ? Math.min(first, second) : Math.max(first, second);
-      var printHeight = isPortrait ? Math.max(first, second) : Math.min(first, second);
-      var finishedWidth = printWidth + 4;
-      var finishedHeight = printHeight + 4;
+      var printWidth = isPortrait ? Math.min(size.first, size.second) : Math.max(size.first, size.second);
+      var printHeight = isPortrait ? Math.max(size.first, size.second) : Math.min(size.first, size.second);
+      var frameAddition = 1.125;
+      var finishedWidth = printWidth + frameAddition;
+      var finishedHeight = printHeight + frameAddition;
+      var matWidth = framedMatInches(values, variant);
       framedRoomVisual.style.setProperty('--framed-room-art-width', ((finishedWidth / 72) * 71.4).toFixed(3) + '%');
       framedRoomVisual.style.setProperty('--framed-room-aspect', (finishedWidth / finishedHeight).toFixed(4));
+      framedRoomVisual.style.setProperty('--framed-room-mat-width', ((matWidth / finishedWidth) * 100).toFixed(3) + '%');
     }
 
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {
@@ -549,6 +564,7 @@
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
       var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
+      var matInches = framedMatInches(values, variant);
       updateMetalRoomScale(values, variant);
       updateGalleryWrapRoomScale(values, variant);
       updateFramedRoomScale(values, variant);
@@ -582,12 +598,14 @@
       frame.classList.toggle('is-metal', isMetal);
       frame.classList.toggle('is-framed', !!frameColor);
       frame.classList.toggle('has-mat', !!matColor);
+      frame.classList.toggle('mat-1-5', isFramedFinish && matInches === 1.5);
+      frame.classList.toggle('mat-2', isFramedFinish && matInches === 2);
       frame.style.setProperty('--frame-color', frameColor || 'transparent');
       frame.style.setProperty('--mat-color', matColor || 'transparent');
       if (finishCaption) {
         if (isCanvas) finishCaption.textContent = 'Gallery wrap · Texture and depth preview';
         else if (isMetal) finishCaption.textContent = 'Metal · Clean and luminous preview';
-        else if (isFramedFinish) finishCaption.textContent = 'Matted and framed · Finish preview';
+        else if (isFramedFinish) finishCaption.textContent = 'Matted and framed · ' + matInches + '-inch double-white mat preview';
         else finishCaption.textContent = finishCaption.dataset.defaultCaption || '';
       }
     }

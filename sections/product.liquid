@@ -80,7 +80,6 @@
             {%- endif -%}
             <p class="frame-preview__note">Frame and mat preview is for illustration. Actual finish may vary slightly.</p>
           </div>
-          <div class="product-preview-carousel" data-preview-carousel hidden>
           <div class="metal-lifestyle-grid gallery-wrap-preview-grid" data-gallery-wrap-preview hidden>
             <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
               <button class="metal-lifestyle__open" type="button" data-gallery-wrap-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} gallery wrap lifestyle preview">
@@ -123,9 +122,6 @@
               <div class="metal-lifestyle-lightbox__content" data-gallery-wrap-lightbox-content></div>
             </dialog>
           </div>
-          {% render 'product-preview-navigation' %}
-          </div>
-          <div class="product-preview-carousel" data-preview-carousel hidden>
           <div class="metal-lifestyle-grid framed-preview-grid" data-framed-preview hidden>
             <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
               <button class="metal-lifestyle__open" type="button" data-framed-preview-open aria-haspopup="dialog" aria-label="Enlarge {{ product.title | escape }} framed lifestyle preview">
@@ -159,11 +155,8 @@
               <div class="metal-lifestyle-lightbox__content" data-framed-preview-lightbox-content></div>
             </dialog>
           </div>
-          {% render 'product-preview-navigation' %}
-          </div>
         {%- endif -%}
         {%- if reference_image -%}
-          <div class="product-preview-carousel" data-preview-carousel hidden>
           <div class="metal-lifestyle-grid" data-metal-lifestyle hidden>
           <figure class="metal-lifestyle metal-lifestyle--{{ metal_mockup_orientation }}">
             <button
@@ -283,8 +276,6 @@
               </button>
               <div class="metal-lifestyle-lightbox__content" data-metal-lifestyle-lightbox-content></div>
             </dialog>
-          </div>
-          {% render 'product-preview-navigation' %}
           </div>
         {%- endif -%}
       </div>

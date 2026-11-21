@@ -20,19 +20,6 @@ function option(name, values, selected) {
   </fieldset>`;
 }
 
-function previewCarousel(attribute) {
-  return `<div data-preview-carousel hidden>
-    <div ${attribute} hidden>
-      <figure class="metal-lifestyle"></figure>
-      <figure class="metal-lifestyle"></figure>
-      <figure class="metal-lifestyle"></figure>
-    </div>
-    <button type="button" data-preview-previous disabled>Previous</button>
-    <span data-preview-position>1 of 3</span>
-    <button type="button" data-preview-next>Next</button>
-  </div>`;
-}
-
 function productFixture() {
   return `<!doctype html><html><body>
     <section data-product data-finish-option="finish" data-frame-option="frame" data-mat-option="mat" data-money-format="\${{amount}}" data-base-image-src="https://example.com/art.jpg" data-base-image-alt="Artwork">
@@ -46,9 +33,9 @@ function productFixture() {
       <div data-price></div>
       <div class="frame-preview" data-frame-preview><img data-main-image src="https://example.com/art.jpg" alt="Artwork"></div>
       <p data-finish-caption>Finish preview</p>
-      ${previewCarousel('data-metal-lifestyle')}
-      ${previewCarousel('data-gallery-wrap-preview')}
-      ${previewCarousel('data-framed-preview')}
+      <div data-metal-lifestyle hidden></div>
+      <div data-gallery-wrap-preview hidden></div>
+      <div data-framed-preview hidden></div>
     </section>
   </body></html>`;
 }
@@ -56,7 +43,6 @@ function productFixture() {
 function loadProduct() {
   const dom = new JSDOM(productFixture(), { url: 'https://example.com/products/art', runScripts: 'outside-only' });
   dom.window.requestAnimationFrame = (callback) => { callback(); return 1; };
-  dom.window.cancelAnimationFrame = () => {};
   dom.window.eval(themeScript);
   dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded', { bubbles: true }));
   return dom;
@@ -112,37 +98,4 @@ test('product initialization is idempotent when Shopify reloads a section', () =
   assert.equal(root.dataset.productReady, '1');
   select(dom, 'Finish', 'Metal');
   assert.equal(dom.window.document.querySelector('input[name="id"]').value, '3');
-});
-
-test('mobile preview arrows reveal and navigate all three lifestyle images', () => {
-  const dom = loadProduct();
-  const document = dom.window.document;
-  const grid = document.querySelector('[data-metal-lifestyle]');
-  const wrapper = grid.closest('[data-preview-carousel]');
-  const items = [...grid.querySelectorAll(':scope > .metal-lifestyle')];
-  Object.defineProperties(grid, {
-    offsetLeft: { value: 0 },
-    clientWidth: { value: 208 },
-    scrollWidth: { value: 624 },
-    scrollLeft: { value: 0, writable: true },
-  });
-  items.forEach((item, index) => Object.defineProperty(item, 'offsetLeft', { value: index * 208 }));
-  grid.scrollTo = ({ left }) => {
-    grid.scrollLeft = left;
-    grid.dispatchEvent(new dom.window.Event('scroll'));
-  };
-
-  select(dom, 'Finish', 'Metal');
-  assert.equal(wrapper.hidden, false);
-  assert.equal(wrapper.querySelector('[data-preview-position]').textContent, '1 of 3');
-  assert.equal(wrapper.querySelector('[data-preview-previous]').disabled, true);
-  assert.equal(wrapper.querySelector('[data-preview-next]').disabled, false);
-
-  wrapper.querySelector('[data-preview-next]').click();
-  assert.equal(wrapper.querySelector('[data-preview-position]').textContent, '2 of 3');
-  assert.equal(wrapper.querySelector('[data-preview-previous]').disabled, false);
-
-  wrapper.querySelector('[data-preview-next]').click();
-  assert.equal(wrapper.querySelector('[data-preview-position]').textContent, '3 of 3');
-  assert.equal(wrapper.querySelector('[data-preview-next]').disabled, true);
 });

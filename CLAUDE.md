@@ -6,7 +6,7 @@ These rules apply to every AI session (Claude Code, Codex, or any other assistan
 
 - **Owner and approver:** Joseph Rowland (GitHub: `jrowland2112-glitch`). The owner owns the artwork, the business, the Shopify store, every account, and the code, and is the only person who approves changes.
 - **Helper:** Tristan Rowland (GitHub: `tjrowland3`) built the first version and may help if the owner asks. He has no approval authority after the handoff.
-- **Shopify store:** `rowland-photography-0v8ydig1.myshopify.com` (live site: not yet).
+- **Shopify store:** `rowland-photography-0v8ydig1.myshopify.com` (public domain: `jrowlandphoto.com`).
 - **Purpose:** a gallery of the owner's original photography and art where visitors browse pieces, read the blog, and buy prints.
 
 Until the store is transferred, Tristan is the acting owner and the remaining placeholders above stay unfilled. After the handoff, fill them in (see `docs/AI_SETUP.md`).
@@ -18,7 +18,7 @@ Until the store is transferred, Tristan is the acting owner and the remaining pl
 - **Blog:** "Behind the Lense" (`behind-the-lense`), with posts `vermont` and `long-island`. The default "News" blog is unused.
 - **Pages:** About (template `page.about`) and Contact (template `page.contact`).
 - **Photos** live in Shopify Files: `gristmill.jpg`, `vermont.jpg`, `longi_slandf.jpg`.
-- **Not done yet:** products and the print vendor, payments, domain, and real text for the About page and blog posts.
+- **Commerce:** active products use the custom WHCC Live connector. Shopify Payments, the custom domain, product copy, About page, and Field Journal are configured. Treat the current Shopify state as authoritative and verify it before any operational change.
 
 ### Theme editor and GitHub stay in sync
 

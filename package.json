@@ -7,23 +7,24 @@
     "photos:upload": "node scripts/bulk-products.mjs --apply",
     "whcc:doctor": "node scripts/whcc-doctor.mjs",
     "whcc:validate-mappings": "node scripts/whcc-validate-mappings.mjs",
-    "finerworks:doctor": "node scripts/finerworks-doctor.mjs",
-    "finerworks:validate-mappings": "node scripts/finerworks-validate-mappings.mjs",
     "connector:audit": "node scripts/connector-readiness.mjs",
     "products:map-whcc": "node scripts/apply-whcc-product-mappings.mjs",
     "products:sync-active-whcc": "node scripts/sync-active-whcc-mappings.mjs",
-    "products:map-finerworks": "node scripts/apply-finerworks-product-mappings.mjs",
     "connector:test": "node --test test/connector-*.test.mjs",
     "connector:dev": "wrangler dev --config connector/wrangler.example.toml",
-    "connector:finerworks:dev": "wrangler dev --config connector/wrangler.finerworks.example.toml",
+    "theme:check": "shopify theme check --fail-level error",
+    "theme:optimize-images": "node scripts/optimize-theme-images.mjs",
+    "check": "npm test && npm run theme:check",
     "test": "node --test"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.922.0",
+    "@aws-sdk/client-s3": "^3.1175.0",
     "csv-parse": "^7.0.3",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "wrangler": "^4.47.0"
+    "@shopify/cli": "^5.0.2",
+    "jsdom": "^31.0.1",
+    "wrangler": "^4.166.0"
   }
 }

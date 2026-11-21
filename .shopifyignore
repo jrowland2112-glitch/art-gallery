@@ -17,3 +17,10 @@ CLAUDE.md
 AGENTS.md
 README.md
 LICENSE-SHOPIFY-SKELETON.md
+email-templates
+connector
+scripts
+test
+bulk-upload
+package.json
+package-lock.json

@@ -604,6 +604,19 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .metal-lifestyle--edge.metal-lifestyle--landscape .metal-lifestyle__panel { width: 70%; }
 .metal-lifestyle--edge.metal-lifestyle--portrait .metal-lifestyle__panel { width: 42%; }
+/*
+ * The lifestyle scene already contains the model's hands in front of the
+ * metal panel. Keep the lower contact points transparent in the projected
+ * artwork layer so the hands remain visible at every responsive size and in
+ * the enlarged dialog. These percentages are local to the panel, so they
+ * scale with the same perspective transform as the artwork.
+ */
+[data-metal-layout="wall"][data-metal-orientation="landscape"] .metal-lifestyle__panel {
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 96.5% 78%, 96.5% 100%, 3.5% 100%, 3.5% 78%, 0 78%);
+}
+[data-metal-layout="wall"][data-metal-orientation="portrait"] .metal-lifestyle__panel {
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 93% 84%, 93% 100%, 7% 100%, 7% 84%, 0 84%);
+}
 .gallery-wrap__panel {
   position: absolute;
   top: 0;

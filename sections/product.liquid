@@ -7,6 +7,11 @@
   assign main_image = product.featured_image | default: current_variant.featured_image
   assign reference_image = product.featured_image | default: main_image
   assign metal_mockup_orientation = 'landscape'
+  comment
+    Approved metal lifestyle composite: keep the original landscape mockup and
+    extracted left-hand overlay together. Automated tests pin both asset hashes
+    so the hand alignment cannot drift unnoticed.
+  endcomment
   assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
   assign metal_left_hand_asset = 'metal-lifestyle-landscape-left-hand-overlay.png'
   assign metal_edge_asset = 'metal-edge-landscape.jpg'

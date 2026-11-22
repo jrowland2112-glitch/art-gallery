@@ -55,3 +55,8 @@ test('legacy Title-option products retain the live frame preview', async () => {
   assert.match(product, /data-frame-preview/);
   assert.doesNotMatch(product, /assign use_frame_preview = false/);
 });
+
+test('search result artwork does not add colored media blocks', async () => {
+  const css = await text('assets/base.css');
+  assert.match(css, /\.search-results__grid \.card__media \{[^}]*background: transparent;/);
+});

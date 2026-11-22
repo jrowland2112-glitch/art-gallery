@@ -18,6 +18,11 @@ test('metal wall previews layer both hands above an uncut artwork panel', () => 
   );
   assert.match(
     css,
+    /\.metal-lifestyle__hands--left\s*\{[^}]*17\.2% 72%/s,
+    'the landscape foreground must retain the forward edge of the left thumb',
+  );
+  assert.match(
+    css,
     /\[data-metal-orientation="portrait"\]\s+\.metal-lifestyle__hands--right\s*\{[^}]*clip-path:\s*polygon\(/s,
   );
 });

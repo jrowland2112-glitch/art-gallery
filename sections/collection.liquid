@@ -28,6 +28,25 @@
               {%- endif -%}
             {%- endfor -%}
           </div>
+          <div class="gallery-locations__mobile">
+            <label class="visually-hidden" for="GalleryLocation-{{ section.id }}">Browse by location</label>
+            <select id="GalleryLocation-{{ section.id }}" data-gallery-location-select>
+              <option value="{{ collection.url }}"{% if current_tags == blank %} selected{% endif %}>All locations</option>
+              {%- for location_tag in location_tags -%}
+                {%- liquid
+                  assign clean_location_tag = location_tag | strip
+                  assign location_handle = clean_location_tag | handleize
+                  assign location_is_active = false
+                  if current_tags contains clean_location_tag
+                    assign location_is_active = true
+                  endif
+                -%}
+                {%- if clean_location_tag != blank -%}
+                  <option value="{{ collection.url }}/{{ location_handle }}"{% if location_is_active %} selected{% endif %}>{{ clean_location_tag }}</option>
+                {%- endif -%}
+              {%- endfor -%}
+            </select>
+          </div>
         </nav>
       {%- endif -%}
     {%- endif -%}

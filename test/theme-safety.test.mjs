@@ -37,3 +37,21 @@ test('retired provider and invalid CSS variables cannot return unnoticed', async
   assert.doesNotMatch(css, /--font-heading-family/);
   assert.doesNotMatch(packageJson, /finerworks/i);
 });
+
+test('gallery location navigation stays compact on mobile', async () => {
+  const [collection, css, theme] = await Promise.all([
+    text('sections/collection.liquid'),
+    text('assets/base.css'),
+    text('assets/theme.js'),
+  ]);
+  assert.match(collection, /data-gallery-location-select/);
+  assert.match(css, /@media \(max-width: 749px\)[\s\S]*?\.gallery-locations__list \{ display: none; \}/);
+  assert.match(css, /\.gallery-locations__mobile \{ display: block; \}/);
+  assert.match(theme, /window\.location\.assign\(select\.value\)/);
+});
+
+test('legacy Title-option products retain the live frame preview', async () => {
+  const product = await text('sections/product.liquid');
+  assert.match(product, /data-frame-preview/);
+  assert.doesNotMatch(product, /assign use_frame_preview = false/);
+});

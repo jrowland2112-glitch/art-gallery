@@ -920,6 +920,7 @@ textarea { min-height: 9rem; resize: vertical; }
 }
 .gallery-locations__label { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); }
 .gallery-locations__list { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+.gallery-locations__mobile { display: none; }
 .gallery-location {
   display: inline-flex;
   align-items: center;
@@ -935,8 +936,19 @@ textarea { min-height: 9rem; resize: vertical; }
 .gallery-location:hover { border-color: var(--color-foreground); }
 .gallery-location.is-active { border-color: var(--color-foreground); background: var(--color-foreground); color: var(--color-background); }
 @media (max-width: 749px) {
-  .gallery-locations__list { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.25rem; scrollbar-width: thin; }
-  .gallery-location { flex: 0 0 auto; }
+  .gallery-locations { gap: 0.65rem; }
+  .gallery-locations__list { display: none; }
+  .gallery-locations__mobile { display: block; }
+  .gallery-locations__mobile select {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 2.5rem 0.65rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font: inherit;
+  }
 }
 .collection-page .toolbar {
   margin-bottom: 1.5rem;

@@ -242,21 +242,47 @@
       if (!panel) return;
       var isPortrait = visual.dataset.framedOrientation === 'portrait';
       var isEdge = visual.dataset.framedLayout === 'edge';
+      var scaleX = parseFloat(visual.dataset.framedOpeningScaleX) || 1;
+      var scaleY = parseFloat(visual.dataset.framedOpeningScaleY) || 1;
+
+      function scaledRect(left, top, width, height) {
+        return {
+          left: left - (width * (scaleX - 1) / 2),
+          top: top - (height * (scaleY - 1) / 2),
+          width: width * scaleX,
+          height: height * scaleY
+        };
+      }
+
+      function percent(value) {
+        return (Math.round(value * 100) / 100) + '%';
+      }
+
+      function scaledPoints(points) {
+        var centerX = points.reduce(function (sum, point) { return sum + point[0]; }, 0) / points.length;
+        var centerY = points.reduce(function (sum, point) { return sum + point[1]; }, 0) / points.length;
+        return points.map(function (point) {
+          return [centerX + ((point[0] - centerX) * scaleX), centerY + ((point[1] - centerY) * scaleY)];
+        });
+      }
+
       if (!isPortrait && !isEdge) {
-        panel.style.left = '20.5%';
-        panel.style.top = '21.8%';
-        panel.style.width = '56.7%';
-        panel.style.height = '46.3%';
+        var wallRect = scaledRect(20.5, 21.8, 56.7, 46.3);
+        panel.style.left = percent(wallRect.left);
+        panel.style.top = percent(wallRect.top);
+        panel.style.width = percent(wallRect.width);
+        panel.style.height = percent(wallRect.height);
         panel.style.aspectRatio = 'auto';
         panel.style.transform = 'none';
         panel.style.clipPath = 'polygon(0% 10.4%, 99.8% 0%, 100% 100%, 0.4% 95.9%)';
         return;
       }
       if (!isPortrait && isEdge) {
-        panel.style.left = '12.5%';
-        panel.style.top = '23.1%';
-        panel.style.width = '75.2%';
-        panel.style.height = '49.8%';
+        var edgeRect = scaledRect(12.5, 23.1, 75.2, 49.8);
+        panel.style.left = percent(edgeRect.left);
+        panel.style.top = percent(edgeRect.top);
+        panel.style.width = percent(edgeRect.width);
+        panel.style.height = percent(edgeRect.height);
         panel.style.aspectRatio = 'auto';
         panel.style.transform = 'none';
         panel.style.clipPath = 'polygon(5.7% 0.6%, 94.4% 0.4%, 100% 100%, 0.1% 99.4%)';
@@ -267,6 +293,7 @@
       else if (isEdge) points = [[0.168, 0.234], [0.828, 0.233], [0.857, 0.730], [0.127, 0.727]];
       else if (isPortrait) points = [[0.334, 0.153], [0.655, 0.120], [0.655, 0.771], [0.335, 0.751]];
       else points = [[0.205, 0.266], [0.771, 0.218], [0.772, 0.681], [0.207, 0.662]];
+      points = scaledPoints(points);
       var visualWidth = visual.clientWidth;
       var visualHeight = visual.clientHeight;
       var sourceWidth = panel.offsetWidth;
@@ -320,6 +347,24 @@
       framedRoomVisual.style.setProperty('--framed-room-art-width', ((finishedWidth / 72) * 71.4).toFixed(3) + '%');
       framedRoomVisual.style.setProperty('--framed-room-aspect', (finishedWidth / finishedHeight).toFixed(4));
       framedRoomVisual.style.setProperty('--framed-room-mat-width', ((matWidth / finishedWidth) * 100).toFixed(3) + '%');
+    }
+
+    function updateFramedThumbnailScale(values, variant) {
+      var size = framedSize(values, variant);
+      if (!size) return;
+      var shortSide = Math.min(size.first, size.second);
+      var longSide = Math.max(size.first, size.second);
+      var matWidth = framedMatInches(values, variant);
+      var shortOpeningRatio = (shortSide - (2 * matWidth)) / shortSide;
+      var longOpeningRatio = (longSide - (2 * matWidth)) / longSide;
+      var shortScale = shortOpeningRatio / 0.75;
+      var longScale = longOpeningRatio / (5 / 6);
+      framedVisuals.forEach(function (visual) {
+        if (visual.dataset.framedLayout === 'room') return;
+        var isPortrait = visual.dataset.framedOrientation === 'portrait';
+        visual.dataset.framedOpeningScaleX = (isPortrait ? shortScale : longScale).toFixed(4);
+        visual.dataset.framedOpeningScaleY = (isPortrait ? longScale : shortScale).toFixed(4);
+      });
     }
 
     if (metalOpeners.length && metalLightbox && metalLightboxClose && metalLightboxContent) {
@@ -600,6 +645,7 @@
       updateMetalRoomScale(values, variant);
       updateGalleryWrapRoomScale(values, variant);
       updateFramedRoomScale(values, variant);
+      updateFramedThumbnailScale(values, variant);
       if (metalLifestyle) {
         metalLifestyle.hidden = !isMetal;
         metalLifestyle.setAttribute('aria-hidden', isMetal ? 'false' : 'true');

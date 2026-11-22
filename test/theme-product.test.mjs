@@ -36,7 +36,11 @@ function productFixture() {
       <p data-finish-caption>Finish preview</p>
       <div data-metal-lifestyle hidden></div>
       <div data-gallery-wrap-preview hidden></div>
-      <div data-framed-preview hidden></div>
+      <div data-framed-preview hidden>
+        <div data-framed-visual data-framed-layout="wall" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
+        <div data-framed-visual data-framed-layout="edge" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
+        <div data-framed-visual data-framed-layout="room" data-framed-orientation="landscape"></div>
+      </div>
     </section>
   </body></html>`;
 }
@@ -66,6 +70,8 @@ test('product finish and size selections update mat, price, variant, and preview
   assert.equal(frame.classList.contains('mat-1-5'), true);
   assert.equal(frame.style.getPropertyValue('--mat-width'), 'clamp(14px, 3.4vw, 35px)');
   assert.equal(document.querySelector('[data-main-image]').src, 'https://example.com/art.jpg');
+  assert.equal(document.querySelector('[data-framed-layout="wall"]').dataset.framedOpeningScaleX, '1.0000');
+  assert.equal(document.querySelector('[data-framed-layout="wall"] .framed-preview__art-panel').style.width, '56.7%');
   assert.match(caption.textContent, /1\.5-inch double-white mat/);
   assert.equal(variantId.value, '1');
   assert.equal(document.querySelector('[data-price]').textContent, '$245');
@@ -77,12 +83,17 @@ test('product finish and size selections update mat, price, variant, and preview
   assert.equal(variantId.value, '2');
   assert.equal(frame.style.getPropertyValue('--mat-width'), 'clamp(14px, 3.4vw, 35px)');
   assert.equal(document.querySelector('[data-main-image]').src, 'https://example.com/art.jpg');
+  assert.equal(document.querySelector('[data-framed-layout="edge"]').dataset.framedOpeningScaleX, '1.0000');
 
   select(dom, 'Size', '24x36');
   assert.equal(variantId.value, '6');
   assert.equal(frame.style.getPropertyValue('--mat-width'), 'clamp(9.33px, 2.27vw, 23.33px)');
   assert.equal(frame.style.getPropertyValue('--frame-width'), 'clamp(5px, 0.9vw, 9px)');
   assert.equal(document.querySelector('[data-main-image]').src, 'https://example.com/art.jpg');
+  assert.equal(document.querySelector('[data-framed-layout="wall"]').dataset.framedOpeningScaleX, '1.0667');
+  assert.equal(document.querySelector('[data-framed-layout="wall"]').dataset.framedOpeningScaleY, '1.1111');
+  assert.equal(document.querySelector('[data-framed-layout="wall"] .framed-preview__art-panel').style.width, '60.48%');
+  assert.equal(document.querySelector('[data-framed-layout="edge"] .framed-preview__art-panel').style.width, '80.22%');
 
   select(dom, 'Size', '16x24');
   select(dom, 'Finish', 'Metal');

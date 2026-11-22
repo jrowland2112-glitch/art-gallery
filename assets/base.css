@@ -621,7 +621,7 @@ textarea { min-height: 9rem; resize: vertical; }
  * Percentage masks scale with thumbnails and cloned lightbox previews.
  */
 [data-metal-orientation="landscape"] .metal-lifestyle__hands--left {
-  clip-path: polygon(11.5% 64.5%, 13.5% 64.5%, 15.2% 66%, 16.2% 68%, 16.6% 71%, 16.2% 74%, 14.7% 76%, 13% 75.5%, 11.5% 73%);
+  clip-path: polygon(12.2% 66%, 13% 65%, 14% 65.5%, 14.8% 66.5%, 15.2% 68%, 15% 69.5%, 14.2% 71%, 13.2% 71.2%, 12.4% 70%, 12% 68%);
 }
 [data-metal-orientation="landscape"] .metal-lifestyle__hands--right {
   clip-path: polygon(83.2% 100%, 83.5% 88%, 84% 82%, 83.8% 78%, 84.5% 74%, 86% 69%, 87.5% 69%, 89% 72%, 89.8% 76%, 91% 80%, 92% 83%, 92.8% 90%, 93.8% 100%);

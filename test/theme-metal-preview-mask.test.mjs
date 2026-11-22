@@ -18,8 +18,8 @@ test('metal wall previews layer both hands above an uncut artwork panel', () => 
   );
   assert.match(
     css,
-    /\.metal-lifestyle__hands--left\s*\{[^}]*11\.5% 64\.5%[^}]*16\.6% 71%[^}]*11\.5% 73%/s,
-    'the landscape foreground must isolate only the left thumb contact area',
+    /\.metal-lifestyle__hands--left\s*\{[^}]*12\.2% 66%[^}]*15\.2% 68%[^}]*13\.2% 71\.2%/s,
+    'the landscape foreground must isolate the fingertip without reaching the lower-left corner',
   );
   assert.match(
     css,

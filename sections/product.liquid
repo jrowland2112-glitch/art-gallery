@@ -1,6 +1,10 @@
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
-  assign main_image = current_variant.featured_image | default: product.featured_image
+  comment
+    Always begin with the source photograph. Legacy variant-specific framed renders
+    are intentionally ignored because the live preview scales the mat by size.
+  endcomment
+  assign main_image = product.featured_image | default: current_variant.featured_image
   assign reference_image = product.featured_image | default: main_image
   assign metal_mockup_orientation = 'landscape'
   assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'

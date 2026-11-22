@@ -542,7 +542,7 @@ textarea { min-height: 9rem; resize: vertical; }
   padding-block: 1rem;
 }
 .product-lightbox__preview { box-sizing: border-box; flex: 0 1 auto; max-width: 100%; }
-.product-lightbox__preview img { display: block; width: auto; max-width: 100%; height: auto; max-height: none; object-fit: contain; }
+.product-lightbox__preview img { display: block; box-sizing: border-box; width: auto; max-width: 100%; height: auto; max-height: none; object-fit: contain; }
 .product__stage-copy { align-self: end; text-align: center; }
 .frame-preview__note { font-size: 0.8rem; color: var(--color-muted); font-style: italic; text-align: center; margin: 0.3rem 0 0; }
 .product__stage-caption {

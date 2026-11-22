@@ -41,6 +41,15 @@ function productFixture() {
         <div data-framed-visual data-framed-layout="edge" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
         <div data-framed-visual data-framed-layout="room" data-framed-orientation="landscape"></div>
       </div>
+      <button type="button" data-product-lightbox-open>Enlarge</button>
+      <dialog data-product-lightbox>
+        <button type="button" data-product-lightbox-close>Close</button>
+        <div class="product-lightbox__image-wrap">
+          <div class="frame-preview product-lightbox__preview" data-product-lightbox-preview>
+            <img data-product-lightbox-image src="https://example.com/art.jpg" alt="Artwork">
+          </div>
+        </div>
+      </dialog>
     </section>
   </body></html>`;
 }
@@ -48,6 +57,11 @@ function productFixture() {
 function loadProduct() {
   const dom = new JSDOM(productFixture(), { url: 'https://example.com/products/art', runScripts: 'outside-only' });
   dom.window.requestAnimationFrame = (callback) => { callback(); return 1; };
+  dom.window.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  dom.window.HTMLDialogElement.prototype.close = function () { this.open = false; };
+  const lightbox = dom.window.document.querySelector('[data-product-lightbox]');
+  Object.defineProperty(lightbox, 'clientWidth', { configurable: true, value: 1800 });
+  Object.defineProperty(lightbox, 'clientHeight', { configurable: true, value: 900 });
   dom.window.eval(themeScript);
   dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded', { bubbles: true }));
   return dom;
@@ -121,4 +135,28 @@ test('product initialization is idempotent when Shopify reloads a section', () =
   assert.equal(root.dataset.productReady, '1');
   select(dom, 'Finish', 'Metal');
   assert.equal(dom.window.document.querySelector('input[name="id"]').value, '3');
+});
+
+test('enlarged framed preview scales mat and frame to the selected physical size', () => {
+  const dom = loadProduct();
+  const document = dom.window.document;
+  const open = document.querySelector('[data-product-lightbox-open]');
+  const preview = document.querySelector('[data-product-lightbox-preview]');
+  const image = document.querySelector('[data-product-lightbox-image]');
+
+  open.click();
+  const firstMat = parseFloat(preview.style.getPropertyValue('--mat-width'));
+  const firstFrame = parseFloat(preview.style.getPropertyValue('--frame-width'));
+  const firstHeight = parseFloat(image.style.height);
+  assert.ok(Math.abs((firstMat / firstHeight) - (1.5 / 12)) < 0.0001);
+  assert.ok(Math.abs((firstFrame / firstHeight) - (0.5625 / 12)) < 0.0001);
+
+  select(dom, 'Size', '24x36');
+  open.click();
+  const largeMat = parseFloat(preview.style.getPropertyValue('--mat-width'));
+  const largeFrame = parseFloat(preview.style.getPropertyValue('--frame-width'));
+  const largeHeight = parseFloat(image.style.height);
+  assert.ok(Math.abs((largeMat / largeHeight) - (2 / 24)) < 0.0001);
+  assert.ok(Math.abs((largeFrame / largeHeight) - (0.5625 / 24)) < 0.0001);
+  assert.ok(largeHeight > firstHeight);
 });

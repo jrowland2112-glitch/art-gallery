@@ -24,12 +24,6 @@
   endif
   assign form_id = 'product-form-' | append: section.id
   assign use_frame_preview = section.settings.frame_preview
-  for product_option_name in product.options
-    assign product_option_name_lower = product_option_name | downcase
-    if product_option_name_lower == 'title'
-      assign use_frame_preview = false
-    endif
-  endfor
 -%}
 <section
   class="section product-section"

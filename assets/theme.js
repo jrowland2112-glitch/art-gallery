@@ -831,10 +831,19 @@
     });
   }
 
+  function initGalleryLocationSelect(select) {
+    if (select.dataset.galleryLocationReady) return;
+    select.dataset.galleryLocationReady = '1';
+    select.addEventListener('change', function () {
+      if (select.value) window.location.assign(select.value);
+    });
+  }
+
   function initAll() {
     document.querySelectorAll('[data-product]').forEach(initProduct);
     document.querySelectorAll('[data-slideshow]').forEach(initSlideshow);
     document.querySelectorAll('[data-journal-carousel]').forEach(initJournalCarousel);
+    document.querySelectorAll('[data-gallery-location-select]').forEach(initGalleryLocationSelect);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);

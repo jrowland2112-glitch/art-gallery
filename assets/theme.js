@@ -546,26 +546,56 @@
       return fmt.replace(/\{\{\s*amount[a-z_]*\s*\}\}/, amount.replace(/\.00$/, ''));
     }
 
-    function hasRenderedFrame(variant) {
-      var image = variant && variant.featured_image;
-      if (!image) return false;
-      var identity = [image.alt, image.src, image.url].filter(Boolean).join(' ');
-      return /WHCC Gallery Slim black frame|whcc-gallery-slim-double-white-(?:1-5|2)/i.test(identity);
+    function selectedFinish(values) {
+      var finishValue = '';
+      groups.forEach(function (group, index) {
+        var name = (group.dataset.optionName || '').toLowerCase();
+        var kind = (group.dataset.optionKind || '').toLowerCase();
+        if (kind === 'finish' || name.indexOf(finishOpt) !== -1) finishValue = (values[index] || '').toLowerCase();
+      });
+      return finishValue;
+    }
+
+    function previewLength(value, unit) {
+      return (Math.round(value * 100) / 100) + unit;
+    }
+
+    function updateMainFrameScale(values, variant, isFramedFinish) {
+      if (!frame) return;
+      var size = framedSize(values, variant);
+      if (!isFramedFinish || !size) {
+        frame.style.removeProperty('--mat-width');
+        frame.style.removeProperty('--frame-width');
+        return;
+      }
+      var shortSide = Math.min(size.first, size.second);
+      var matRatio = framedMatInches(values, variant) / shortSide;
+      var frameRatio = 0.5625 / shortSide;
+      frame.style.setProperty('--mat-width', 'clamp(' + [
+        previewLength(Math.max(8, 112 * matRatio), 'px'),
+        previewLength(27.2 * matRatio, 'vw'),
+        previewLength(280 * matRatio, 'px')
+      ].join(', ') + ')');
+      frame.style.setProperty('--frame-width', 'clamp(' + [
+        previewLength(Math.max(5, 213.3333 * frameRatio), 'px'),
+        previewLength(38.4 * frameRatio, 'vw'),
+        previewLength(384 * frameRatio, 'px')
+      ].join(', ') + ')');
     }
 
     function updateFrame(values, variant) {
-      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false, finishValue = '';
+      var frameColor = null, matColor = null, hasFrameOption = false, hasMatOption = false;
+      var finishValue = selectedFinish(values);
       groups.forEach(function (g, i) {
         var name = (g.dataset.optionName || '').toLowerCase();
         var kind = (g.dataset.optionKind || '').toLowerCase();
-        if (kind === 'finish' || name.indexOf(finishOpt) !== -1) finishValue = (values[i] || '').toLowerCase();
-        else if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
+        if (kind === 'finish' || name.indexOf(finishOpt) !== -1) return;
+        if (name.indexOf(frameOpt) !== -1) { hasFrameOption = true; frameColor = lookup(FRAME_COLORS, values[i]); }
         else if (name.indexOf(matOpt) !== -1) { hasMatOption = true; matColor = lookup(MAT_COLORS, values[i]); }
       });
       var isCanvas = /canvas|gallery\s*wrap/.test(finishValue);
       var isMetal = /metal|aluminum|aluminium/.test(finishValue);
       var isFramedFinish = /frame|matted/.test(finishValue);
-      var usesRenderedFrame = isFramedFinish && hasRenderedFrame(variant);
       var matInches = framedMatInches(values, variant);
       updateMetalRoomScale(values, variant);
       updateGalleryWrapRoomScale(values, variant);
@@ -589,9 +619,6 @@
       if (isCanvas || isMetal) {
         frameColor = null;
         matColor = null;
-      } else if (usesRenderedFrame) {
-        frameColor = null;
-        matColor = null;
       } else if (isFramedFinish) {
         if (!hasFrameOption) frameColor = '#252522';
         if (!hasMatOption) matColor = '#ffffff';
@@ -604,6 +631,7 @@
       frame.classList.toggle('mat-2', isFramedFinish && matInches === 2);
       frame.style.setProperty('--frame-color', frameColor || 'transparent');
       frame.style.setProperty('--mat-color', matColor || 'transparent');
+      updateMainFrameScale(values, variant, isFramedFinish);
       if (finishCaption) {
         if (isCanvas) finishCaption.textContent = 'Gallery wrap · Texture and depth preview';
         else if (isMetal) finishCaption.textContent = 'Metal · Clean and luminous preview';
@@ -654,7 +682,7 @@
       addBtn.disabled = !variant.available;
       addBtn.textContent = variant.available ? 'Add to cart' : 'Sold out';
       if (mainImg) {
-        var variantImage = variant.featured_image;
+        var variantImage = /frame|matted/.test(selectedFinish(values)) ? null : variant.featured_image;
         var nextImageSrc = variantImage ? (variantImage.src || variantImage.url) : baseImageSrc;
         if (nextImageSrc) mainImg.src = nextImageSrc;
         mainImg.alt = variantImage && variantImage.alt ? variantImage.alt : baseImageAlt;

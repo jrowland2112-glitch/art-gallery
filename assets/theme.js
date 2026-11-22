@@ -68,6 +68,7 @@
     var lightbox = root.querySelector('[data-product-lightbox]');
     var lightboxImg = root.querySelector('[data-product-lightbox-image]');
     var lightboxPreview = root.querySelector('[data-product-lightbox-preview]');
+    var lightboxWrap = root.querySelector('.product-lightbox__image-wrap');
     var lightboxOpen = root.querySelector('[data-product-lightbox-open]');
     var lightboxClose = root.querySelector('[data-product-lightbox-close]');
     var finishCaption = root.querySelector('[data-finish-caption]');
@@ -115,10 +116,49 @@
       lightboxPreview.style.cssText = stagePreview.style.cssText;
     }
 
+    function scaleProductLightbox() {
+      if (!lightbox || !lightbox.open || !lightboxImg || !lightboxPreview || !lightboxWrap) return;
+      lightboxImg.style.removeProperty('width');
+      lightboxImg.style.removeProperty('height');
+      if (!lightboxPreview.classList.contains('is-framed') || !lightboxPreview.classList.contains('has-mat')) return;
+
+      var values = selected();
+      var variant = findVariant(values);
+      var size = framedSize(values, variant);
+      if (!size) return;
+      var shortSide = Math.min(size.first, size.second);
+      var longSide = Math.max(size.first, size.second);
+      var sourceWidth = lightboxImg.naturalWidth || mainImg.naturalWidth || mainImg.width || longSide;
+      var sourceHeight = lightboxImg.naturalHeight || mainImg.naturalHeight || mainImg.height || shortSide;
+      var isPortrait = sourceHeight > sourceWidth;
+      var printWidth = isPortrait ? shortSide : longSide;
+      var printHeight = isPortrait ? longSide : shortSide;
+      var matInches = framedMatInches(values, variant);
+      var frameInches = 0.5625;
+      var outerWidth = printWidth + (2 * matInches) + (2 * frameInches);
+      var outerHeight = printHeight + (2 * matInches) + (2 * frameInches);
+      var lightboxStyle = window.getComputedStyle(lightbox);
+      var wrapStyle = window.getComputedStyle(lightboxWrap);
+      var horizontalSpace = parseFloat(lightboxStyle.paddingLeft) + parseFloat(lightboxStyle.paddingRight);
+      var verticalSpace = parseFloat(lightboxStyle.paddingTop) + parseFloat(lightboxStyle.paddingBottom)
+        + parseFloat(wrapStyle.paddingTop) + parseFloat(wrapStyle.paddingBottom);
+      var availableWidth = lightbox.clientWidth - (horizontalSpace || 0);
+      var availableHeight = lightbox.clientHeight - (verticalSpace || 0);
+      var scale = Math.min(availableWidth / outerWidth, availableHeight / outerHeight);
+      if (!Number.isFinite(scale) || scale <= 0) return;
+
+      var imageBorder = parseFloat(window.getComputedStyle(lightboxImg).borderLeftWidth) || 0;
+      lightboxPreview.style.setProperty('--mat-width', previewLength(Math.max(0, (matInches * scale) - imageBorder), 'px'));
+      lightboxPreview.style.setProperty('--frame-width', previewLength(frameInches * scale, 'px'));
+      lightboxImg.style.width = previewLength(printWidth * scale, 'px');
+      lightboxImg.style.height = previewLength(printHeight * scale, 'px');
+    }
+
     if (lightbox && lightboxOpen && lightboxClose) {
       lightboxOpen.addEventListener('click', function () {
         syncLightboxImage();
         lightbox.showModal();
+        requestAnimationFrame(scaleProductLightbox);
       });
       lightboxClose.addEventListener('click', function () { lightbox.close(); });
       lightbox.addEventListener('click', function (event) {
@@ -452,6 +492,7 @@
       if (framedLightbox && framedLightbox.open) {
         requestAnimationFrame(function () { projectFramedVisual(framedLightboxContent.querySelector('[data-framed-visual]')); });
       }
+      if (lightbox && lightbox.open) requestAnimationFrame(scaleProductLightbox);
     });
 
     function whccDetails(value) {

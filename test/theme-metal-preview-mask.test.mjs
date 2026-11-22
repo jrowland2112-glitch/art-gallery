@@ -14,10 +14,15 @@ test('metal wall previews preserve hands without cutting the artwork panel', () 
   assert.match(productSection, /metal-lifestyle__hands metal-lifestyle__hands--right/);
   assert.match(
     productSection,
-    /assign metal_mockup_asset = 'metal-lifestyle-landscape-clean-grip\.jpg'/,
-    'landscape previews must use the unobstructed clean-grip mockup',
+    /assign metal_mockup_asset = 'metal-lifestyle-landscape\.jpg'/,
+    'landscape previews must retain the original mockup',
   );
-  assert.match(productSection, /if metal_mockup_orientation == 'portrait'[\s\S]*metal-lifestyle__hands--left/);
+  assert.match(
+    productSection,
+    /assign metal_left_hand_asset = 'metal-lifestyle-landscape-left-hand-overlay\.png'/,
+    'landscape previews must use the extracted original-hand overlay',
+  );
+  assert.match(productSection, /assign metal_left_hand_asset = metal_mockup_asset/);
   assert.doesNotMatch(css, /\[data-metal-orientation="landscape"\]\s+\.metal-lifestyle__hands--left/);
   assert.match(
     css,

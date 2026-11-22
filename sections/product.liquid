@@ -7,7 +7,8 @@
   assign main_image = product.featured_image | default: current_variant.featured_image
   assign reference_image = product.featured_image | default: main_image
   assign metal_mockup_orientation = 'landscape'
-  assign metal_mockup_asset = 'metal-lifestyle-landscape-clean-grip.jpg'
+  assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
+  assign metal_left_hand_asset = 'metal-lifestyle-landscape-left-hand-overlay.png'
   assign metal_edge_asset = 'metal-edge-landscape.jpg'
   assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-landscape.jpg'
   assign gallery_wrap_edge_asset = 'gallery-wrap-edge-landscape.jpg'
@@ -16,6 +17,7 @@
   if reference_image and reference_image.aspect_ratio < 1
     assign metal_mockup_orientation = 'portrait'
     assign metal_mockup_asset = 'metal-lifestyle-portrait.jpg'
+    assign metal_left_hand_asset = metal_mockup_asset
     assign metal_edge_asset = 'metal-edge-portrait.jpg'
     assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-portrait.jpg'
     assign gallery_wrap_edge_asset = 'gallery-wrap-edge-portrait.jpg'
@@ -186,17 +188,15 @@
                 >
                 <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
               </div>
-              {%- if metal_mockup_orientation == 'portrait' -%}
-                <img
-                  class="metal-lifestyle__hands metal-lifestyle__hands--left"
-                  src="{{ metal_mockup_asset | asset_url }}"
-                  width="1400"
-                  height="1120"
-                  loading="lazy"
-                  alt=""
-                  aria-hidden="true"
-                >
-              {%- endif -%}
+              <img
+                class="metal-lifestyle__hands metal-lifestyle__hands--left"
+                src="{{ metal_left_hand_asset | asset_url }}"
+                width="1400"
+                height="1120"
+                loading="lazy"
+                alt=""
+                aria-hidden="true"
+              >
               <img
                 class="metal-lifestyle__hands metal-lifestyle__hands--right"
                 src="{{ metal_mockup_asset | asset_url }}"

@@ -7,7 +7,7 @@
   assign main_image = product.featured_image | default: current_variant.featured_image
   assign reference_image = product.featured_image | default: main_image
   assign metal_mockup_orientation = 'landscape'
-  assign metal_mockup_asset = 'metal-lifestyle-landscape.jpg'
+  assign metal_mockup_asset = 'metal-lifestyle-landscape-clean-grip.jpg'
   assign metal_edge_asset = 'metal-edge-landscape.jpg'
   assign gallery_wrap_mockup_asset = 'gallery-wrap-lifestyle-landscape.jpg'
   assign gallery_wrap_edge_asset = 'gallery-wrap-edge-landscape.jpg'
@@ -186,15 +186,17 @@
                 >
                 <span class="metal-lifestyle__sheen" aria-hidden="true"></span>
               </div>
-              <img
-                class="metal-lifestyle__hands metal-lifestyle__hands--left"
-                src="{{ metal_mockup_asset | asset_url }}"
-                width="1400"
-                height="1120"
-                loading="lazy"
-                alt=""
-                aria-hidden="true"
-              >
+              {%- if metal_mockup_orientation == 'portrait' -%}
+                <img
+                  class="metal-lifestyle__hands metal-lifestyle__hands--left"
+                  src="{{ metal_mockup_asset | asset_url }}"
+                  width="1400"
+                  height="1120"
+                  loading="lazy"
+                  alt=""
+                  aria-hidden="true"
+                >
+              {%- endif -%}
               <img
                 class="metal-lifestyle__hands metal-lifestyle__hands--right"
                 src="{{ metal_mockup_asset | asset_url }}"

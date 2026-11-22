@@ -5,7 +5,7 @@ import test from 'node:test';
 const css = await readFile(new URL('../assets/base.css', import.meta.url), 'utf8');
 const productSection = await readFile(new URL('../sections/product.liquid', import.meta.url), 'utf8');
 
-test('metal wall previews layer both hands above an uncut artwork panel', () => {
+test('metal wall previews preserve hands without cutting the artwork panel', () => {
   assert.doesNotMatch(
     css,
     /\[data-metal-layout="wall"\][^{]+\.metal-lifestyle__panel\s*\{[^}]*clip-path/s,
@@ -13,14 +13,12 @@ test('metal wall previews layer both hands above an uncut artwork panel', () => 
   assert.match(productSection, /metal-lifestyle__hands metal-lifestyle__hands--left/);
   assert.match(productSection, /metal-lifestyle__hands metal-lifestyle__hands--right/);
   assert.match(
-    css,
-    /\[data-metal-orientation="landscape"\]\s+\.metal-lifestyle__hands--left\s*\{[^}]*clip-path:\s*polygon\(/s,
+    productSection,
+    /assign metal_mockup_asset = 'metal-lifestyle-landscape-clean-grip\.jpg'/,
+    'landscape previews must use the unobstructed clean-grip mockup',
   );
-  assert.match(
-    css,
-    /\.metal-lifestyle__hands--left\s*\{[^}]*12\.2% 66%[^}]*15\.2% 68%[^}]*13\.2% 71\.2%/s,
-    'the landscape foreground must isolate the fingertip without reaching the lower-left corner',
-  );
+  assert.match(productSection, /if metal_mockup_orientation == 'portrait'[\s\S]*metal-lifestyle__hands--left/);
+  assert.doesNotMatch(css, /\[data-metal-orientation="landscape"\]\s+\.metal-lifestyle__hands--left/);
   assert.match(
     css,
     /\[data-metal-orientation="portrait"\]\s+\.metal-lifestyle__hands--right\s*\{[^}]*clip-path:\s*polygon\(/s,

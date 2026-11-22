@@ -346,7 +346,7 @@ textarea { min-height: 9rem; resize: vertical; }
   width: 54%;
   text-align: left;
 }
-.search-results__grid .card__media { aspect-ratio: 3 / 2; }
+.search-results__grid .card__media { aspect-ratio: 3 / 2; background: transparent; }
 .search-results__grid .card__media img { object-fit: contain; padding: 0; }
 .shop-results__grid { align-items: start; }
 .shop-results__grid .card { min-width: 0; }

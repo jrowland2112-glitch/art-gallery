@@ -748,6 +748,7 @@
           var label = input.nextElementSibling;
           if (label) {
             label.hidden = isSizeGroup && !compatible;
+            label.classList.toggle('is-incompatible', isSizeGroup && !compatible);
             label.classList.toggle('is-unavailable', compatible && !available);
           }
           input.disabled = isSizeGroup && !compatible;

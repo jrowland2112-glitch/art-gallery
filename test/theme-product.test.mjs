@@ -36,7 +36,12 @@ function productFixture() {
       <div class="frame-preview" data-frame-preview><img data-main-image src="https://example.com/art.jpg" alt="Artwork"></div>
       <p data-finish-caption>Finish preview</p>
       <div data-metal-lifestyle hidden></div>
-      <div data-gallery-wrap-preview hidden></div>
+      <div data-gallery-wrap-preview hidden>
+        <div data-gallery-wrap-visual data-gallery-wrap-layout="room" data-gallery-wrap-orientation="landscape">
+          <img class="metal-lifestyle__scene" alt="">
+          <div class="gallery-room__panel"></div>
+        </div>
+      </div>
       <div data-framed-preview hidden>
         <div data-framed-visual data-framed-layout="wall" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
         <div data-framed-visual data-framed-layout="edge" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
@@ -145,19 +150,23 @@ test('finish-specific sizes stay selectable without exposing unsupported combina
 
   assert.equal(size40.disabled, true);
   assert.equal(size40.nextElementSibling.hidden, true);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
 
   select(dom, 'Finish', 'Gallery Wrap');
   assert.equal(size40.disabled, false);
   assert.equal(size40.nextElementSibling.hidden, false);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), false);
   select(dom, 'Size', '40x60');
   assert.equal(document.querySelector('input[name="id"]').value, '7');
   assert.equal(document.querySelector('[data-price]').textContent, '$1500');
+  assert.equal(document.querySelector('[data-gallery-wrap-layout="room"]').style.getPropertyValue('--gallery-room-art-width'), '59.500%');
 
   select(dom, 'Finish', 'Metal');
   assert.equal(document.querySelector('input[name="id"]').value, '3');
   assert.equal([...document.querySelectorAll('input[name="Size"]')].find((input) => input.checked).value, '12x18');
   assert.equal(size40.disabled, true);
   assert.equal(size40.nextElementSibling.hidden, true);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
 });
 
 test('enlarged framed preview scales mat and frame to the selected physical size', () => {

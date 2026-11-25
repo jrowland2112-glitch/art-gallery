@@ -4,6 +4,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 import { parseCombinedVariantTitle, readPriceSheet } from './lib/catalog.mjs';
+import { variantsForProduct } from './lib/product-variant-extensions.mjs';
 import { createShopifyClient } from './lib/shopify.mjs';
 
 function key(finish, size) {
@@ -22,7 +23,6 @@ function identity(variant) {
 async function main() {
   const apply = process.argv.includes('--apply');
   const catalog = await readPriceSheet(path.resolve('bulk-upload/prices.standard.csv'));
-  const approved = new Map(catalog.map((mapping) => [key(mapping.finish, mapping.size), mapping]));
   const client = await createShopifyClient({});
   const data = await client.graphql(`
     query ActiveProductsForWhccSync {
@@ -41,6 +41,8 @@ async function main() {
   `);
   const changes = [];
   for (const product of data.products?.nodes || []) {
+    const approvedMappings = variantsForProduct(catalog, product.handle);
+    const approved = new Map(approvedMappings.map((mapping) => [key(mapping.finish, mapping.size), mapping]));
     if (product.variants.nodes.length !== approved.size) throw new Error(`${product.title} does not have the approved ${approved.size} variants.`);
     for (const variant of product.variants.nodes) {
       const mapping = approved.get(identity(variant));

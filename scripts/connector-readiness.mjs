@@ -4,23 +4,8 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { readPriceSheet } from './lib/catalog.mjs';
+import { PRODUCT_VARIANT_EXTENSIONS } from './lib/product-variant-extensions.mjs';
 import { createShopifyClient } from './lib/shopify.mjs';
-
-const PRODUCT_VARIANT_EXTENSIONS = Object.freeze({
-  'aspen-icm': [{
-    finish: 'Gallery Wrap',
-    size: '40x60',
-    whccProductRef: 'gallery-wrap',
-    whccSelections: {
-      size: '40x60',
-      canvas_type: 'premium_fine_art',
-      depth: '2_1_2in',
-      protection: 'semi_gloss',
-      gallery_wrap_edge: 'black_edge',
-      all_hanging_hardware: 'sawtooth_hangers_bumpers_paper_backing',
-    },
-  }],
-});
 
 function mappingKey(mapping) {
   return `${String(mapping.finish || '').trim().toLowerCase()}|${String(mapping.size || '').replace(/\s*[x×]\s*/i, 'x').trim().toLowerCase()}`;

@@ -807,7 +807,8 @@ textarea { min-height: 9rem; resize: vertical; }
 .option-group__title { color: var(--color-foreground); }
 .option-group__selected { text-transform: none; letter-spacing: 0; color: var(--color-muted); font-size: 0.9rem; }
 .option-values { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.option-group--finish .option-values, .option-group--size .option-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.55rem; }
+.option-group--finish .option-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.55rem; }
+.option-group--size .option-values { display: flex; flex-wrap: nowrap; gap: 0.45rem; }
 .option-values input { position: absolute; opacity: 0; pointer-events: none; }
 .option-values label {
   border: 1px solid var(--color-border); padding: 0.75rem 0.95rem; cursor: pointer;
@@ -816,9 +817,27 @@ textarea { min-height: 9rem; resize: vertical; }
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 }
 .option-group--finish .option-values label { min-height: 4.4rem; }
+.option-group--size .option-values label {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.7rem 0.3rem;
+  font-size: clamp(0.82rem, 1.2vw, 1rem);
+}
 .option-values input:checked + label { border-color: var(--color-foreground); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-foreground); }
 .option-values input:focus-visible + label { outline: 2px solid var(--color-foreground); outline-offset: 2px; }
 .option-values label.is-unavailable { color: var(--color-muted); background: transparent; opacity: 0.55; }
+.option-values label.is-incompatible { display: none; }
+.option-group__mobile-select {
+  display: none;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.7rem 2.5rem 0.7rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font: inherit;
+}
 .option-value__content { display: grid; gap: 0.1rem; }
 .option-value__content strong { font-weight: 400; line-height: 1.25; }
 .option-value__content small { color: var(--color-muted); font-size: 0.68rem; line-height: 1.25; }
@@ -918,6 +937,8 @@ textarea { min-height: 9rem; resize: vertical; }
   .product-breadcrumb { margin-bottom: 1.25rem; }
   .product__stage { min-height: 24rem; }
   .product__info h1 { font-size: calc(clamp(2rem, 11vw, 3rem) * var(--heading-scale)); }
+  .option-group--size.has-mobile-size-select .option-values { display: none; }
+  .option-group--size.has-mobile-size-select .option-group__mobile-select { display: block; }
   .product__buy { grid-template-columns: 1fr; }
   .product__buy .qty { width: 100%; justify-content: space-between; }
   .product__buy .shopify-payment-button, .product__buy-note { grid-column: auto; }

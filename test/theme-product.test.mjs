@@ -12,6 +12,7 @@ const variants = [
   { id: 4, options: ['Gallery Wrap', '12x18'], price: 22500, available: true, featured_image: null },
   { id: 5, options: ['Metal', '16x24'], price: 40000, available: false, featured_image: null },
   { id: 6, options: ['Framed', '24x36'], price: 70000, available: true, featured_image: { src: 'https://example.com/legacy-2.jpg', alt: 'Artwork in the WHCC Gallery Slim black frame with 2-inch double-white mat' } },
+  { id: 7, options: ['Gallery Wrap', '40x60'], price: 150000, available: true, featured_image: null },
 ];
 
 function option(name, values, selected) {
@@ -28,14 +29,19 @@ function productFixture() {
       <form id="product-form" action="/cart/add">
         <input name="id" value="1">
         ${option('Finish', ['Framed', 'Metal', 'Gallery Wrap'], 'Framed')}
-        ${option('Size', ['12x18', '16x24', '24x36'], '12x18')}
+        ${option('Size', ['12x18', '16x24', '24x36', '40x60'], '12x18')}
         <button data-add-to-cart>Add to cart</button>
       </form>
       <div data-price></div>
       <div class="frame-preview" data-frame-preview><img data-main-image src="https://example.com/art.jpg" alt="Artwork"></div>
       <p data-finish-caption>Finish preview</p>
       <div data-metal-lifestyle hidden></div>
-      <div data-gallery-wrap-preview hidden></div>
+      <div data-gallery-wrap-preview hidden>
+        <div data-gallery-wrap-visual data-gallery-wrap-layout="room" data-gallery-wrap-orientation="landscape">
+          <img class="metal-lifestyle__scene" alt="">
+          <div class="gallery-room__panel"></div>
+        </div>
+      </div>
       <div data-framed-preview hidden>
         <div data-framed-visual data-framed-layout="wall" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
         <div data-framed-visual data-framed-layout="edge" data-framed-orientation="landscape"><div class="framed-preview__art-panel"></div></div>
@@ -135,6 +141,48 @@ test('product initialization is idempotent when Shopify reloads a section', () =
   assert.equal(root.dataset.productReady, '1');
   select(dom, 'Finish', 'Metal');
   assert.equal(dom.window.document.querySelector('input[name="id"]').value, '3');
+});
+
+test('finish-specific sizes stay selectable without exposing unsupported combinations', () => {
+  const dom = loadProduct();
+  const document = dom.window.document;
+  const size40 = [...document.querySelectorAll('input[name="Size"]')].find((input) => input.value === '40x60');
+
+  assert.equal(size40.disabled, true);
+  assert.equal(size40.nextElementSibling.hidden, true);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
+  const mobileSelect = document.querySelector('[data-mobile-size-select]');
+  assert.deepEqual([...mobileSelect.options].map((option) => option.value), ['12x18', '16x24', '24x36']);
+
+  select(dom, 'Finish', 'Gallery Wrap');
+  assert.equal(size40.disabled, false);
+  assert.equal(size40.nextElementSibling.hidden, false);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), false);
+  assert.deepEqual([...mobileSelect.options].map((option) => option.value), ['12x18', '40x60']);
+  select(dom, 'Size', '40x60');
+  assert.equal(document.querySelector('input[name="id"]').value, '7');
+  assert.equal(document.querySelector('[data-price]').textContent, '$1500');
+  assert.equal(document.querySelector('[data-gallery-wrap-layout="room"]').style.getPropertyValue('--gallery-room-art-width'), '59.500%');
+
+  select(dom, 'Finish', 'Metal');
+  assert.equal(document.querySelector('input[name="id"]').value, '3');
+  assert.equal([...document.querySelectorAll('input[name="Size"]')].find((input) => input.checked).value, '12x18');
+  assert.equal(size40.disabled, true);
+  assert.equal(size40.nextElementSibling.hidden, true);
+  assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
+  assert.equal(mobileSelect.value, '12x18');
+});
+
+test('mobile size dropdown selects the same Shopify variant as desktop controls', () => {
+  const dom = loadProduct();
+  const document = dom.window.document;
+  select(dom, 'Finish', 'Gallery Wrap');
+  const mobileSelect = document.querySelector('[data-mobile-size-select]');
+  mobileSelect.value = '40x60';
+  mobileSelect.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
+  assert.equal(document.querySelector('input[name="id"]').value, '7');
+  assert.equal(document.querySelector('[data-price]').textContent, '$1500');
+  assert.equal([...document.querySelectorAll('input[name="Size"]')].find((input) => input.checked).value, '40x60');
 });
 
 test('enlarged framed preview scales mat and frame to the selected physical size', () => {

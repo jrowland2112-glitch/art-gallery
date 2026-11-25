@@ -6,6 +6,22 @@ import { fileURLToPath } from 'node:url';
 import { readPriceSheet } from './lib/catalog.mjs';
 import { createShopifyClient } from './lib/shopify.mjs';
 
+const PRODUCT_VARIANT_EXTENSIONS = Object.freeze({
+  'aspen-icm': [{
+    finish: 'Gallery Wrap',
+    size: '40x60',
+    whccProductRef: 'gallery-wrap',
+    whccSelections: {
+      size: '40x60',
+      canvas_type: 'premium_fine_art',
+      depth: '2_1_2in',
+      protection: 'semi_gloss',
+      gallery_wrap_edge: 'black_edge',
+      all_hanging_hardware: 'sawtooth_hangers_bumpers_paper_backing',
+    },
+  }],
+});
+
 function mappingKey(mapping) {
   return `${String(mapping.finish || '').trim().toLowerCase()}|${String(mapping.size || '').replace(/\s*[x×]\s*/i, 'x').trim().toLowerCase()}`;
 }
@@ -20,11 +36,9 @@ function parsedMapping(variant) {
   }
 }
 
-export async function auditConnectorReadiness({ client, catalogVariants, output = console } = {}) {
+export async function auditConnectorReadiness({ client, catalogVariants, productVariantExtensions = PRODUCT_VARIANT_EXTENSIONS, output = console } = {}) {
   const shopify = client || await createShopifyClient({});
   const expected = catalogVariants || await readPriceSheet(path.resolve('bulk-upload', 'prices.standard.csv'));
-  const expectedKeys = new Set(expected.map(mappingKey));
-  const expectedByKey = new Map(expected.map((mapping) => [mappingKey(mapping), mapping]));
   const data = await shopify.graphql(`
     query ActiveProductsForConnectorAudit {
       products(first: 250, query: "status:active", sortKey: TITLE) {
@@ -47,6 +61,9 @@ export async function auditConnectorReadiness({ client, catalogVariants, output 
 
   for (const product of products) {
     const issues = [];
+    const approvedMappings = [...expected, ...(productVariantExtensions[product.handle] || [])];
+    const expectedKeys = new Set(approvedMappings.map(mappingKey));
+    const expectedByKey = new Map(approvedMappings.map((mapping) => [mappingKey(mapping), mapping]));
     if (!product.source?.value) issues.push('missing private R2 source key');
     const productVariants = product.variants?.nodes || [];
     variants += productVariants.length;
@@ -80,7 +97,7 @@ export async function auditConnectorReadiness({ client, catalogVariants, output 
     }
     throw new Error(`${failures.length} active product(s) are not ready for the custom WHCC connector.`);
   }
-  output.log('All active products have a private source key and the complete approved nine-variant WHCC mapping.');
+  output.log('All active products have a private source key and their complete approved WHCC mappings.');
   return { products: products.length, variants, failures };
 }
 

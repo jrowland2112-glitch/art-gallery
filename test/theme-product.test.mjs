@@ -151,11 +151,14 @@ test('finish-specific sizes stay selectable without exposing unsupported combina
   assert.equal(size40.disabled, true);
   assert.equal(size40.nextElementSibling.hidden, true);
   assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
+  const mobileSelect = document.querySelector('[data-mobile-size-select]');
+  assert.deepEqual([...mobileSelect.options].map((option) => option.value), ['12x18', '16x24', '24x36']);
 
   select(dom, 'Finish', 'Gallery Wrap');
   assert.equal(size40.disabled, false);
   assert.equal(size40.nextElementSibling.hidden, false);
   assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), false);
+  assert.deepEqual([...mobileSelect.options].map((option) => option.value), ['12x18', '40x60']);
   select(dom, 'Size', '40x60');
   assert.equal(document.querySelector('input[name="id"]').value, '7');
   assert.equal(document.querySelector('[data-price]').textContent, '$1500');
@@ -167,6 +170,19 @@ test('finish-specific sizes stay selectable without exposing unsupported combina
   assert.equal(size40.disabled, true);
   assert.equal(size40.nextElementSibling.hidden, true);
   assert.equal(size40.nextElementSibling.classList.contains('is-incompatible'), true);
+  assert.equal(mobileSelect.value, '12x18');
+});
+
+test('mobile size dropdown selects the same Shopify variant as desktop controls', () => {
+  const dom = loadProduct();
+  const document = dom.window.document;
+  select(dom, 'Finish', 'Gallery Wrap');
+  const mobileSelect = document.querySelector('[data-mobile-size-select]');
+  mobileSelect.value = '40x60';
+  mobileSelect.dispatchEvent(new dom.window.Event('change', { bubbles: true }));
+  assert.equal(document.querySelector('input[name="id"]').value, '7');
+  assert.equal(document.querySelector('[data-price]').textContent, '$1500');
+  assert.equal([...document.querySelectorAll('input[name="Size"]')].find((input) => input.checked).value, '40x60');
 });
 
 test('enlarged framed preview scales mat and frame to the selected physical size', () => {

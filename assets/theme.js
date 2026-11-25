@@ -102,6 +102,24 @@
     var groups = Array.prototype.slice.call(root.querySelectorAll('[data-option-index]'));
     if (finishCaption) finishCaption.dataset.defaultCaption = finishCaption.textContent;
 
+    groups.forEach(function (group) {
+      if ((group.dataset.optionKind || '').toLowerCase() !== 'size') return;
+      var select = document.createElement('select');
+      select.className = 'option-group__mobile-select';
+      select.setAttribute('data-mobile-size-select', '');
+      select.setAttribute('aria-label', 'Choose your size');
+      group.classList.add('has-mobile-size-select');
+      group.appendChild(select);
+      select.addEventListener('change', function () {
+        var input = Array.prototype.slice.call(group.querySelectorAll('input[type="radio"]')).find(function (candidate) {
+          return candidate.value === select.value && !candidate.disabled;
+        });
+        if (!input) return;
+        input.checked = true;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+
     function syncLightboxImage() {
       if (!mainImg || !lightboxImg || !lightboxPreview) return;
       lightboxImg.src = mainImg.currentSrc || mainImg.src;
@@ -730,7 +748,8 @@
     function updateAvailability(values) {
       groups.forEach(function (group, optionIndex) {
         var isSizeGroup = (group.dataset.optionKind || '').toLowerCase() === 'size';
-        group.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        var inputs = Array.prototype.slice.call(group.querySelectorAll('input[type="radio"]'));
+        inputs.forEach(function (input) {
           var candidate = values.slice();
           candidate[optionIndex] = input.value;
           var compatible = variants.some(function (variant) {
@@ -754,6 +773,20 @@
           input.disabled = isSizeGroup && !compatible;
           input.setAttribute('aria-label', input.value + (available ? '' : ', unavailable with current selections'));
         });
+        var mobileSelect = group.querySelector('[data-mobile-size-select]');
+        if (isSizeGroup && mobileSelect) {
+          mobileSelect.replaceChildren();
+          inputs.forEach(function (input) {
+            var label = input.nextElementSibling;
+            if (input.disabled || (label && label.classList.contains('is-incompatible'))) return;
+            var option = document.createElement('option');
+            option.value = input.value;
+            option.textContent = input.value + (label && label.classList.contains('is-unavailable') ? ' — Sold out' : '');
+            option.disabled = !!(label && label.classList.contains('is-unavailable'));
+            option.selected = input.checked;
+            mobileSelect.appendChild(option);
+          });
+        }
       });
     }
 

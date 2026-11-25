@@ -12,6 +12,7 @@ const variants = [
   { id: 4, options: ['Gallery Wrap', '12x18'], price: 22500, available: true, featured_image: null },
   { id: 5, options: ['Metal', '16x24'], price: 40000, available: false, featured_image: null },
   { id: 6, options: ['Framed', '24x36'], price: 70000, available: true, featured_image: { src: 'https://example.com/legacy-2.jpg', alt: 'Artwork in the WHCC Gallery Slim black frame with 2-inch double-white mat' } },
+  { id: 7, options: ['Gallery Wrap', '40x60'], price: 150000, available: true, featured_image: null },
 ];
 
 function option(name, values, selected) {
@@ -28,7 +29,7 @@ function productFixture() {
       <form id="product-form" action="/cart/add">
         <input name="id" value="1">
         ${option('Finish', ['Framed', 'Metal', 'Gallery Wrap'], 'Framed')}
-        ${option('Size', ['12x18', '16x24', '24x36'], '12x18')}
+        ${option('Size', ['12x18', '16x24', '24x36', '40x60'], '12x18')}
         <button data-add-to-cart>Add to cart</button>
       </form>
       <div data-price></div>
@@ -135,6 +136,28 @@ test('product initialization is idempotent when Shopify reloads a section', () =
   assert.equal(root.dataset.productReady, '1');
   select(dom, 'Finish', 'Metal');
   assert.equal(dom.window.document.querySelector('input[name="id"]').value, '3');
+});
+
+test('finish-specific sizes stay selectable without exposing unsupported combinations', () => {
+  const dom = loadProduct();
+  const document = dom.window.document;
+  const size40 = [...document.querySelectorAll('input[name="Size"]')].find((input) => input.value === '40x60');
+
+  assert.equal(size40.disabled, true);
+  assert.equal(size40.nextElementSibling.hidden, true);
+
+  select(dom, 'Finish', 'Gallery Wrap');
+  assert.equal(size40.disabled, false);
+  assert.equal(size40.nextElementSibling.hidden, false);
+  select(dom, 'Size', '40x60');
+  assert.equal(document.querySelector('input[name="id"]').value, '7');
+  assert.equal(document.querySelector('[data-price]').textContent, '$1500');
+
+  select(dom, 'Finish', 'Metal');
+  assert.equal(document.querySelector('input[name="id"]').value, '3');
+  assert.equal([...document.querySelectorAll('input[name="Size"]')].find((input) => input.checked).value, '12x18');
+  assert.equal(size40.disabled, true);
+  assert.equal(size40.nextElementSibling.hidden, true);
 });
 
 test('enlarged framed preview scales mat and frame to the selected physical size', () => {

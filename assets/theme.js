@@ -729,17 +729,43 @@
 
     function updateAvailability(values) {
       groups.forEach(function (group, optionIndex) {
+        var isSizeGroup = (group.dataset.optionKind || '').toLowerCase() === 'size';
         group.querySelectorAll('input[type="radio"]').forEach(function (input) {
           var candidate = values.slice();
           candidate[optionIndex] = input.value;
+          var compatible = variants.some(function (variant) {
+            return variant.options.every(function (optionValue, index) {
+              return optionValue === candidate[index];
+            });
+          });
           var available = variants.some(function (variant) {
-            return variant.available && variant.options.every(function (optionValue, index) {
+            if (!variant.available) return false;
+            if (!isSizeGroup) return variant.options[optionIndex] === input.value;
+            return variant.options.every(function (optionValue, index) {
               return optionValue === candidate[index];
             });
           });
           var label = input.nextElementSibling;
-          if (label) label.classList.toggle('is-unavailable', !available);
+          if (label) {
+            label.hidden = isSizeGroup && !compatible;
+            label.classList.toggle('is-unavailable', compatible && !available);
+          }
+          input.disabled = isSizeGroup && !compatible;
           input.setAttribute('aria-label', input.value + (available ? '' : ', unavailable with current selections'));
+        });
+      });
+    }
+
+    function reconcileSelection(preferredOptionIndex) {
+      var values = selected();
+      if (findVariant(values)) return;
+      var replacement = variants.find(function (variant) {
+        return variant.available && variant.options[preferredOptionIndex] === values[preferredOptionIndex];
+      }) || variants.find(function (variant) { return variant.available; });
+      if (!replacement) return;
+      groups.forEach(function (group, optionIndex) {
+        group.querySelectorAll('input[type="radio"]').forEach(function (input) {
+          input.checked = input.value === replacement.options[optionIndex];
         });
       });
     }
@@ -780,7 +806,12 @@
       window.history.replaceState({}, '', url.toString());
     }
 
-    groups.forEach(function (g) { g.addEventListener('change', update); });
+    groups.forEach(function (g, optionIndex) {
+      g.addEventListener('change', function () {
+        reconcileSelection(optionIndex);
+        update();
+      });
+    });
     initWhccPicker();
 
     update();

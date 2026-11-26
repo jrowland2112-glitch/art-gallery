@@ -32,7 +32,9 @@
         "blog",
         "about"
       ],
-      "settings": {}
+      "settings": {
+        "header_message": "From my family to yours, wishing you a beautiful and peaceful Thanksgiving."
+      }
     }
   },
   "order": [

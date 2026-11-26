@@ -35,6 +35,10 @@
         {%- endif -%}
       </a>
 
+      {%- if section.settings.header_message != blank -%}
+        <p class="site-header__message">{{ section.settings.header_message | escape }}</p>
+      {%- endif -%}
+
       <nav class="site-header__nav" aria-label="Main">
         <ul>{{ nav_links }}</ul>
       </nav>
@@ -97,6 +101,7 @@
     { "type": "checkbox", "id": "show_search", "label": "Show product search", "default": true },
     { "type": "checkbox", "id": "show_instagram", "label": "Show Instagram icon", "default": true },
     { "type": "checkbox", "id": "show_cart", "label": "Always show cart icon", "default": false, "info": "When off, the cart icon only appears once something is in the cart" },
+    { "type": "text", "id": "header_message", "label": "Centered message", "info": "Leave empty to hide the message" },
     { "type": "checkbox", "id": "sticky", "label": "Keep header visible when scrolling", "default": false }
   ],
   "blocks": [

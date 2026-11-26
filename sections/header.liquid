@@ -36,7 +36,25 @@
       </a>
 
       {%- if section.settings.header_message != blank -%}
-        <p class="site-header__message">{{ section.settings.header_message | escape }}</p>
+        <div class="site-header__message" role="note">
+          <img
+            class="site-header__message-ornament site-header__message-ornament--start"
+            src="{{ 'thanksgiving-oak-acorns.png' | asset_url }}"
+            width="320"
+            height="160"
+            alt=""
+            aria-hidden="true"
+          >
+          <span>{{ section.settings.header_message | escape }}</span>
+          <img
+            class="site-header__message-ornament site-header__message-ornament--end"
+            src="{{ 'thanksgiving-oak-acorns.png' | asset_url }}"
+            width="320"
+            height="160"
+            alt=""
+            aria-hidden="true"
+          >
+        </div>
       {%- endif -%}
 
       <nav class="site-header__nav" aria-label="Main">

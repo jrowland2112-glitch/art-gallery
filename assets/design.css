@@ -14,15 +14,27 @@ h1, h2, h3 { font-weight: 400; }
 .site-header__message {
   position: absolute;
   left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   margin: 0;
   transform: translateX(-50%);
-  max-width: min(34rem, 36vw);
+  max-width: min(62rem, 58vw);
   text-align: center;
   font-family: var(--font-heading);
   font-size: 1rem;
   font-style: italic;
   line-height: 1.25;
   letter-spacing: 0.025em;
+  white-space: nowrap;
+}
+.site-header__message-ornament {
+  flex: 0 0 auto;
+  width: 3.4rem;
+  height: auto;
+}
+.site-header__message-ornament--end {
+  transform: scaleX(-1);
 }
 .site-header__nav { justify-self: end; }
 .site-header__nav a,
@@ -46,12 +58,14 @@ h1, h2, h3 { font-weight: 400; }
     max-width: 100%;
     padding: 0 1rem 0.65rem;
     font-size: 0.9rem;
+    white-space: normal;
   }
 }
 @media (max-width: 989px) {
   .site-header__inner { grid-template-columns: 1fr auto; min-height: 5rem; }
   .site-header__logo img { width: min(var(--logo-width, 280px), 60vw); max-height: 4.5rem; }
   .site-header__icons { margin-left: 0; }
+  .site-header__message-ornament { width: 2.55rem; }
 }
 
 .wordmark { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; }

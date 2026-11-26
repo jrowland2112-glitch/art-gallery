@@ -13,7 +13,7 @@ h1, h2, h3 { font-weight: 400; }
 .site-header__logo img { display: block; max-height: 5.25rem; object-fit: contain; mix-blend-mode: multiply; }
 .site-header__message {
   position: absolute;
-  left: 50%;
+  left: calc(50% - 3.75rem);
   display: flex;
   align-items: center;
   gap: 0.55rem;

@@ -1,0 +1,94 @@
+{%- comment -%}
+  Merchant-listing JSON-LD for Google Search.
+
+  Shopify's built-in product structured_data filter omits the shipping and
+  made-to-order return policies used by this store. Keep these values aligned
+  with the customer-facing Shipping & Returns copy and Shopify shipping setup.
+{%- endcomment -%}
+
+{%- liquid
+  assign merchant_description = product.description | strip_html | strip
+  if merchant_description == blank
+    assign merchant_description = product.title | append: ' — fine art photography by Joseph Rowland, available as framed art, metal, and gallery wrap finishes.'
+  endif
+  assign merchant_currency = cart.currency.iso_code | default: shop.currency
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": {{ canonical_url | append: '#product' | json }},
+    "name": {{ product.title | json }},
+    "description": {{ merchant_description | json }},
+    "url": {{ canonical_url | json }},
+    "brand": {
+      "@type": "Brand",
+      "name": "Rowland Photography"
+    },
+    "image": [
+      {%- for image in product.images -%}
+        {{ image | image_url: width: 2000 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ],
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type": "Offer",
+          "@id": {{ canonical_url | append: '#offer-' | append: variant.id | json }},
+          "url": {{ canonical_url | append: '?variant=' | append: variant.id | json }},
+          "name": {{ product.title | append: ' — ' | append: variant.title | json }},
+          "sku": {{ variant.sku | json }},
+          "price": {{ variant.price | money_without_currency | replace: ',', '' | json }},
+          "priceCurrency": {{ merchant_currency | json }},
+          "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "itemCondition": "https://schema.org/NewCondition",
+          "seller": {
+            "@type": "Organization",
+            "name": "Rowland Photography",
+            "url": {{ shop.url | json }}
+          },
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "0",
+              "currency": {{ merchant_currency | json }}
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "addressCountry": "US",
+              "addressRegion": [
+                "AL", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "ID",
+                "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI",
+                "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY",
+                "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN",
+                "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC"
+              ]
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 3,
+                "maxValue": 5,
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 2,
+                "maxValue": 8,
+                "unitCode": "DAY"
+              }
+            }
+          },
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "US",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
